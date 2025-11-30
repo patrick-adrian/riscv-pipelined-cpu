@@ -1,4 +1,7 @@
 `timescale 1ns / 1ps
+`include "misc_tasks.sv"
+`include "csr_macros.sv"
+`include "tb_macros.sv"
 //==============================================================//
 //  Module:       csr_reg_file_tb
 //  File:         csr_reg_file_tb.sv
@@ -21,8 +24,6 @@
 //                - Manual sections (e.g., monitors or scoreboards) are
 //                  safe to modify and extend.
 //==============================================================//
-`include "csr_macros.sv"
-`include "tb_macros.sv"
 
 module csr_reg_file_tb;
 
@@ -188,6 +189,7 @@ module csr_reg_file_tb;
         `CHECK(u_dut.minstreth_q === 32'h0, "minstreth reset value incorrect");
         `CHECK(u_dut.mstatus_q === 32'h0, "mstatus reset value incorrect");
         `CHECK(u_dut.mtest_status_q === 32'h0, "mtest_status reset value incorrect");
+        `CHECK(u_dut.mdbg_q === 32'h0, "mdbg reset value incorrect");
 
         //Readcheck for standard registers
         $display("[%t] Beginning read check for standard registers...", $realtime);
@@ -196,6 +198,9 @@ module csr_reg_file_tb;
         
         read_register(`MTEST_STATUS_ADDR, tb_rdata);
         `CHECK(csr_rdata_o === 32'h0, "Reset check for mtest_status failed");
+        
+        read_register(`MDBG_ADDR, tb_rdata);
+        `CHECK(csr_rdata_o === 32'h0, "Reset check for mdbg failed");
         
 
         // Readcheck for special registers
@@ -244,6 +249,11 @@ module csr_reg_file_tb;
         read_register(`MTEST_STATUS_ADDR, tb_rdata);
         `CHECK(tb_rdata === tb_wdata, "Write check for mtest_status failed");
         
+        tb_wdata = $urandom();
+        write_register(`MDBG_ADDR, tb_wdata);
+        read_register(`MDBG_ADDR, tb_rdata);
+        `CHECK(tb_rdata === tb_wdata, "Write check for mdbg failed");
+        
 
         // Writethrough check
         $display("[%t] Beginning writethrough check for all writable registers...", $realtime);
@@ -264,6 +274,9 @@ module csr_reg_file_tb;
         
         tb_wdata = $urandom();
         write_through(`MTEST_STATUS_ADDR, tb_wdata);
+        
+        tb_wdata = $urandom();
+        write_through(`MDBG_ADDR, tb_wdata);
         
 
         // reset all special registers

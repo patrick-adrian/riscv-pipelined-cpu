@@ -12,7 +12,7 @@ STARTUP_OBJ = $(STARTUP:.s=.o)
 ARCH = rv32i_zicsr
 ABI  = ilp32
 
-CC_FLAGS  = -march=$(ARCH) -mabi=$(ABI) -O2 -std=gnu11 -Icommon
+CC_FLAGS  = -march=$(ARCH) -mabi=$(ABI) -O2 -std=gnu11 -Icommon -msmall-data-limit=8
 
 # List of program directories
 C_DIRS  := $(wildcard c_programs/*)
@@ -47,7 +47,7 @@ $(C_ELFS): $(STARTUP_OBJ) $(LINKER)
 
 # DMEM hex
 %.data.hex: %.elf
-	$(OBJCOPY) -O binary -j .rodata -j .data $< $*.data.bin
+	$(OBJCOPY) -O binary -j .rodata -j .data -j .sdata $< $*.data.bin
 	hexdump -v -e '1/4 "%08x\n"' $*.data.bin > $@
 	rm -f $*.data.bin
 

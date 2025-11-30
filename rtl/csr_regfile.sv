@@ -42,31 +42,35 @@ module csr_regfile (
 );
 
     // csr signal definitions
-
+    
     // Bottom 32-bits storing number of cycles
     logic [31:0] mcycle_q;
     logic [31:0] mcycle_next;
-
+    
     // Top 32-bits storing number of cycles
     logic [31:0] mcycleh_q;
     logic [31:0] mcycleh_next;
-
+    
     // Bottom 32-bits storing number of instructions retired
     logic [31:0] minstret_q;
     logic [31:0] minstret_next;
-
+    
     // Top 32-bits storing number of instructions retired
     logic [31:0] minstreth_q;
     logic [31:0] minstreth_next;
-
+    
     // machine status register (currently only used for testing)
     logic [31:0] mstatus_q;
     logic [31:0] mstatus_next;
-
+    
     // Custom Register for handelling test success/failure in simulation
     logic [31:0] mtest_status_q;
     logic [31:0] mtest_status_next;
-
+    
+    // Custom register for holding debug info during testing
+    logic [31:0] mdbg_q;
+    logic [31:0] mdbg_next;
+    
 
     // Write logic (only implementing specific registers as of now)
     always_ff @(posedge clk_i) begin : csr_write_ff
@@ -77,6 +81,7 @@ module csr_regfile (
             minstreth_q    <= 32'h0;
             mstatus_q      <= 32'h0;
             mtest_status_q <= 32'h0;
+            mdbg_q         <= 32'h0;
         end else begin
             mcycle_q       <= mcycle_next;
             mcycleh_q      <= mcycleh_next;
@@ -84,6 +89,7 @@ module csr_regfile (
             minstreth_q    <= minstreth_next;
             mstatus_q      <= mstatus_next;
             mtest_status_q <= mtest_status_next;
+            mdbg_q         <= mdbg_next;
         end
     end
 
@@ -96,6 +102,7 @@ module csr_regfile (
             `MINSTRETH_ADDR   : csr_rdata_o = (csr_we_i && csr_waddr_i == csr_raddr_i) ? csr_wdata_i : minstreth_q;
             `MSTATUS_ADDR     : csr_rdata_o = (csr_we_i && csr_waddr_i == csr_raddr_i) ? csr_wdata_i : mstatus_q;
             `MTEST_STATUS_ADDR: csr_rdata_o = (csr_we_i && csr_waddr_i == csr_raddr_i) ? csr_wdata_i : mtest_status_q;
+            `MDBG_ADDR        : csr_rdata_o = (csr_we_i && csr_waddr_i == csr_raddr_i) ? csr_wdata_i : mdbg_q;
             default: csr_rdata_o = 32'h0;
         endcase
     end
@@ -104,9 +111,10 @@ module csr_regfile (
         // Standard writable registers
         mstatus_next = csr_we_i && (`MSTATUS_ADDR == csr_waddr_i) ? csr_wdata_i : mstatus_q;
         mtest_status_next = csr_we_i && (`MTEST_STATUS_ADDR == csr_waddr_i) ? csr_wdata_i : mtest_status_q;
+        mdbg_next    = csr_we_i && (`MDBG_ADDR == csr_waddr_i) ? csr_wdata_i : mdbg_q;
 
         // Following registers next cycle behaviour manually generated:
-        //mcycle mcycleh minstret minstreth
+        //mcycle mcycleh minstret minstreth 
 
         // mcycle handelling
         mcycle_next = (csr_we_i && csr_waddr_i == `MCYCLE_ADDR) ? csr_wdata_i : mcycle_q + 1;

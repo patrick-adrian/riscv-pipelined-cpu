@@ -30,6 +30,19 @@ regressions:
       - full_test_two
       - csr_instr_test
 
+    c_smoke:
+      - basic_execution
+      - data_check
+      - bss_check
+      - stack_recursion
+      - deep_recursion
+      - array_plus_loop
+      - func_plus_ptr
+      - struct_ptr_arith
+      - global_array
+      - combined_check
+
+
 tests:
     ####################################
     #          basic asm tests         #
@@ -83,6 +96,56 @@ tests:
     #       basic c programs           #
     ####################################
     sum:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    basic_execution:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    data_check:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    bss_check:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    stack_recursion:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    deep_recursion:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    array_plus_loop:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    func_plus_ptr:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    struct_ptr_arith:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    global_array:
+      tb: riscv_top_tb.sv
+      defines: []
+      tags: [system, slow, c_program]
+
+    combined_check:
       tb: riscv_top_tb.sv
       defines: []
       tags: [system, slow, c_program]

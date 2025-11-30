@@ -1,4 +1,5 @@
 #include "test_status.h"
+#include "stubs.h"
 
 int main() {
     int sum = 0;

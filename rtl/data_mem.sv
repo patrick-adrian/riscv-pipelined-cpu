@@ -36,6 +36,10 @@ module data_mem #(
 
     (* ram_style = "block" *) logic [31:0] RAM[8195:0];
 
+    initial begin
+        $readmemh(`DATA_HEX_FILE, RAM);
+    end
+
     always @(posedge clk_i) begin
 
         //Write logic
@@ -95,6 +99,5 @@ module data_mem #(
         endcase
 
     end
-
 
 endmodule
