@@ -4,7 +4,9 @@
 //  File:         alu.sv
 //  Description:  Paramaterized ALU
 //
-//  Author:       Patrick P
+//  Author:                     Viggo Woznoiak
+//  Reviewed/annotated by:      Patrick Pineda
+//
 //  DEPENDENCIES: control_macros.sv
 //
 //  Parameters:   WIDTH  - data width

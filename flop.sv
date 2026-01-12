@@ -4,7 +4,8 @@
 //  File:         flop.sv
 //  Description:  Generic parameterized D flip-flop with reset
 //
-//  Author:       Patrrick P
+//  Author:                     Viggo Woznoiak
+//  Reviewed/annotated by:      Patrick Pineda
 //
 //  Parameters:   WIDTH  - width of stored value
 //
