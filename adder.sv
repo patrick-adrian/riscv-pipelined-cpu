@@ -4,7 +4,7 @@
 //  File:         adder.sv
 //  Description:  Generic paramaterized adder
 //
-//  Author:                     Viggo Woznoiak
+//  Author:                     Viggo Wozniak
 //  Reviewed/annotated by:      Patrick Pineda
 //
 //  Parameters:   WIDTH  - data width

@@ -4,7 +4,7 @@
 //  File:         alu.sv
 //  Description:  Paramaterized ALU
 //
-//  Author:                     Viggo Woznoiak
+//  Author:                     Viggo Wozniak
 //  Reviewed/annotated by:      Patrick Pineda
 //
 //  DEPENDENCIES: control_macros.sv

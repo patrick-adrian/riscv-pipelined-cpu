@@ -4,7 +4,7 @@
 //  File:         decode_stage.sv
 //  Description:  All logic contained within the decode stage, along with its pipeline register
 //
-//  Author:                     Viggo Woznoiak
+//  Author:                     Viggo Wozniak
 //  Reviewed/annotated by:      Patrick Pineda
 //
 //  DEPENDENCIES: imm_extend.sv, flop.sv

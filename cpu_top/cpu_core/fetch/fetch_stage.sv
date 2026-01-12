@@ -4,7 +4,7 @@
 //  File:         fetch_stage.sv
 //  Description:  All logic contained within the fetch pipeline stage, along with its pipeline register
 //
-//  Author:                     Viggo Woznoiak
+//  Author:                     Viggo Wozniak
 //  Reviewed/annotated by:      Patrick Pineda
 //  
 //  DEPENDENCIES: flop.sv, adder.sv, control_macros.sv
