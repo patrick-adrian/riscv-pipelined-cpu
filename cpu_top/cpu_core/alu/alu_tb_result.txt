@@ -1,0 +1,10 @@
+Time | A         B         OP   RESULT      N Z C V
+5000 | 00000005 00000003 ADD  00000008 0 0 0 0
+10000 | 0000000a 00000003 SUB  00000007 0 0 1 0
+15000 | 00000003 0000000a SUB  fffffff9 1 0 0 0
+20000 | f0f0f0f0 0f0f0f0f AND  00000000 0 1 0 0
+25000 | f0f0f0f0 0f0f0f0f OR   ffffffff 1 0 0 0
+30000 | aaaaaaaa 55555555 XOR  ffffffff 1 0 0 0
+35000 | ffffffff 00000001 SLT  00000001 0 0 0 0
+40000 | ffffffff 00000001 SLTU 00000000 0 1 0 0
+alu_tb.sv:125: $finish called at 40000 (1ps)
