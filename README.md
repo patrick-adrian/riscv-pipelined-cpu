@@ -1,4 +1,4 @@
-Devlog: <br>
+<h1> Devlog </h1>
 Mon Jan 12: Add fetch stage RTL and diagram. <br>
 Tues Jan 13: Add decode diagram. <br>
 Sat Jan 24: Add to execute.drawio. <br>
