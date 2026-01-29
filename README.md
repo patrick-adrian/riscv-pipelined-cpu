@@ -1,3 +1,10 @@
+<h1> Objectives </h1>
+<ul>
+<li>Understand Biggo03's CPU pipeline</li>
+<li>Create a test framework and environment using SystemVerilog testbenches and iVerilog</li>
+<li>Build a UVM framework on top of all this</li>
+</ul>
+
 <h1> Devlog </h1>
 Mon Jan 12: Add fetch stage RTL and diagram. <br>
 Tues Jan 13: Add decode diagram. <br>
