@@ -1,7 +1,7 @@
 <h1> Objectives </h1>
 <ul>
-<li>Understand Biggo03's CPU pipeline and create diagrams for each RTL module <b><i>In progress </b></i></li>
-<li>Create a test framework and environment using SystemVerilog testbenches and iVerilog</li>
+<li>Understand Biggo03's CPU pipeline and create diagrams for each RTL module <b><i>(In progress)</b></i></li>
+<li>Create a test framework and environment using SystemVerilog testbenches and iVerilog <b><i>(In progress)</b></i></li></li>
 <li>Build a UVM framework on top of all this</li>
 </ul>
 
