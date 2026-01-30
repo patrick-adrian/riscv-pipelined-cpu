@@ -1,6 +1,7 @@
 <h1> Objectives </h1>
 <ul>
 <li>Understand Biggo03's CPU pipeline and create diagrams for each RTL module</li>
+    <progress id="obj1" value="32" max="100">32%</progress>
 <li>Create a test framework and environment using SystemVerilog testbenches and iVerilog</li>
 <li>Build a UVM framework on top of all this</li>
 </ul>
