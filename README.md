@@ -11,6 +11,7 @@
 <li>Tues Jan 13: Add decode diagram. </li>
 <li>Sat Jan 24: Add to execute.drawio. </li>
 <li>Tues Jan 27: Turn old laptop into 24/7 Linux server for iVerilog compilation and simulation via SSH. Add ALU testbench results. </li>
+<li>Sat Jan 31: Upload execute.png. </li>
 </ul>
 
 <h1> RISC-V Format and Instruction Set</h1>
