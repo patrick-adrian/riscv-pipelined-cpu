@@ -10,7 +10,8 @@
 //
 //  Parameters:   N/A
 //
-//  Notes:        N/A
+//  Notes:        Memory stage latches EX results, performs memory data width handling,
+//                generates forwarding data, and safely transports all control/data needed for WB updates
 //==============================================================//
 `include "control_macros.sv"
 

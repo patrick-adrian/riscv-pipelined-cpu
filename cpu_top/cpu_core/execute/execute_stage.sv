@@ -9,7 +9,8 @@
 //
 //  Parameters:   N/A
 //
-//  Notes:        N/A
+//  Notes:        Execute stage performs ALU ops, computes branch/jump targets, handles data forwarding,
+//                executes CSR ops, checks branch prediction correctness, and holds EX register.
 //==============================================================//
 `include "control_macros.sv"
 

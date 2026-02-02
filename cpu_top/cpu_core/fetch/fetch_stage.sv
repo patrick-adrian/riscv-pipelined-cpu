@@ -9,7 +9,7 @@
 //  
 //  DEPENDENCIES: flop.sv, adder.sv, control_macros.sv
 //
-//  Parameters:   N/A
+//  Parameters:   Fetches next instruction
 //==============================================================//
 `include "control_macros.sv"
 

@@ -11,7 +11,7 @@
 //
 //  Parameters:   N/A
 //
-//  Notes:        N/A
+//  Notes:        Generates signals required for execute stage
 //==============================================================//
 
 module decode_stage (
