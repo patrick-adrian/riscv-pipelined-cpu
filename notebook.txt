@@ -1,0 +1,171 @@
+IF, ID, EX, MEM, WB
+MEM and WB are separated because memory is slow and unpredictable
+Register writes must be clean, single-cycle, well-timed
+
+MEM - interacts with data memory, finalizes LOAD/STORE instructions, 
+passes through ALU results for non-memory ops
+LW: read from data memory usding address from EX
+SW: write data to memory
+*MEM stage does NOT modify reg finalizes
+Stores change memory, not registers
+Loads retrieve data, but do not commit yet
+
+WB - updates register file, commits results to reg file
+selects what gets written (Load data from MEM, ALU result from EX/MEM, CSR result, etc)
+selects rd (dest reg), controls reg_write
+
+EXAMPLE: lw x5, 0(x1)
+EX - address calculation
+MEM - memory read
+WB - Loaded value written into x5
+**If WB didn't exist as separate stage, forwarding logic chaos
+
+EXAMPLE: sw x5, 0(x1)
+EX - address calculation
+MEM - memory write
+WB: no reg write
+**Stores skip WB entirely
+
+EXAMPLE: add x3, x1, x2 (non-memory instruction)
+EX - ALU computation
+MEM - result just passes through
+WB - ALU result written to x3
+
+MEM STAGE PRODUCES RESULTS, WB STAGE COMMITS RESULTS.
+--------------------------------------------------------------------------------------------------------------
+DATA MEMORY VS. REG FILE
+DMEM - larger, slower storage outside datapath
+usually, single-ported, synchronous, bigger than reg file
+accessed in MEM STAGE only
+DMEM never accessed implicitly, only load/store instructions
+
+RF - small storage inside cpu 
+feed operands to ALU, receive results from WB, accessed every cycle
+accessed in Read: ID stage, Write: WB stage
+CPU can use it immediately without waiting
+--------------------------------------------------------------------------------------------------------------
+R-type (pure register ALU ops)
+
+add x3, x1, x2                  # x3 = x1 + x2
+IF - fetch
+ID - read x1, x2 from reg file
+EX - ALU computation
+MEM - Pass-through
+WB - write result to x3
+
+key signals:
+reg_write = 1
+alu_op = ADD 
+mem_read = 0
+mem_write = 0
+--------------------------------------------------------
+I-type (immediate arithmetic)
+
+addi x3, x1, 12                 # x3 = x1 + 12
+(same as R-type except operand B comes from immediate, not RF)
+ID - read x1, sign-extend immediate
+EX - ALU uses imm
+
+**imm values are resolved before EX
+--------------------------------------------------------
+Load instructions (memory -> register)
+
+lw x5, 0(x1)                    # x5 = MEM[x1 + 0]
+IF - fetch
+ID - Read x1, imm
+EX - compute address
+MEM - read data mem 
+WB - write to x5
+
+key signals:
+mem_read = 1
+reg_write = 1
+wb_sel = MEM
+
+**loads are only instructions that move data from memory into reg file (why load-use hazards exist)
+---------------------------------------------------------
+Store instructions (register -> memory)
+
+sw x5, 0(x1)                    # MEM[x1 + 0] = x5
+IF - fetch
+ID - read x1 (addr), x5 (data)
+EX - compute address
+MEM - write to data memory
+WB - nothing
+
+key signals:
+mem_write = 1
+reg_write - 0
+
+**Stores never write registers
+**LOAD/STORE NEEDS TO COMPUTE ADDRESS BECAUSE MEMORY IS NOT ADDRESSED BY REGISTERS 
+**IT'S ADDRESSED BY BYTE ADDRESSES
+**ex. lw x5, 8(x1)
+-> addr = base_register + offset
+register = pointer
+memory[register + offset]
+**telling cpu to add 8 bytes, access memory at that byte address, fetch 32-bit word starting there
+**all memory accesses in RISC architecture use effective addr computed by ALU
+----------------------------------------------------------
+Branch instructions (control flow)
+
+beq x1, x2, label               # if x1 == x2, PC <- target
+IF - fetch
+ID - read x1, x2, imm
+EX - compare + compute target
+MEM - often unused
+WB - nothing
+
+key signals:
+branch = 1
+pc_sel = branch_taken ? target: pc+4
+
+**branches don't write to RF, touch memory, but DO mess with pipeline
+------------------------------------------------------------
+Jump instructions
+
+jal x1, label                   $ x1 = PC + 4, PC = target
+IF - fetch
+ID - decode
+EX - compute target + PC+4
+MEM - pass-through
+WB - write link register
+
+**jumps write registers, branches don't
+------------------------------------------------------------
+CSR / special instructions
+csrrw x1, csr, x2
+
+--------------------------------------------------------------------------------------------------------------
+data memory is byte-addressable
+every address refers to one byte (8 bits)
+byte at 0x1000 -> 8 bits
+byte at 0x1001 -> next 8 bits
+byte at 0x1002 -> next 8 bits
+A word (32 bits) is just 4 consecutive byte ADDRESSES
+ex. lw x5 0(x1)
+-> read bytes at:
+    address
+    address + 1
+    address + 2
+    address + 3
+assemble into 32-bit value.
+
+WHY?
+1. different data sizes must coexist
+char (1 byte)
+short (2 bytes)
+int (4 bytes)
+double (8 bytes)
+structs (mixed)
+
+Registers: no address, sub-address, concept of bytes
+x5 = 32-bit value
+You can't say x5 + 1 byte.
+Registers are identified by name or index (x0-x31)              #x stands for XLEN
+                                                                #RV32 -> 32-bit registers
+                                                                #x5 = one XLEN-wide value
+Accessed as a whole, always read or written in full width
+
+Register's don't need to be byte-addressable because they're meant for computation, not storage layout
+Memory is byte-addressed storage, registers are named storage elements with no address space
