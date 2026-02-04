@@ -44,7 +44,7 @@ module memory_stage (
 
     // data outputs
     output logic [31:0] instr_mem_o,        //instr now in mem stage
-    output logic [31:0] reduced_data_mem_o, 
+    output logic [31:0] reduced_data_mem_o, //canverts raw memory data into reduced format, sent to WB stage
     output logic [31:0] alu_result_mem_o,
     output logic [31:0] write_data_mem_o,
     output logic [31:0] pc_target_mem_o,
