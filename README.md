@@ -13,6 +13,8 @@
 <li>Tues Jan 27: Turn old laptop into 24/7 Linux server for iVerilog compilation and simulation via SSH. Add ALU testbench results. </li>
 <li>Sat Jan 31: Upload execute.png. </li>
 <li>Mon Feb 2: Add writeback stage and reg file RTL. </li>
+<li>Wed Feb 4: Add notebook, memory stage diagram, and data mem RTL. </li>
+<li>Thurs Feb 5: Add writeback stage diagram, fix repo structure. </li>
 </ul>
 
 <h1> RISC-V Format and Instruction Set</h1>
