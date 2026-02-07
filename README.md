@@ -15,6 +15,8 @@
 <li>Mon Feb 2: Add writeback stage and reg file RTL. </li>
 <li>Wed Feb 4: Add notebook, memory stage diagram, and data mem RTL. </li>
 <li>Thurs Feb 5: Add writeback stage diagram, fix repo structure. </li>
+<li>Fri Feb 6: Reorg, fix decode diagram. </li>
+<li>Sat Feb 7: Fix datapath diagrams, reg file diagram. </li>
 </ul>
 
 <h1> RISC-V Format and Instruction Set</h1>
