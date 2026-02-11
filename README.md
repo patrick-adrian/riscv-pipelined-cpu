@@ -17,6 +17,7 @@
 <li>Thurs Feb 5: Add writeback stage diagram, fix repo structure. </li>
 <li>Fri Feb 6: Reorg, fix decode diagram. </li>
 <li>Sat Feb 7: Fix datapath diagrams, reg file diagram. </li>
+<li>Mon Feb 9: Add datapath and CSR reg RTL. Add reg file diagram. </li>
 </ul>
 
 <h1> RISC-V Format and Instruction Set</h1>
