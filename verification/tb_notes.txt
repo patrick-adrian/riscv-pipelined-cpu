@@ -1,0 +1,23 @@
+* Typical testbench pattern:
+* 1. Initialize signals
+* 2. Apply test vectors (stimulus)
+* 3. Wait for propagation (#delay)
+* 4. Check outputs (verification)
+* 5. Report results
+* 6. Finish simulation
+
+**Choose iverilog if:**
+- ✅ You're learning verification
+- ✅ You prefer Verilog/SystemVerilog syntax
+- ✅ You need SystemVerilog classes/interfaces
+- ✅ Quick prototyping is your priority
+- ✅ Design complexity is low to medium
+
+**Choose Verilator if:**
+- ✅ Performance is critical
+- ✅ You're comfortable with C++
+- ✅ Design is large or complex
+- ✅ You need C++ library integration
+- ✅ Production verification environment
+
+
