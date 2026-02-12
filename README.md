@@ -18,6 +18,7 @@
 <li>Fri Feb 6: Reorg, fix decode diagram. </li>
 <li>Sat Feb 7: Fix datapath diagrams, reg file diagram. </li>
 <li>Mon Feb 9: Add datapath and CSR reg RTL. Add reg file diagram. </li>
+<li>Wed Feb 11: Forked modules. Begin learning modules for RTL testbenches and UVM. </li>
 </ul>
 
 <h1> RISC-V Format and Instruction Set</h1>
