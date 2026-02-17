@@ -5,6 +5,15 @@
 <li>Build a UVM framework on top of all this</li>
 </ul>
 
+<h1> Goals </h1>
+<ul>
+<li>End of February: Complete RTL testbench modules </li>
+<li>End of March: Complete verification planning modules </li>
+<li>End of April: Complete UVM modules </li>
+<li>End of May: Rudimentary UVM tb for Pipelined CPU </li>
+<li>June onward: Minimal GPU, AXI Cache modules</li>
+</ul>
+
 <h1> Devlog </h1>
 <ul>
 <li>Mon Jan 12: Add fetch stage RTL and diagram. </li>
@@ -19,6 +28,8 @@
 <li>Sat Feb 7: Fix datapath diagrams, reg file diagram. </li>
 <li>Mon Feb 9: Add datapath and CSR reg RTL. Add reg file diagram. </li>
 <li>Wed Feb 11: Forked modules. Begin learning modules for RTL testbenches and UVM. </li>
+<li>Tues Feb 17: Completed Module 0: RTL testbenches. </li>
+
 </ul>
 
 <h1> RISC-V Format and Instruction Set</h1>
