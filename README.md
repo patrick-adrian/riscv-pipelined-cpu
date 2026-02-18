@@ -7,7 +7,7 @@
 
 <h1> Goals </h1>
 <ul>
-<li>End of February: Complete RTL testbench modules </li>
+<li>End of February: Complete RTL testbench modules. Create SV and C++ testbenches for pipeline stages. </li>
 <li>End of March: Complete verification planning modules </li>
 <li>End of April: Complete UVM modules </li>
 <li>End of May: Rudimentary UVM tb for Pipelined CPU </li>
