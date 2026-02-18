@@ -20,4 +20,73 @@
 - ✅ You need C++ library integration
 - ✅ Production verification environment
 
+Module 0 Key Takeaways:
+SV/iVerilog:
+reg is for signals driven by tb
+wire is for signals observed/monitored by tb
+tasks are basically functions that can be reused
 
+C++/Verilator:
+$display
+int main(int argc, char** argv){
+
+    Verilated::commandArgs(argc, argv); //process CLI arguments for verilator options
+        // test procedure
+    dut->a = 0;  // Set input A to 0
+    dut->b = 0;  // Set input B to 0
+    dut->eval(); // Evaluate combinational logic
+}
+
+Testbench class
+    constructor, destructor, void check((uint8_t a_val, uint8_t b_val, uint8_t expected)
+    void run(tests)
+
+Module 1 Key Takeaways:
+SV/iVerilog:
+reg[1:0] test_vector [0:3]  // indices 0, 1, 2, 3
+        // Example test_vectors.hex:
+        //   00
+        //   01
+        //   10
+        //   11
+        // 
+        // test_vector[0] = 2'h00 (a=0, b=0)
+        // test_vector[1] = 2'h01 (a=0, b=1)
+        // test_vector[2] = 2'h10 (a=1, b=0)
+        // test_vector[3] = 2'h11 (a=1, b=1)
+$readmemh("test_vectors.hex", test_vector);      // Read test inputs
+
+always begin
+        clk = 0;     // Clock low
+        #10;         // Wait 10ns (half period)
+        clk = 1;     // Clock high (rising edge - counter updates here)
+        #10;         // Wait 10ns (half period)
+        // Loop forever (creates continuous clock)
+    end
+
+C++/Verilator:
+// Monitor all relevant signals - prints automatically on changes
+$monitor
+// $strobe prints at the END of the current time step (after all assignments)
+
+Module 2 Key Takeaways:
+C++/Verilator:
+#include <iostream>      // Console I/O
+#include <fstream>       // File I/O (ifstream, ofstream)
+#include <sstream>        // String stream for parsing
+#include <vector>         // Dynamic array for test vectors
+#include <cassert>        // Assertions
+#include <verilated.h>    // Verilator core
+#include "Vand_gate.h"    // Generated wrapper
+
+/**
+ * TestVector Structure
+ * 
+ * Represents a single test case with inputs and expected output.
+ * This structure makes test data self-documenting and easy to manage.
+ */
+struct TestVector {
+    uint8_t a;         // Input A
+    uint8_t b;         // Input B
+    uint8_t expected;  // Expected output
+};
