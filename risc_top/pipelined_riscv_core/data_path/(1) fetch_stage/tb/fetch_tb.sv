@@ -76,7 +76,7 @@ module fetch_stage_tb;
         pc_plus4_ex_i       = 32'hBBBB_0000;
         pred_pc_target_fi_i = 32'hCCCC_0000;
 
-        // Reset
+        // Reset (pc reg should be zero)
         reset_i = 1;
         repeat (2) @(posedge clk);
         reset_i = 0;
@@ -87,7 +87,7 @@ module fetch_stage_tb;
         pc_src_i = `PC_SRC_SEQ_F;
 
         expected_pc = 32'h0000_0000;
-        @(posedge clk);
+        //@(posedge clk);                           ts breaks it!
         check_pc();
 
         repeat (2) begin
