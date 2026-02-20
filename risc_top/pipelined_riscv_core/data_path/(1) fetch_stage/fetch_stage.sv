@@ -11,7 +11,7 @@
 //
 //  Parameters:   Fetches next instruction
 //==============================================================//
-`include "control_macros.sv"
+`include "../../../../../common/control_macros.sv"
 
 module fetch_stage (
     // Clock & reset_i

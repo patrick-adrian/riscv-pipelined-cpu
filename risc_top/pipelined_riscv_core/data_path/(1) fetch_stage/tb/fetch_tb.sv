@@ -1,5 +1,11 @@
 `timescale 1ns/1ps
 
+`include "control_macros.sv"
+
+// To run TB:
+// iverilog -g2012 fetch_tb.sv ../fetch_stage.sv  -I ../../../../../common/ ../../../../../common/adder.sv ../../../../../common/flop.sv -o fetch_tb.out
+// vvp fetch_tb.out
+
 module fetch_stage_tb;
 
     // -------------------------------------------------

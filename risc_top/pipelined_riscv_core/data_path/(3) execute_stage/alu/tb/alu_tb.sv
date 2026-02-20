@@ -1,5 +1,10 @@
 `timescale 1ns / 1ps
-`include "control_macros.sv"  // Make sure your ALU macros are defined here
+`include "control_macros.sv" 
+
+// To run TB:
+// cd ./alu/tb
+// iverilog -g2012 alu_tb.sv ../alu.sv  -I ../../../../../../common/ -o alu_tb.out
+// vvp alu_tb.out
 
 module alu_tb;
 
