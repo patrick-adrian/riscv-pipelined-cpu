@@ -3,8 +3,9 @@
 `include "control_macros.sv"
 
 // To run TB:
-// iverilog -g2012 fetch_tb.sv ../fetch_stage.sv  -I ../../../../../common/ ../../../../../common/adder.sv ../../../../../common/flop.sv -o fetch_tb.out
+// iverilog -g2012 fetch_tb.sv ../fetch_stage.sv  -I ../../../../../common/ ../../../../../common/adder.sv ../../../../../common/flop.sv -o fetch_tb
 // vvp fetch_tb.out
+// gtkwave fetch_tb.vcd
 
 module fetch_stage_tb;
 
@@ -139,6 +140,12 @@ module fetch_stage_tb;
 
         $display("All tests PASSED.");
         $finish;
+    end
+
+    initial begin
+        $dumpfile("fetch_tb.vcd");           // Set VCD output filename
+        $dumpvars(0, fetch_stage_tb);              // Dump all signals (level 0 = full hierarchy)
+        $dumpvars(1, dut);                          // Explicitly dump DUT signals (redundant but safe)
     end
 
 endmodule
