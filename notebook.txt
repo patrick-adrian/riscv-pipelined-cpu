@@ -169,3 +169,11 @@ Accessed as a whole, always read or written in full width
 
 Register's don't need to be byte-addressable because they're meant for computation, not storage layout
 Memory is byte-addressed storage, registers are named storage elements with no address space
+-----------------------------
+task vs function in SV:
+functions execute in zero simulation time, behave like comb logic, returns single value
+tasks consume time, multiple outputs
+ALWAYS do task automatic... or function automatic, or else vars are shared bwtn. calls
+
+tbs shouldn't use same logic to calculate expected values,
+rather, use a "golden reference model"
