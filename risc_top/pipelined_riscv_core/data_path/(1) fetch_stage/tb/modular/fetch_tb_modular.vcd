@@ -1,0 +1,260 @@
+$date
+	Tue Feb 24 16:26:58 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module fetch_tb $end
+$var wire 1 ! stall_fi_i $end
+$var wire 1 " reset_i $end
+$var wire 32 # pred_pc_target_fi_i [31:0] $end
+$var wire 32 $ pc_target_ex_i [31:0] $end
+$var wire 2 % pc_src_i [1:0] $end
+$var wire 32 & pc_plus4_fi_o [31:0] $end
+$var wire 32 ' pc_plus4_ex_i [31:0] $end
+$var wire 32 ( pc_fi_o [31:0] $end
+$var wire 1 ) clk_i $end
+$scope module check $end
+$var wire 1 ! stall_fi_i $end
+$var wire 1 " reset_i $end
+$var wire 32 * pred_pc_target_fi_i [31:0] $end
+$var wire 32 + pc_target_ex_i [31:0] $end
+$var wire 2 , pc_src_i [1:0] $end
+$var wire 32 - pc_plus4_ex_i [31:0] $end
+$var wire 32 . pc_fi_o [31:0] $end
+$var wire 1 ) clk_i $end
+$var reg 32 / expected_pc [31:0] $end
+$upscope $end
+$scope module dut $end
+$var wire 1 ! stall_fi_i $end
+$var wire 1 " reset_i $end
+$var wire 32 0 pred_pc_target_fi_i [31:0] $end
+$var wire 32 1 pc_target_ex_i [31:0] $end
+$var wire 2 2 pc_src_i [1:0] $end
+$var wire 32 3 pc_plus4_fi_o [31:0] $end
+$var wire 32 4 pc_plus4_ex_i [31:0] $end
+$var wire 32 5 pc_fi_o [31:0] $end
+$var wire 1 ) clk_i $end
+$var reg 32 6 pc_next_fi [31:0] $end
+$scope module u_adder_pc_plus4 $end
+$var wire 32 7 b [31:0] $end
+$var wire 32 8 y [31:0] $end
+$var wire 32 9 a [31:0] $end
+$var parameter 32 : WIDTH $end
+$upscope $end
+$scope module u_pc_reg $end
+$var wire 32 ; D [31:0] $end
+$var wire 1 < en $end
+$var wire 1 " reset $end
+$var wire 1 ) clk_i $end
+$var parameter 32 = WIDTH $end
+$var reg 32 > Q [31:0] $end
+$upscope $end
+$upscope $end
+$scope module mon $end
+$var wire 32 ? pc_fi_o [31:0] $end
+$var wire 32 @ pc_plus4_fi_o [31:0] $end
+$var wire 1 ! stall_fi_i $end
+$var wire 1 " reset_i $end
+$var wire 32 A pred_pc_target_fi_i [31:0] $end
+$var wire 32 B pc_target_ex_i [31:0] $end
+$var wire 2 C pc_src_i [1:0] $end
+$var wire 32 D pc_plus4_ex_i [31:0] $end
+$var wire 1 ) clk_i $end
+$upscope $end
+$scope module stim $end
+$var reg 1 ) clk_i $end
+$var reg 32 E pc_plus4_ex_i [31:0] $end
+$var reg 2 F pc_src_i [1:0] $end
+$var reg 32 G pc_target_ex_i [31:0] $end
+$var reg 32 H pred_pc_target_fi_i [31:0] $end
+$var reg 1 " reset_i $end
+$var reg 1 ! stall_fi_i $end
+$upscope $end
+$upscope $end
+$scope module fetch_tb $end
+$scope module dut $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b100000 =
+b100000 :
+$end
+#0
+$dumpvars
+b11001100110011000000000000000000 H
+b10101010101010100000000000000000 G
+b0 F
+b10111011101110110000000000000000 E
+b10111011101110110000000000000000 D
+b0 C
+b10101010101010100000000000000000 B
+b11001100110011000000000000000000 A
+bx @
+bx ?
+bx >
+1<
+bx ;
+bx 9
+bx 8
+b100 7
+bx 6
+bx 5
+b10111011101110110000000000000000 4
+bx 3
+b0 2
+b10101010101010100000000000000000 1
+b11001100110011000000000000000000 0
+bx /
+bx .
+b10111011101110110000000000000000 -
+b0 ,
+b10101010101010100000000000000000 +
+b11001100110011000000000000000000 *
+0)
+bx (
+b10111011101110110000000000000000 '
+bx &
+b0 %
+b10101010101010100000000000000000 $
+b11001100110011000000000000000000 #
+1"
+0!
+$end
+#10000
+b100 6
+b100 ;
+b100 &
+b100 3
+b100 8
+b100 @
+b0 (
+b0 .
+b0 5
+b0 9
+b0 >
+b0 ?
+b0 /
+1)
+#20000
+0)
+#30000
+b1000 6
+b1000 ;
+b100 /
+b1000 &
+b1000 3
+b1000 8
+b1000 @
+b100 (
+b100 .
+b100 5
+b100 9
+b100 >
+b100 ?
+0"
+1)
+#40000
+0)
+#50000
+b1100 6
+b1100 ;
+b1100 &
+b1100 3
+b1100 8
+b1100 @
+b1000 (
+b1000 .
+b1000 5
+b1000 9
+b1000 >
+b1000 ?
+b1000 /
+1)
+#60000
+0)
+#70000
+b10000 6
+b10000 ;
+b1100 /
+b10000 &
+b10000 3
+b10000 8
+b10000 @
+b1100 (
+b1100 .
+b1100 5
+b1100 9
+b1100 >
+b1100 ?
+1)
+#80000
+0)
+#90000
+b10100 &
+b10100 3
+b10100 8
+b10100 @
+b10000 (
+b10000 .
+b10000 5
+b10000 9
+b10000 >
+b10000 ?
+b10000 /
+b11001100110011000000000000000000 6
+b11001100110011000000000000000000 ;
+b1 %
+b1 ,
+b1 2
+b1 C
+b1 F
+1)
+#100000
+0)
+#110000
+b10111011101110110000000000000000 /
+b11001100110011000000000000000100 &
+b11001100110011000000000000000100 3
+b11001100110011000000000000000100 8
+b11001100110011000000000000000100 @
+b11001100110011000000000000000000 (
+b11001100110011000000000000000000 .
+b11001100110011000000000000000000 5
+b11001100110011000000000000000000 9
+b11001100110011000000000000000000 >
+b11001100110011000000000000000000 ?
+b10111011101110110000000000000000 6
+b10111011101110110000000000000000 ;
+b10 %
+b10 ,
+b10 2
+b10 C
+b10 F
+1)
+#120000
+0)
+#130000
+b10111011101110110000000000000100 &
+b10111011101110110000000000000100 3
+b10111011101110110000000000000100 8
+b10111011101110110000000000000100 @
+b10111011101110110000000000000000 (
+b10111011101110110000000000000000 .
+b10111011101110110000000000000000 5
+b10111011101110110000000000000000 9
+b10111011101110110000000000000000 >
+b10111011101110110000000000000000 ?
+b10101010101010100000000000000000 6
+b10101010101010100000000000000000 ;
+b11 %
+b11 ,
+b11 2
+b11 C
+b11 F
+1)
