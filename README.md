@@ -31,6 +31,7 @@
 <li>Tues Feb 17: Completed Module 0: RTL testbenches. </li>
 <li>Thurs Feb 19: Added testbenches for fetch module. </li>
 <li>Sat Feb 21: Added Remote - SSH extension to SSH into Linux server for local compilation and simulation of TBs. Added waveform compilation for fetch TB. </li>
+<li> Tues Feb 24: Added modular SV testbench for fetch stage. </li>
 
 </ul>
 
