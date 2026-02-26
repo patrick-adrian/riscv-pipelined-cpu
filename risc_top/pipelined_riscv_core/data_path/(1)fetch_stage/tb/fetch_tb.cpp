@@ -1,6 +1,12 @@
 #include <verilated.h>
 #include "Vfetch_stage.h"
 
+// To run TB:
+// cd ../\(1)fetch_stage/tb
+// verilator -Wall -cc ../fetch_stage.sv ../../../../../common/adder.sv ../../../../../common/flop.sv --exe fetch_tb.cpp --build --trace
+// ./obj_dir/Vfetch_stage 
+// gtkwave fetch_tb_classbased.vcd
+
 vluint64_t sim_time = 0;
 
 double sc_time_stamp() {
