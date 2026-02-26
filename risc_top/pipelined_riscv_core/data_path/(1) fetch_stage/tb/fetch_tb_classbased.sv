@@ -2,11 +2,12 @@
 
 `include "control_macros.sv"
 
+// ***iVerilog DOES NOT SUPPORT MAILBOX, CANNOT COMPILE
 // To run TB:
 // cd ../\(1) fetch_stage/tb
-// iverilog -g2012 class_based/fetch_tb_class_based.sv ../../fetch_stage.sv  -I ../../../../../../common/ ../../../../../../common/adder.sv ../../../../../../common/flop.sv -o fetch_tb_class_based.out
-// vvp fetch_tb_class_based.out
-// gtkwave fetch_tb_class_based.vcd
+// iverilog -g2012 fetch_tb_classbased.sv ../fetch_stage.sv  -I ../../../../../common/ ../../../../../common/adder.sv ../../../../../common/flop.sv -o fetch_tb_classbased.out
+// vvp fetch_tb_classbased.out
+// gtkwave fetch_tb_classbased.vcd
 
 interface fetch_if(input logic clk);
 
@@ -253,4 +254,11 @@ module fetch_tb;
         #500 $finish;
     end
 
+    initial begin
+        $dumpfile("fetch_tb_classbased.vcd");        
+        $dumpvars(0, fetch_tb);             
+        $dumpvars(1, dut);                         
+    end
+
 endmodule
+

@@ -4,7 +4,7 @@
 
 // To run TB:
 // cd ../\(1) fetch_stage/tb
-// iverilog -g2012 fetch_tb_modular.sv ../../fetch_stage.sv  -I ../../../../../../common/ ../../../../../../common/adder.sv ../../../../../../common/flop.sv -o fetch_tb_modular.out
+// iverilog -g2012 fetch_tb_modular.sv ../fetch_stage.sv  -I ../../../../../common/ ../../../../../common/adder.sv ../../../../../common/flop.sv -o fetch_tb_modular.out
 // vvp fetch_tb_modular.out
 // gtkwave fetch_tb_modular.vcd
 
