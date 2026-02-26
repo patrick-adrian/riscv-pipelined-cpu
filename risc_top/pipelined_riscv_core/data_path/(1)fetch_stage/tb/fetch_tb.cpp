@@ -1,5 +1,6 @@
 #include <verilated.h>
 #include "Vfetch_stage.h"
+#include <verilated_vcd_c.h>
 
 // To run TB:
 // cd ../\(1)fetch_stage/tb
@@ -27,7 +28,13 @@ void tick(Vfetch_stage* dut) {
 int main(int argc, char** argv) {
 
     Verilated::commandArgs(argc, argv);
+    Verilated::traceEverOn(true);
+
     Vfetch_stage* dut = new Vfetch_stage;
+    VerilatedVcdC* tfp = new VerilatedVcdC;
+
+    dut->trace(tfp, 99);
+    tfp->open("fetch_tb_cpp.vcd");
 
     // -------------------------------
     // Initialize inputs
@@ -40,9 +47,12 @@ int main(int argc, char** argv) {
     dut->pc_plus4_ex_i  = 0xBBBB0000;
     dut->pred_pc_target_fi_i = 0xCCCC0000;
 
+    tfp->dump(sim_time);
     // Apply reset for 2 cycles
     tick(dut);
     tick(dut);
+
+    tfp->dump(sim_time);
 
     dut->reset_i = 0;
 
@@ -59,6 +69,8 @@ int main(int argc, char** argv) {
                expected, dut->pc_fi_o);
         return 1;
     }
+
+    tfp->dump(sim_time);
 
     for (int i = 0; i < 2; i++) {
         expected += 4;
