@@ -7,11 +7,11 @@
 
 <h1> Goals </h1>
 <ul>
-<li>End of February: Complete RTL testbench modules. Create SV and C++ testbenches for pipeline stages. </li>
-<li>End of March: Complete verification planning modules </li>
-<li>End of April: Complete UVM modules </li>
-<li>End of May: Rudimentary UVM tb for Pipelined CPU </li>
-<li>June onward: Minimal GPU, AXI Cache modules</li>
+<li>End of February: Begin SV and C++ testbench modules. Begin creating SV and (mostly) C++ testbenches for pipeline stages. </li>
+<li>End of March: Go over verification planning modules. Begin top-level CPU C++ testbench. </li>
+<li>End of April: Complete UVM modules. </li>
+<li>End of May: Rudimentary UVM tb for Pipelined CPU. </li>
+<li>June onward: Minimal GPU, AXI Cache modules. </li>
 </ul>
 
 <h1> Devlog </h1>
@@ -32,6 +32,7 @@
 <li>Thurs Feb 19: Added testbenches for fetch module. </li>
 <li>Sat Feb 21: Added Remote - SSH extension to SSH into Linux server for local compilation and simulation of TBs. Added waveform compilation for fetch TB. </li>
 <li> Tues Feb 24: Added modular SV testbench for fetch stage. </li>
+<li> Thurs Feb 26: Added C++ testbench for fetch stage. </li>
 
 </ul>
 
