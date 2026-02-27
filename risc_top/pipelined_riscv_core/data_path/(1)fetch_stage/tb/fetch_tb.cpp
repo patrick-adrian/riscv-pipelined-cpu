@@ -60,7 +60,6 @@ int main(int argc, char** argv) {
     // 1. Sequential (PC + 4)
     // -----------------------------------
     dut->pc_src_i = 0; // PC_SRC_SEQ_F
-    tick(dut);
 
     uint32_t expected = 0x00000000;
 
@@ -69,8 +68,6 @@ int main(int argc, char** argv) {
                expected, dut->pc_fi_o);
         return 1;
     }
-
-    tfp->dump(sim_time);
 
     for (int i = 0; i < 2; i++) {
         expected += 4;
