@@ -1,0 +1,9 @@
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/operation-locked-in/Documents/riscv-pipelined-cpu/risc_top/pipelined_riscv_core/data_path/(1)fetch_stage/fetch_stage.sv" into library work
+INFO: [VRFC 10-311] analyzing module fetch_stage
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/operation-locked-in/Documents/riscv-pipelined-cpu/risc_top/pipelined_riscv_core/data_path/(1)fetch_stage/tb/fetch_tb.sv" into library work
+INFO: [VRFC 10-311] analyzing module fetch_tb
+WARNING: [VRFC 10-3824] variable 'txn' must explicitly be declared as automatic or static [/home/operation-locked-in/Documents/riscv-pipelined-cpu/risc_top/pipelined_riscv_core/data_path/(1)fetch_stage/tb/fetch_tb.sv:63]
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/operation-locked-in/Documents/riscv-pipelined-cpu/common/flop.sv" into library work
+INFO: [VRFC 10-311] analyzing module flop
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/operation-locked-in/Documents/riscv-pipelined-cpu/common/adder.sv" into library work
+INFO: [VRFC 10-311] analyzing module adder

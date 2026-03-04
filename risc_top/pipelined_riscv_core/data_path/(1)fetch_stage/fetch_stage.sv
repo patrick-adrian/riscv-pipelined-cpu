@@ -10,8 +10,9 @@
 //  DEPENDENCIES: flop.sv, adder.sv, control_macros.sv
 //
 //  Parameters:   Fetches next instruction
+//  COMPILE IN VIVADO: xvlog fetch_stage.sv -i ../../../../common/ -sv
 //==============================================================//
-`include "../../../../../common/control_macros.sv"
+`include "../../../../common/control_macros.sv"
 
 module fetch_stage (
     // Clock & reset_i

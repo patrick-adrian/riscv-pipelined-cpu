@@ -3,150 +3,70 @@
 `include "control_macros.sv"
 
 // To run TB:
-// cd ../\(1)fetch_stage/tb
-// iverilog -g2012 fetch_tb.sv ../fetch_stage.sv  -I ../../../../../common/ ../../../../../common/adder.sv ../../../../../common/flop.sv -o fetch_tb.out
-// vvp fetch_tb.out
-// gtkwave fetch_tb.vcd
+// cd ../\(1)fetch_stage
+// vivado -mode tcl
+// xvlog fetch_stage.sv ./tb/fetch_tb.sv -i ../../../../common/ -sv ../../../../common/flop.sv ../../../../common/adder.sv
+// xelab fetch_tb -s sim
+// xsim sim -runall
 
-module fetch_stage_tb;
+`include "fetch_if.sv"
+`include "fetch_txn.sv"
+`include "fetch_driver.sv"
+`include "fetch_monitor.sv"
+`include "fetch_scoreboard.sv"
 
-    // -------------------------------------------------
-    // DUT Signals
-    // -------------------------------------------------
-    logic        clk;
-    logic        reset_i;
+module fetch_tb;
 
-    logic [1:0]  pc_src_i;
-    logic        stall_fi_i;
-
-    logic [31:0] pc_target_ex_i;
-    logic [31:0] pc_plus4_ex_i;
-    logic [31:0] pred_pc_target_fi_i;
-
-    logic [31:0] pc_fi_o;
-    logic [31:0] pc_plus4_fi_o;
-
-    // -------------------------------------------------
-    // DUT Instance
-    // -------------------------------------------------
-    fetch_stage dut (
-        .clk_i                  (clk),
-        .reset_i                (reset_i),
-        .pc_src_i               (pc_src_i),
-        .stall_fi_i             (stall_fi_i),
-        .pc_target_ex_i         (pc_target_ex_i),
-        .pc_plus4_ex_i          (pc_plus4_ex_i),
-        .pred_pc_target_fi_i    (pred_pc_target_fi_i),
-        .pc_fi_o                (pc_fi_o),
-        .pc_plus4_fi_o          (pc_plus4_fi_o)
-    );
-
-    // -------------------------------------------------
-    // Clock Generation (10ns period)
-    // -------------------------------------------------
-    initial clk = 0;
+    logic clk;
     always #5 clk = ~clk;
 
-    // -------------------------------------------------
-    // Scoreboard tracking expected PC
-    // -------------------------------------------------
-    logic [31:0] expected_pc;
+    fetch_if vif(clk);
 
-    task automatic check_pc();
-        #1; // settle
-        if (pc_fi_o !== expected_pc) begin
-            $display("❌ ERROR @ %0t | expected: %h | got: %h",
-                     $time, expected_pc, pc_fi_o);
-            $fatal;
-        end
-        else begin
-            $display("✅ PASS @ %0t | PC = %h",
-                     $time, pc_fi_o);
-        end
-    endtask
+    fetch_stage dut (
+        .clk_i(clk),
+        .reset_i(vif.reset),
+        .pc_src_i(vif.pc_src),
+        .stall_fi_i(vif.stall),
+        .pc_target_ex_i(vif.pc_target_ex),
+        .pc_plus4_ex_i(vif.pc_plus4_ex),
+        .pred_pc_target_fi_i(vif.pred_pc_target),
+        .pc_fi_o(vif.pc),
+        .pc_plus4_fi_o(vif.pc_plus4)
+    );
 
-    // -------------------------------------------------
-    // Test Sequence
-    // -------------------------------------------------
-    initial begin
-        $display("Starting fetch_stage test...");
+    mailbox #(fetch_txn) drv_mbx = new();
+    mailbox #(fetch_txn) scb_drv_mbx = new();
+    mailbox #(logic [31:0]) mon_mbx = new();
 
-        // Default values
-        pc_src_i            = 2'b00;
-        stall_fi_i          = 0;
-        pc_target_ex_i      = 32'hAAAA_0000;
-        pc_plus4_ex_i       = 32'hBBBB_0000;
-        pred_pc_target_fi_i = 32'hCCCC_0000;
-
-        // Reset (pc reg should be zero)
-        reset_i = 1;
-        repeat (2) @(posedge clk);
-        reset_i = 0;
-
-        // -----------------------------------------
-        // 1. Sequential increments (PC + 4)
-        // -----------------------------------------
-        pc_src_i = `PC_SRC_SEQ_F;
-
-        expected_pc = 32'h0000_0000;
-        //@(posedge clk);                           ts breaks it!
-        check_pc();
-
-        repeat (2) begin
-            expected_pc = expected_pc + 4;
-            @(posedge clk);
-            check_pc();
-        end
-
-        // -----------------------------------------
-        // 2. Branch prediction source
-        // -----------------------------------------
-        pc_src_i = `PC_SRC_PRED_F;
-        expected_pc = pred_pc_target_fi_i;
-        @(posedge clk);
-        check_pc();
-
-        // -----------------------------------------
-        // 3. EX sequential redirect
-        // -----------------------------------------
-        pc_src_i = `PC_SRC_SEQ_E;
-        expected_pc = pc_plus4_ex_i;
-        @(posedge clk);
-        check_pc();
-
-        // -----------------------------------------
-        // 4. EX target redirect
-        // -----------------------------------------
-        pc_src_i = `PC_SRC_TARGET_E;
-        expected_pc = pc_target_ex_i;
-        @(posedge clk);
-        check_pc();
-
-        // -----------------------------------------
-        // 5. Stall check (PC must not change)
-        // -----------------------------------------
-        pc_src_i   = `PC_SRC_SEQ_F;
-        stall_fi_i = 1;
-
-        @(posedge clk);
-        #1;
-        if (pc_fi_o !== expected_pc) begin
-            $display("❌ ERROR: Stall failed!");
-            $fatal;
-        end
-        else
-            $display("✅ PASS: Stall held PC");
-
-        stall_fi_i = 0;
-
-        $display("All tests PASSED.");
-        $finish;
-    end
+    fetch_driver     driver;
+    fetch_monitor    monitor;
+    fetch_scoreboard scoreboard;
 
     initial begin
-        $dumpfile("fetch_tb.vcd");           // Set VCD output filename
-        $dumpvars(0, fetch_stage_tb);              // Dump all signals (level 0 = full hierarchy)
-        $dumpvars(1, dut);                          // Explicitly dump DUT signals (redundant but safe)
+        clk = 0;
+        vif.reset = 1;
+        repeat(2) @(posedge clk);
+        vif.reset = 0;
+
+        driver = new(vif, drv_mbx);
+        monitor = new(vif, mon_mbx);
+        scoreboard = new(scb_drv_mbx, mon_mbx);
+
+        fork
+            driver.run();
+            monitor.run();
+            scoreboard.run();
+        join_none
+
+        // Generate transactions
+        repeat (20) begin
+            fetch_txn txn = new();
+            assert(txn.randomize());
+            drv_mbx.put(txn);
+            scb_drv_mbx.put(txn);
+        end
+
+        #200 $finish;
     end
 
 endmodule
