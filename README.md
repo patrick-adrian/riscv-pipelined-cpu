@@ -33,6 +33,9 @@
 <li>Sat Feb 21: Added Remote - SSH extension to SSH into Linux server for local compilation and simulation of TBs. Added waveform compilation for fetch TB. </li>
 <li> Tues Feb 24: Added modular SV testbench for fetch stage. </li>
 <li> Thurs Feb 26: Added C++ testbench for fetch stage. </li>
+<li> Sat Feb 28: New plan: Focus on full UVM and SV testbenches. Need proper tooling for doing so. </li>
+<li> Mon Mar 2: Installed Vivado on Linux home server. </li>
+<li> Tues Mar 3: Added UVM tb for fetch stage and compilation with Vivado. </li>
 
 </ul>
 
