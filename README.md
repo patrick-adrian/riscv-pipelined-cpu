@@ -7,11 +7,10 @@
 
 <h1> Goals </h1>
 <ul>
-<li>End of February: Begin SV and C++ testbench modules. Begin creating SV and (mostly) C++ testbenches for pipeline stages. </li>
-<li>End of March: Go over verification planning modules. Begin top-level CPU C++ testbench. </li>
-<li>End of April: Complete UVM modules. </li>
-<li>End of May: Rudimentary UVM tb for Pipelined CPU. </li>
-<li>June onward: Minimal GPU, AXI Cache modules. </li>
+<li>End of February: Begin SV and C++ testbench modules. Begin creating SV testbenches for pipeline stages. </li>
+<li>End of March: Go over verification planning and UVM modules. </li>
+<li>End of April: Rudimentary UVM tb for Pipelined CPU. </li>
+<li>May onward: Minimal GPU, AXI Cache modules. </li>
 </ul>
 
 <h1> Devlog </h1>
