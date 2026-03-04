@@ -1,19 +1,17 @@
 `timescale 1ns/1ps
 
-`include "control_macros.sv"
+`include "../../../../common/control_macros.sv"
 
 // To run TB:
 // cd ../\(1)fetch_stage
-// vivado -mode tcl
-// xvlog fetch_stage.sv ./tb/fetch_tb.sv -i ../../../../common/ -sv ../../../../common/flop.sv ../../../../common/adder.sv
-// xelab fetch_tb -s sim
-// xsim sim -runall
+// make
+// ./obj_dir/Vfetch_stage 
 
-`include "fetch_if.sv"
-`include "fetch_txn.sv"
-`include "fetch_driver.sv"
-`include "fetch_monitor.sv"
-`include "fetch_scoreboard.sv"
+`include "./tb/fetch_if.sv"
+`include "./tb/fetch_txn.sv"
+`include "./tb/fetch_driver.sv"
+`include "./tb/fetch_monitor.sv"
+`include "./tb/fetch_scoreboard.sv"
 
 module fetch_tb;
 

@@ -1,0 +1,4 @@
+TXN: src=1 stall=0 ex_t=53af5073 ex_p4=13d27d23 pred=3f3dc52e
+[25000] %Error: fetch_scoreboard.sv:34: Assertion failed in $unit.fetch_scoreboard.run: Mismatch! Model=3f3dc52e DUT=00000004
+%Error: tb/fetch_scoreboard.sv:34: Verilog $stop
+Aborting...
