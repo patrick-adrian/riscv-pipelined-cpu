@@ -34,8 +34,9 @@
 <li> Thurs Feb 26: Added C++ testbench for fetch stage. </li>
 <li> Sat Feb 28: New plan: Focus on full UVM and SV testbenches. Need proper tooling for doing so. </li>
 <li> Mon Mar 2: Installed Vivado on Linux home server. </li>
-<li> Tues Mar 3: Added UVM tb for fetch stage and compilation with Vivado. </li>
+<li> Tues Mar 3: Added UVM-like tb for fetch stage and compilation with Vivado. </li>
 <li> Wed Mar 4: Attempted UVM compilation with Verilator. Took very long; sticking with Vivado. </li>
+<li> Sat Mar 7: Separated RTL and testbench directories, makefiles for Vivado compilation. </li>
 
 </ul>
 
