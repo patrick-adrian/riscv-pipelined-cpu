@@ -4,7 +4,7 @@ XELAB = xelab
 XSIM  = xsim
 
 # directories
-RTL_DIR = ../../risc_top/pipelined_riscv_core/data_path/\(1\)fetch_stage/
+RTL_DIR = ../../rtl/risc_top/pipelined_riscv_core/data_path/\(1\)fetch_stage/
 
 # includes
 INCLUDES = \
