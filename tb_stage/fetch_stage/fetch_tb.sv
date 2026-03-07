@@ -3,11 +3,7 @@
 `include "control_macros.sv"
 
 // To run TB:
-// cd ../\(1)fetch_stage
-// vivado -mode tcl
-// xvlog fetch_stage.sv ./tb/fetch_tb.sv -i ../../../../common/ -sv ../../../../common/flop.sv ../../../../common/adder.sv
-// xelab fetch_tb -s sim
-// xsim sim -runall
+// make simulate, make clean
 
 `include "fetch_if.sv"
 `include "fetch_txn.sv"

@@ -1,3 +1,7 @@
 *:Zone.Identifier
 .DS_Store
 .env
+.str
+*.vcd
+*.log
+*.bit
