@@ -37,8 +37,10 @@ module fetch_tb;
     fetch_driver     driver;
     fetch_monitor    monitor;
     fetch_scoreboard scoreboard;
+    int txn_id = 0;
 
     initial begin
+        
         clk = 0;
         vif.reset = 1;
         repeat(2) @(posedge clk);
@@ -55,8 +57,11 @@ module fetch_tb;
         join_none
 
         // Generate transactions
+        
         repeat (20) begin
             fetch_txn txn = new();
+            txn.id = txn_id++;
+            
             assert(txn.randomize());
             drv_mbx.put(txn);
             scb_drv_mbx.put(txn);

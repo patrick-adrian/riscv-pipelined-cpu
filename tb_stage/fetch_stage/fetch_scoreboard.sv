@@ -35,9 +35,9 @@ class fetch_scoreboard;
 
             // Compare current DUT output with previous expected
             if (expected_pc !== dut_pc)
-                $error("Mismatch! Model=%h DUT=%h \n", expected_pc, dut_pc);
+                $display("SB  TXN[%0d]: Mismatch! Model=%h DUT=%h \n", txn.id, expected_pc, dut_pc);
             else
-                $display("PASS: PC=%h \n", dut_pc);
+                $display("SB  TXN[%0d]: PASS: PC=%h \n", txn.id, dut_pc);
 
             expected_pc = next_expected_pc;
         end
