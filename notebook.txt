@@ -176,4 +176,10 @@ tasks consume time, multiple outputs
 ALWAYS do task automatic... or function automatic, or else vars are shared bwtn. calls
 
 tbs shouldn't use same logic to calculate expected values,
+
 rather, use a "golden reference model"
+---------------------------------------------------
+March 12, 2026
+Fetch stage TB kept encountering issues with being out of sync with the DUT:
+1. Driver updated interface signals on the rising edge, meaning it took 2 cycles to propagate through the fetch stage's flop. Once driver updated on the negative edge instead, expected PC and model's PC began lining up.
+2. Switched from mailbox system to a expected_pc_queue in the scoreboard. Scoreboard needs to calculate next_expected_pc with the current transaction, store in in the queue. Scoreboard uses that for next cycle.
