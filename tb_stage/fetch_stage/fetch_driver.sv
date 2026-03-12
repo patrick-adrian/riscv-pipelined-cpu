@@ -15,7 +15,9 @@ class fetch_driver;
         forever begin
             mbx.get(txn);
 
-            @(posedge vif.clk);
+            // Drive control signals on the negative edge so they are
+            // stable before the next positive edge that clocks the DUT.
+            @(negedge vif.clk);
 
             vif.pc_src         <= txn.pc_src;
             vif.stall          <= txn.stall;

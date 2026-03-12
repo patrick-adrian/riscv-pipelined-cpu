@@ -12,6 +12,7 @@ class fetch_monitor;
     task run();
         forever begin
             @(posedge vif.clk);
+            #0;
             mbx.put(vif.pc);
         end
     endtask

@@ -1,11 +1,12 @@
 class fetch_scoreboard;
 
     virtual fetch_if vif;
-    mailbox #(fetch_txn) drv_mbx;
+    mailbox #(fetch_txn)    drv_mbx;
     mailbox #(logic [31:0]) mon_mbx;
 
     logic [31:0] expected_pc;
     logic [31:0] next_expected_pc;
+    logic [31:0] expected_q[$];   // queue models pipeline delay
 
     function new(virtual fetch_if vif,
                  mailbox #(fetch_txn) drv_mbx,
@@ -20,11 +21,26 @@ class fetch_scoreboard;
         fetch_txn txn;
         logic [31:0] dut_pc;
 
+        // Seed the expected queue with the reset PC so that
+        // the first DUT PC sample after reset has a model value.
+        expected_q.push_back(expected_pc);
+
         forever begin
+            // Get the next transaction and the corresponding DUT PC sample
             drv_mbx.get(txn);
             mon_mbx.get(dut_pc);
 
-            // Compute next PC
+            // Compare DUT output with the oldest expected value
+            expected_pc = expected_q.pop_front();
+
+            if (expected_pc !== dut_pc)
+                $display("[CYCLE %0d] SB TXN[%0d]: Mismatch! Model=%h DUT=%h",
+                         vif.cycle, txn.id, expected_pc, dut_pc);
+            else
+                $display("[CYCLE %0d] SB TXN[%0d]: PASS: PC=%h",
+                         vif.cycle, txn.id, dut_pc);
+
+            // Compute next expected PC based on this transaction
             next_expected_pc = expected_pc;
 
             if (!txn.stall) begin
@@ -36,15 +52,8 @@ class fetch_scoreboard;
                 endcase
             end
 
-            // Compare current DUT output with previous expected
-            if (expected_pc !== dut_pc)
-                $display("[CYCLE %0d] SB  TXN[%0d]: Mismatch! Model=%h DUT=%h \n",
-                         vif.cycle, txn.id, expected_pc, dut_pc);
-            else
-                $display("[CYCLE %0d] SB  TXN[%0d]: PASS: PC=%h \n",
-                         vif.cycle, txn.id, dut_pc);
-
-            expected_pc = next_expected_pc;
+            // Push expected value into pipeline queue
+            expected_q.push_back(next_expected_pc);
         end
     endtask
 
