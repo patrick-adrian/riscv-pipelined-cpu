@@ -18,6 +18,15 @@ module fetch_tb;
 
     fetch_if vif(clk);
 
+    // Simple cycle counter for logging
+    initial vif.cycle = 0;
+    always @(posedge clk) begin
+        if (vif.reset)
+            vif.cycle <= 0;
+        else
+            vif.cycle <= vif.cycle + 1;
+    end
+
     fetch_stage dut (
         .clk_i(clk),
         .reset_i(vif.reset),
@@ -48,7 +57,7 @@ module fetch_tb;
 
         driver = new(vif, drv_mbx);
         monitor = new(vif, mon_mbx);
-        scoreboard = new(scb_drv_mbx, mon_mbx);
+        scoreboard = new(vif, scb_drv_mbx, mon_mbx);
 
         fork
             driver.run();

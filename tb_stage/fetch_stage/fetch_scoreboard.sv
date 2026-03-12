@@ -1,13 +1,16 @@
 class fetch_scoreboard;
 
+    virtual fetch_if vif;
     mailbox #(fetch_txn) drv_mbx;
     mailbox #(logic [31:0]) mon_mbx;
 
     logic [31:0] expected_pc;
     logic [31:0] next_expected_pc;
 
-    function new(mailbox #(fetch_txn) drv_mbx,
+    function new(virtual fetch_if vif,
+                 mailbox #(fetch_txn) drv_mbx,
                  mailbox #(logic [31:0]) mon_mbx);
+        this.vif     = vif;
         this.drv_mbx = drv_mbx;
         this.mon_mbx = mon_mbx;
         expected_pc = 0;
@@ -35,9 +38,11 @@ class fetch_scoreboard;
 
             // Compare current DUT output with previous expected
             if (expected_pc !== dut_pc)
-                $display("SB  TXN[%0d]: Mismatch! Model=%h DUT=%h \n", txn.id, expected_pc, dut_pc);
+                $display("[CYCLE %0d] SB  TXN[%0d]: Mismatch! Model=%h DUT=%h \n",
+                         vif.cycle, txn.id, expected_pc, dut_pc);
             else
-                $display("SB  TXN[%0d]: PASS: PC=%h \n", txn.id, dut_pc);
+                $display("[CYCLE %0d] SB  TXN[%0d]: PASS: PC=%h \n",
+                         vif.cycle, txn.id, dut_pc);
 
             expected_pc = next_expected_pc;
         end

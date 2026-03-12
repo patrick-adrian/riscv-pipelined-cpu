@@ -12,4 +12,6 @@ interface fetch_if(input logic clk);
     logic [31:0] pc;
     logic [31:0] pc_plus4;
 
+    int          cycle;
+
 endinterface

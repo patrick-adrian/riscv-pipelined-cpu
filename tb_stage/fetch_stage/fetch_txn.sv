@@ -8,9 +8,9 @@ class fetch_txn;
     rand logic [31:0] pc_plus4_ex;
     rand logic [31:0] pred_pc_target;
 
-    function void display();
-        $display("DRV TXN[%0d]: src=%0d stall=%0b ex_t=%h ex_p4=%h pred=%h",
-                  id, pc_src, stall, pc_target_ex,
+    function void display(int cycle);
+        $display("[CYCLE %0d] DRV TXN[%0d]: src=%0d stall=%0b ex_t=%h ex_p4=%h pred=%h",
+                  cycle, id, pc_src, stall, pc_target_ex,
                   pc_plus4_ex, pred_pc_target);
     endfunction
 

@@ -23,7 +23,7 @@ class fetch_driver;
             vif.pc_plus4_ex    <= txn.pc_plus4_ex;
             vif.pred_pc_target <= txn.pred_pc_target;
 
-            txn.display();
+            txn.display(vif.cycle);
         end
     endtask
 
