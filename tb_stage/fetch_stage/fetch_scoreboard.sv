@@ -34,10 +34,10 @@ class fetch_scoreboard;
             expected_pc = expected_q.pop_front();
 
             if (expected_pc !== dut_pc)
-                $display("[CYCLE %0d] SB TXN[%0d]: Mismatch! Model=%h DUT=%h",
+                $display("[CYCLE %0d] SB TXN[%0d]: Mismatch! Model=%h DUT=%h \n",
                          vif.cycle, txn.id, expected_pc, dut_pc);
             else
-                $display("[CYCLE %0d] SB TXN[%0d]: PASS: PC=%h",
+                $display("[CYCLE %0d] SB TXN[%0d]: PASS: PC=%h \n",
                          vif.cycle, txn.id, dut_pc);
 
             // Compute next expected PC based on this transaction

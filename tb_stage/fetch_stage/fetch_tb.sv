@@ -16,6 +16,12 @@ module fetch_tb;
     logic clk;
     always #5 clk = ~clk;
 
+    // Waveform dump for post-sim viewing
+    initial begin
+        $dumpfile("fetch_stage_tb.vcd");
+        $dumpvars(0, fetch_tb);
+    end
+
     fetch_if vif(clk);
 
     // Simple cycle counter for logging
@@ -76,7 +82,7 @@ module fetch_tb;
             scb_drv_mbx.put(txn);
         end
 
-        #200 $finish;
+        #500 $finish;
     end
 
 endmodule
