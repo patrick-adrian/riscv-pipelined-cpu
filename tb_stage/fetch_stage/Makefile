@@ -4,19 +4,19 @@ XELAB = xelab
 XSIM  = xsim
 
 # directories
-RTL_DIR = ../../rtl/risc_top/pipelined_riscv_core/data_path/\(1\)fetch_stage/
+RTL_DIR := $(shell find ../../rtl/risc_top -name "*.sv")
 
 # includes
 INCLUDES = \
 ../../common/ \
 ../../common/adder.sv \
-../../common/flop.sv
+../../common/flop.sv \
 
 # top module
 TOP = fetch_tb
 
 # source files
-RTL = $(RTL_DIR)/fetch_stage.sv
+RTL = $(RTL_DIR)
 
 TB = \
 fetch_tb.sv

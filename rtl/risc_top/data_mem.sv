@@ -42,7 +42,7 @@ module data_mem #(
     (* ram_style = "block" *) logic [31:0] RAM[8195:0];     //8196 words x 4 bytes ~~ 32 KB Memory
 
     initial begin
-        $readmemh(`DATA_HEX_FILE, RAM);
+        //$readmemh(`DATA_HEX_FILE, RAM); # comment out for simulation only
     end
 
     always @(posedge clk_i) begin
