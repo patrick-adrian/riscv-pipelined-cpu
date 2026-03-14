@@ -11,7 +11,7 @@ module fetch_tb;
     always #5 clk = ~clk;
 
     initial begin
-        $dumpfile("fetch_stage_tb.vcd");
+        $dumpfile("waveform.vcd");
         $dumpvars(0, fetch_tb);
     end
 

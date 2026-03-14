@@ -6,3 +6,14 @@
 *.log
 *.bit
 xsim.dir
+*.wdb
+*.jou
+*.pb
+*.wcfg
+*.xml
+*.vcd.gz
+*.vcd.bz2
+*.vcd.xz
+*.vcd.lzma
+*.vcd.lz
+*.vcd.lzo
