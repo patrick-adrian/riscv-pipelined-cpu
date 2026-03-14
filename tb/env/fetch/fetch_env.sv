@@ -32,16 +32,13 @@ class fetch_env;
             monitor.run();
             scoreboard.run();
         join_none
+    endtask
 
-        // Generate transactions
-        repeat (20) begin
-            fetch_txn txn = new();
-            txn.id = txn_id++;
-
-            assert(txn.randomize());
-            drv_mbx.put(txn);
-            scb_drv_mbx.put(txn);
-        end
+    // Test injects transactions via put_txn (tests/fetch/*.sv).
+    task put_txn(fetch_txn txn);
+        txn.id = txn_id++;
+        drv_mbx.put(txn);
+        scb_drv_mbx.put(txn);
     endtask
 
 endclass

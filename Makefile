@@ -8,11 +8,10 @@ TEST ?= fetch_smoke_test
 # Directories
 RTL_SV     := $(shell find rtl -name "*.sv" | sort)
 COMMON_SV  := common/adder.sv common/flop.sv
-TB_ENV_SV  := tb/env/fetch/fetch_env_pkg.sv
+TB_ENV_SV  := tb/env/fetch/fetch_env_pkg.sv tb/env/fetch/fetch_tb.sv
 TEST_SV    := $(shell find tests -name "$(TEST).sv" 2>/dev/null | sort)
-TB_COMMON  := $(shell find tests -name "fetch_tb.sv" 2>/dev/null | sort)
 
-SRC_SV     := $(COMMON_SV) $(RTL_SV) $(TB_ENV_SV) $(TB_COMMON) $(TEST_SV)
+SRC_SV     := $(COMMON_SV) $(RTL_SV) $(TB_ENV_SV) $(TEST_SV)
 
 # Include directories
 INCLUDES = common tb/env/fetch

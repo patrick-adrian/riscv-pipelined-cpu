@@ -2,12 +2,14 @@
 
 `include "control_macros.sv"
 
+// Reusable fetch testbench harness: clock, interface, DUT, cycle counter.
+// Test logic (reset, env, transactions) lives in tests/fetch/*.sv
 module fetch_tb;
 
     logic clk;
+    initial clk = 0;
     always #5 clk = ~clk;
 
-    // Waveform dump for post-sim viewing
     initial begin
         $dumpfile("fetch_stage_tb.vcd");
         $dumpvars(0, fetch_tb);
@@ -15,7 +17,6 @@ module fetch_tb;
 
     fetch_if vif(clk);
 
-    // Simple cycle counter for logging
     initial vif.cycle = 0;
     always @(posedge clk) begin
         if (vif.reset)
@@ -36,19 +37,4 @@ module fetch_tb;
         .pc_plus4_fi_o(vif.pc_plus4)
     );
 
-    fetch_env env;
-
-    initial begin
-        clk = 0;
-        vif.reset = 1;
-        repeat(2) @(posedge clk);
-        vif.reset = 0;
-
-        env = new(vif);
-        env.run();
-
-        #500 $finish;
-    end
-
 endmodule
-
