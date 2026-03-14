@@ -15,3 +15,4 @@ interface fetch_if(input logic clk);
     int          cycle;
 
 endinterface
+

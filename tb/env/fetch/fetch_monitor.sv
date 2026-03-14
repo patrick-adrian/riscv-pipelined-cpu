@@ -18,3 +18,4 @@ class fetch_monitor;
     endtask
 
 endclass
+

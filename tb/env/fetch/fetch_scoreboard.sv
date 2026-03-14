@@ -58,3 +58,4 @@ class fetch_scoreboard;
     endtask
 
 endclass
+
