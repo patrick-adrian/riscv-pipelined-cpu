@@ -1,0 +1,10 @@
+REGRESSION SUMMARY
+------------------
+fetch_smoke_test FAIL
+fetch_reset_test FAIL
+fetch_pc_increment_test FAIL
+fetch_branch_test FAIL
+fetch_random_test FAIL
+
+PASS: 0
+FAIL: 5

@@ -1,2 +1,5 @@
 fetch_smoke_test
 fetch_reset_test
+fetch_pc_increment_test
+fetch_branch_test
+fetch_random_test
