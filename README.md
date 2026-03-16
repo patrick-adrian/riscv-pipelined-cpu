@@ -41,7 +41,7 @@
 <li> Thurs Mar 12: Fix fetch stage tb problems, add waveforms. </li>
 <li> Fri Mar 13: Abstract fetch testbench components with env, refactor project structure with tests/, scripts/, results/, regressions/, add regression tool script. </li>
 <li> Sat Mar 14: Add assertions for fetch stage. </li>
-<li> Thurs Mar 12: Fix assertions B and C for fetch stage. </li>
+<li> Thurs Mar 16: Fix assertions B and C for fetch stage. </li>
 
 </ul>
 
