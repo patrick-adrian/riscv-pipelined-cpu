@@ -14,7 +14,12 @@ COMMON_SV  := common/adder.sv common/flop.sv
 TB_ENV_SV  := $(wildcard tb/env/$(STAGE)/$(STAGE)_env_pkg.sv) tb/env/$(STAGE)/$(STAGE)_tb.sv
 TEST_SV    := tests/$(STAGE)/$(TEST).sv
 
+# Fetch-stage assertions (bind to fetch_stage when STAGE is fetch)
+FETCH_ASSERT_SV := tb/assertions/fetch_assertions.sv tb/assertions/fetch_bind.sv
 SRC_SV     := $(COMMON_SV) $(RTL_SV) $(TB_ENV_SV) $(TEST_SV)
+ifeq ($(STAGE),fetch)
+SRC_SV     += $(FETCH_ASSERT_SV)
+endif
 
 # Include directories (stage env for `include and package visibility)
 INCLUDES   := common tb/env/$(STAGE)
@@ -26,8 +31,10 @@ TOP := $(TEST)
 
 all: simulate
 
+# Define XSIM_SVA_OFF when building for fetch to use procedural assertions (xsim has limited SVA support)
+XVLOG_OPTS := $(if $(filter fetch,$(STAGE)),-d XSIM_SVA_OFF,)
 compile:
-	$(XVLOG) --sv $(SRC_SV) $(addprefix -i ,$(INCLUDES))
+	$(XVLOG) --sv $(SRC_SV) $(addprefix -i ,$(INCLUDES)) $(XVLOG_OPTS)
 
 elab:
 	$(XELAB) $(TOP) -s sim
@@ -41,7 +48,7 @@ waves:
 	$(XSIM) sim -gui
 
 clean:
-	rm -rf xsim.dir *.jou *.log *.pb *.wdb *.wcfg
+	rm -rf xsim.dir *.jou *.log *.pb *.wdb *.wcfg *.vcd *.vpd *.vcd.gz *.vcd.bz2 *.vcd.xz *.vcd.lzma *.vcd.lz *.vcd.lzo 
 
 help:
 	@echo "Usage: make [target] TEST=<test>"
