@@ -1,7 +1,0 @@
-REGRESSION SUMMARY
-------------------
-fetch_smoke_test FAIL
-fetch_reset_test FAIL
-
-PASS: 0
-FAIL: 2

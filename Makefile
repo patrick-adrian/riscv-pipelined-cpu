@@ -7,6 +7,10 @@ XSIM  = xsim
 TEST  ?= fetch_smoke_test
 STAGE := $(firstword $(subst _, ,$(TEST)))
 
+# Optional random seed for xsim (used for constrained-random tests).
+# Example: make simulate TEST=fetch_random_test SEED=1234
+SEED  ?=
+
 # Directories
 # Stage env: <stage>_tb.sv always; <stage>_env_pkg.sv optional (if present, include first)
 RTL_SV     := $(shell find rtl -name "*.sv" | sort)
@@ -37,7 +41,7 @@ elab:
 	$(XELAB) $(TOP) -s sim
 
 run:
-	$(XSIM) sim -runall
+	$(XSIM) sim -runall $(if $(SEED),-sv_seed $(SEED) -testplusarg SEED=$(SEED),)
 
 simulate: compile elab run
 
@@ -48,8 +52,9 @@ clean:
 	rm -rf xsim.dir *.jou *.log *.pb *.wdb *.wcfg *.vcd *.vpd *.vcd.gz *.vcd.bz2 *.vcd.xz *.vcd.lzma *.vcd.lz *.vcd.lzo 
 
 help:
-	@echo "Usage: make [target] TEST=<test>"
+	@echo "Usage: make [target] TEST=<test> [SEED=<n>]"
 	@echo "  TEST = test module name (default: fetch_smoke_test). Stage inferred from prefix (e.g. fetch_ -> fetch)."
+	@echo "  SEED = optional random seed passed to xsim (-sv_seed SEED) for constrained-random tests."
 	@echo ""
 	@echo "Examples:"
 	@echo "  make run"

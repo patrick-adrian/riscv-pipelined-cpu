@@ -9,6 +9,28 @@ module fetch_random_test;
     int num_txns = 200;
 
     initial begin
+        int seed;
+        bit has_seed;
+
+        // Determine the seed:
+        //  - If SEED plusarg is provided, use that.
+        //  - Otherwise use a fixed default so runs are still reproducible.
+        has_seed = $value$plusargs("SEED=%d", seed);
+        if (!has_seed) begin
+            seed = 32'hC0FFEE01;
+        end
+
+        // Seed this process' random stream so that object.randomize()
+        // uses the reported seed.
+        process::self().srandom(seed);
+
+        // Always report the effective seed so regressions can reproduce runs.
+        if (has_seed) begin
+            $display("Using constrained-random SEED=%0d (from plusarg)", seed);
+        end else begin
+            $display("Using constrained-random SEED=%0d (default, no SEED plusarg provided)", seed);
+        end
+
         // Apply reset
         tb.vif.reset = 1;
         repeat (3) @(posedge tb.clk);
