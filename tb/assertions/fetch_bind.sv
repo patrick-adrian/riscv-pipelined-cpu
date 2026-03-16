@@ -6,8 +6,9 @@
 //==============================================================//
 
 bind fetch_stage fetch_assertions u_fetch_assertions (
-    .clk   (clk_i),
-    .reset (reset_i),
-    .stall (stall_fi_i),
-    .pc    (pc_fi_o)
+    .clk    (clk_i),
+    .reset  (reset_i),
+    .stall  (stall_fi_i),
+    .pc     (pc_fi_o),
+    .pc_src (pc_src_i)
 );

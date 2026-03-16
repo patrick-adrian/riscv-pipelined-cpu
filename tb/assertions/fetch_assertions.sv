@@ -8,11 +8,14 @@
 //                support); procedural equivalents are used in that case.
 //==============================================================//
 
+`include "control_macros.sv"
+
 module fetch_assertions (
     input logic        clk,
     input logic        reset,
     input logic        stall,
-    input logic [31:0] pc
+    input logic [31:0] pc,
+    input logic [1:0]  pc_src
 );
 
 `ifndef XSIM_SVA_OFF
@@ -27,27 +30,30 @@ module fetch_assertions (
         else $error("[fetch_assertions] PC must be word aligned; pc[1:0]=%b, expected 2'b00", pc[1:0]);
 
     // -------------------------------------------------------------------------
-    // B) When stall is asserted, the PC must not change
+    // B) When stall was asserted in the previous cycle, the PC must not change
     // -------------------------------------------------------------------------
     property p_pc_stable_while_stalled;
         @(posedge clk)
         disable iff (reset)
-        (stall |-> (pc == $past(pc, 1, @(posedge clk))));
+        ($past(stall, 1, @(posedge clk)) |-> (pc == $past(pc, 1, @(posedge clk))));
     endproperty
     assert property (p_pc_stable_while_stalled)
-        else $error("[fetch_assertions] PC must not change while stall is asserted; pc=%0h", pc);
+        else $error("[fetch_assertions] PC must not change while stall is asserted (from previous cycle); pc=%0h", pc);
 
     // -------------------------------------------------------------------------
-    // C) When stall is not asserted, the PC must increment by 4 relative to
-    //    the previous cycle
+    // C) When the previous cycle was sequential fetch (pc_src == PC_SRC_SEQ_F)
+    //    and not stalled, the PC must increment by 4 relative to the previous
+    //    cycle. This explicitly ignores branch/jump/redirect cycles.
     // -------------------------------------------------------------------------
     property p_pc_increments_by_4_when_not_stalled;
         @(posedge clk)
         disable iff (reset)
-        (!stall |-> (pc == $past(pc, 1, @(posedge clk)) + 32'd4));
+        ($past(pc_src, 1, @(posedge clk)) == `PC_SRC_SEQ_F &&
+         !$past(stall, 1, @(posedge clk))
+         |-> (pc == $past(pc, 1, @(posedge clk)) + 32'd4));
     endproperty
     assert property (p_pc_increments_by_4_when_not_stalled)
-        else $error("[fetch_assertions] PC must increment by 4 when not stalled; pc=%0h", pc);
+        else $error("[fetch_assertions] PC must increment by 4 on sequential, non-stalled fetch; pc=%0h", pc);
 
     // -------------------------------------------------------------------------
     // D) During reset, the PC should be 0
@@ -62,9 +68,13 @@ module fetch_assertions (
 `else
     // Procedural equivalents for simulators with limited SVA support (e.g. xsim)
     logic [31:0] pc_prev;
+    logic [1:0]  pc_src_prev;
+    logic        stall_prev;
 
     always_ff @(posedge clk) begin
-        pc_prev <= pc;
+        pc_prev     <= pc;
+        pc_src_prev <= pc_src;
+        stall_prev  <= stall;
     end
 
     always_ff @(posedge clk) begin
@@ -72,13 +82,13 @@ module fetch_assertions (
         if (pc[1:0] != 2'b00)
             $error("[fetch_assertions] PC must be word aligned; pc[1:0]=%b, expected 2'b00", pc[1:0]);
 
-        // B) When stall is asserted, the PC must not change
-        if (!reset && stall && (pc != pc_prev))
-            $error("[fetch_assertions] PC must not change while stall is asserted; pc=%0h", pc);
+        // B) When stall was asserted in the previous cycle, the PC must not change
+        if (!reset && stall_prev && (pc != pc_prev))
+            $error("[fetch_assertions] PC must not change while stall is asserted (from previous cycle); pc=%0h", pc);
 
-        // C) When stall is not asserted, the PC must increment by 4
-        if (!reset && !stall && (pc != pc_prev + 32'd4))
-            $error("[fetch_assertions] PC must increment by 4 when not stalled; pc=%0h", pc);
+        // C) When previous cycle was sequential fetch and not stalled, PC must increment by 4
+        if (!reset && !stall_prev && pc_src_prev == `PC_SRC_SEQ_F && (pc != pc_prev + 32'd4))
+            $error("[fetch_assertions] PC must increment by 4 on sequential, non-stalled fetch; pc=%0h", pc);
 
         // D) During reset, the PC should be 0
         if (reset && (pc != 32'b0))
