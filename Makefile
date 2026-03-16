@@ -14,15 +14,12 @@ COMMON_SV  := common/adder.sv common/flop.sv
 TB_ENV_SV  := $(wildcard tb/env/$(STAGE)/$(STAGE)_env_pkg.sv) tb/env/$(STAGE)/$(STAGE)_tb.sv
 TEST_SV    := tests/$(STAGE)/$(TEST).sv
 
-# Fetch-stage assertions (bind to fetch_stage when STAGE is fetch)
-FETCH_ASSERT_SV := tb/assertions/fetch_assertions.sv tb/assertions/fetch_bind.sv
-SRC_SV     := $(COMMON_SV) $(RTL_SV) $(TB_ENV_SV) $(TEST_SV)
-ifeq ($(STAGE),fetch)
-SRC_SV     += $(FETCH_ASSERT_SV)
-endif
+# Stage-specific assertions (look under tb/assertions/<STAGE>)
+ASSERT_SV  := $(wildcard tb/assertions/$(STAGE)/*.sv)
+SRC_SV     := $(COMMON_SV) $(RTL_SV) $(TB_ENV_SV) $(TEST_SV) $(ASSERT_SV)
 
-# Include directories (stage env for `include and package visibility)
-INCLUDES   := common tb/env/$(STAGE)
+# Include directories (stage env + stage assertions for `include and package visibility)
+INCLUDES   := common tb/env/$(STAGE) tb/assertions/$(STAGE)
 
 # Top-level module is the test (e.g. fetch_smoke_test, decode_smoke_test)
 TOP := $(TEST)
