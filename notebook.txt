@@ -183,3 +183,10 @@ March 12, 2026
 Fetch stage TB kept encountering issues with being out of sync with the DUT:
 1. Driver updated interface signals on the rising edge, meaning it took 2 cycles to propagate through the fetch stage's flop. Once driver updated on the negative edge instead, expected PC and model's PC began lining up.
 2. Switched from mailbox system to a expected_pc_queue in the scoreboard. Scoreboard needs to calculate next_expected_pc with the current transaction, store in in the queue. Scoreboard uses that for next cycle.
+---------------------------------------------------
+March 14-16, 2026
+Fetch stage Assertion B: PC must not change during stall
+1. If stall is asserted in cycle(n-1), PC must hold between cycle(n-1) and cycle(n)
+urandom is not supported in xsim, so I used xsim's command-line seed (-sv_seed 12345)
+Needed to constrain rand PC values in fetch_txn to be word-aligned.
+---------------------------------------------------
