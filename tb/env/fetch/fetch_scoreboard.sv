@@ -8,6 +8,9 @@ class fetch_scoreboard;
     logic [31:0] next_expected_pc;
     logic [31:0] expected_q[$];   // queue models pipeline delay
 
+    int num_checked = 0;
+    int mismatch_count = 0;
+
     function new(virtual fetch_if vif,
                  mailbox #(fetch_txn) drv_mbx,
                  mailbox #(logic [31:0]) mon_mbx);
@@ -33,12 +36,15 @@ class fetch_scoreboard;
             // Compare DUT output with the oldest expected value
             expected_pc = expected_q.pop_front();
 
-            if (expected_pc !== dut_pc)
+            
+            if (expected_pc !== dut_pc) begin
+                mismatch_count++;
                 $display("[CYCLE %0d] SB TXN[%0d]: Mismatch! Model=%h DUT=%h \n",
                          vif.cycle, txn.id, expected_pc, dut_pc);
-            else
+            end else
                 $display("[CYCLE %0d] SB TXN[%0d]: PASS: PC=%h \n",
                          vif.cycle, txn.id, dut_pc);
+            num_checked++;
 
             // Compute next expected PC based on this transaction
             next_expected_pc = expected_pc;

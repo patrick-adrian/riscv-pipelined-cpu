@@ -11,6 +11,7 @@ class fetch_env;
     mailbox #(logic [31:0]) mon_mbx;
 
     int txn_id;
+    int num_txns_sent;
 
     function new(virtual fetch_if vif);
         this.vif = vif;
@@ -23,7 +24,8 @@ class fetch_env;
         monitor    = new(vif, mon_mbx);
         scoreboard = new(vif, scb_drv_mbx, mon_mbx);
 
-        txn_id = 0;
+        txn_id       = 0;
+        num_txns_sent = 0;
     endfunction
 
     task run();
@@ -39,6 +41,12 @@ class fetch_env;
         txn.id = txn_id++;
         drv_mbx.put(txn);
         scb_drv_mbx.put(txn);
+        num_txns_sent++;
+    endtask
+    
+    task wait_for_completion();
+        // Only wait once the test has actually sent at least one transaction.
+        wait (num_txns_sent > 0 && scoreboard.num_checked == num_txns_sent);
     endtask
 
 endclass

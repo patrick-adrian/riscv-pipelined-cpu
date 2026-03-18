@@ -43,7 +43,7 @@ elab:
 run:
 	$(XSIM) sim -runall $(if $(SEED),-sv_seed $(SEED) -testplusarg SEED=$(SEED),)
 
-simulate: compile elab run
+simulate: compile elab run clean
 
 waves:
 	$(XSIM) sim -gui

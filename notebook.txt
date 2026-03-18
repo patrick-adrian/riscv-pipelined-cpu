@@ -190,3 +190,9 @@ Fetch stage Assertion B: PC must not change during stall
 urandom is not supported in xsim, so I used xsim's command-line seed (-sv_seed 12345)
 Needed to constrain rand PC values in fetch_txn to be word-aligned.
 ---------------------------------------------------
+March 17-18, 2026
+Tests relied on fixed delay to finish (unreliable)
+Introduced num_checked in scoreboard and num_txns_sent in env
+Env waits until num_checked == num_txns_sent
+Mid-test equality issue when comparing scoreboard.num_checked and driver.num_sent
+So moved num_txns_sent ownership to env; now the wait only occurs after env finished sending transactions

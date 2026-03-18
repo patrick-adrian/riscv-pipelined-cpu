@@ -2,6 +2,7 @@ class fetch_driver;
 
     virtual fetch_if vif;
     mailbox #(fetch_txn) mbx;
+    int num_sent = 0;
 
     function new(virtual fetch_if vif,
                  mailbox #(fetch_txn) mbx);
@@ -26,6 +27,7 @@ class fetch_driver;
             vif.pred_pc_target <= txn.pred_pc_target;
 
             txn.display(vif.cycle);
+            num_sent++;
         end
     endtask
 
