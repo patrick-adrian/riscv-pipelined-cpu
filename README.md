@@ -2,7 +2,7 @@
 <ul>
 <li>Understand Biggo03's CPU pipeline and create diagrams for each RTL module <b><i>(Semi-finished)</b></i></li>
 <li>Create a UVM-like framework for each stage using SystemVerilog testbenches and Vivado <b><i>(In progress)</b></i></li></li>
-<li>Build a full UVM framework for the entire CPU pipeline</li> <b><i>(Soon)</b></i></li>
+<li>Build a full UVM framework for the entire CPU pipeline <b><i>(Soon)</b></i></li></li>
 </ul>
 
 <h1> Goals </h1>
