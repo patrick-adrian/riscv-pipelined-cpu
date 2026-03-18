@@ -1,16 +1,17 @@
 <h1> Objectives </h1>
 <ul>
-<li>Understand Biggo03's CPU pipeline and create diagrams for each RTL module <b><i>(In progress)</b></i></li>
-<li>Create a test framework and environment using SystemVerilog/C++ testbenches and iVerilog/Verilator <b><i>(In progress)</b></i></li></li>
-<li>Build a UVM framework on top of all this</li>
+<li>Understand Biggo03's CPU pipeline and create diagrams for each RTL module <b><i>(Semi-finished)</b></i></li>
+<li>Create a UVM-like framework for each stage using SystemVerilog testbenches and Vivado <b><i>(In progress)</b></i></li></li>
+<li>Build a full UVM framework for the entire CPU pipeline</li> <b><i>(Soon)</b></i></li>
 </ul>
 
 <h1> Goals </h1>
 <ul>
 <li>End of February: Begin SV and C++ testbench modules. Begin creating SV testbenches for pipeline stages. </li>
-<li>End of March: Go over verification planning and UVM modules. </li>
-<li>End of April: Rudimentary UVM tb for Pipelined CPU. </li>
-<li>May onward: Minimal GPU, AXI Cache modules. </li>
+<li>End of March: Finish UVM-like environments for each pipelined stage. </li>
+<li>End of April: Full UVM testbench for entire pipelined CPU. </li>
+<li>May: Design a minimal GPU or accelerator and AXI cache modules. </li>
+<li>June: Write UVM testbenches for these designed modules. </li>
 </ul>
 
 <h1> Devlog </h1>
@@ -38,7 +39,7 @@
 <li> Wed Mar 4: Attempted UVM compilation with Verilator. Took very long; sticking with Vivado. </li>
 <li> Sat Mar 7: Separated RTL and testbench directories, makefiles for Vivado compilation. </li>
 <li> Tues Mar 10: Add TXN IDs to fetch stage tb. </li>
-<li> Thurs Mar 12: Fix fetch stage tb problems, add waveforms. </li>
+<li> Thurs Mar 12: Fix fetch stage tb cycle mismatch issues, add waveforms. </li>
 <li> Fri Mar 13: Abstract fetch testbench components with env, refactor project structure with tests/, scripts/, results/, regressions/, add regression tool script. </li>
 <li> Sat Mar 14: Add assertions for fetch stage. </li>
 <li> Thurs Mar 16: Fix assertions B and C for fetch stage. </li>
