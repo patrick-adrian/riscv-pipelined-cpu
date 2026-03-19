@@ -6,7 +6,6 @@ class fetch_scoreboard;
 
     logic [31:0] expected_pc;
     logic [31:0] next_expected_pc;
-    logic [31:0] expected_q[$];   // queue models pipeline delay
 
     int num_checked = 0;
     int mismatch_count = 0;
@@ -24,29 +23,15 @@ class fetch_scoreboard;
         fetch_txn txn;
         logic [31:0] dut_pc;
 
-        // Seed the expected queue with the reset PC so that
-        // the first DUT PC sample after reset has a model value.
-        expected_q.push_back(expected_pc);
-
         forever begin
             // Get the next transaction and the corresponding DUT PC sample
+            // taken on the same posedge that the driver applied this txn's
+            // control inputs.
             drv_mbx.get(txn);
             mon_mbx.get(dut_pc);
 
-            // Compare DUT output with the oldest expected value
-            expected_pc = expected_q.pop_front();
-
-            
-            if (expected_pc !== dut_pc) begin
-                mismatch_count++;
-                $display("[CYCLE %0d] SB TXN[%0d]: Mismatch! Model=%h DUT=%h \n",
-                         vif.cycle, txn.id, expected_pc, dut_pc);
-            end else
-                $display("[CYCLE %0d] SB TXN[%0d]: PASS: PC=%h \n",
-                         vif.cycle, txn.id, dut_pc);
-            num_checked++;
-
-            // Compute next expected PC based on this transaction
+            // Compute the expected next PC and compare it against the DUT's
+            // posedge-updated output.
             next_expected_pc = expected_pc;
 
             if (!txn.stall) begin
@@ -58,8 +43,18 @@ class fetch_scoreboard;
                 endcase
             end
 
-            // Push expected value into pipeline queue
-            expected_q.push_back(next_expected_pc);
+            if (next_expected_pc !== dut_pc) begin
+                mismatch_count++;
+                $display("[CYCLE %0d] SB TXN[%0d]: Mismatch! Model=%h DUT=%h \n",
+                         vif.cycle, txn.id, next_expected_pc, dut_pc);
+            end else begin
+                $display("[CYCLE %0d] SB TXN[%0d]: PASS: PC=%h \n",
+                         vif.cycle, txn.id, dut_pc);
+            end
+            num_checked++;
+
+            // Update expected_pc for the following cycle.
+            expected_pc = next_expected_pc;
         end
     endtask
 

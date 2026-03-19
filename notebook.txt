@@ -196,3 +196,12 @@ Introduced num_checked in scoreboard and num_txns_sent in env
 Env waits until num_checked == num_txns_sent
 Mid-test equality issue when comparing scoreboard.num_checked and driver.num_sent
 So moved num_txns_sent ownership to env; now the wait only occurs after env finished sending transactions
+---------------------------------------------------
+March 19, 2026
+Before: Driver updates signals on negedge. Monitor samples on posedge. Scoreboard compares current PC with expected PC from a queue that was calculated last cycle.
+Going to attempt a single-cycle checking model: driver drives on posedge, monitor samples right after.
+Issues: Monitor sampling still seemed to be sampling before fetch stage flop's NBA update. Add real time delay after clocking event:
+default input #1step output #0;
+Went back to negedge driving 
+Added handshake between driver-monitor so monitor only samples PC exactly when txn has been driven, preventing scoreboard from pairing new txn with an earlier queued PC sample.
+Monitor still reading clocking block sampled value with vif.cb.pc, need to change to vif.pc

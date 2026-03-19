@@ -8,6 +8,7 @@ class fetch_env;
 
     mailbox #(fetch_txn)    drv_mbx;
     mailbox #(fetch_txn)    scb_drv_mbx;
+    mailbox #(int)          drv_done_mbx;
     mailbox #(logic [31:0]) mon_mbx;
 
     int txn_id;
@@ -18,10 +19,11 @@ class fetch_env;
 
         drv_mbx     = new();
         scb_drv_mbx = new();
+        drv_done_mbx = new();
         mon_mbx     = new();
 
-        driver     = new(vif, drv_mbx);
-        monitor    = new(vif, mon_mbx);
+        driver     = new(vif, drv_mbx, drv_done_mbx);
+        monitor    = new(vif, mon_mbx, drv_done_mbx);
         scoreboard = new(vif, scb_drv_mbx, mon_mbx);
 
         txn_id       = 0;
