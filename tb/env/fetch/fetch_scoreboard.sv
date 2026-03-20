@@ -34,7 +34,10 @@ class fetch_scoreboard;
             // posedge-updated output.
             next_expected_pc = expected_pc;
 
-            if (!txn.stall) begin
+            // Reset forces the DUT PC back to 0; keep the reference model in sync.
+            if (vif.reset) begin
+                next_expected_pc = 0;
+            end else if (!txn.stall) begin
                 case(txn.pc_src)
                     2'd0: next_expected_pc = expected_pc + 4;
                     2'd1: next_expected_pc = txn.pred_pc_target;

@@ -60,21 +60,26 @@ module fetch_assertions (
     // -------------------------------------------------------------------------
     property p_pc_zero_during_reset;
         @(posedge clk)
-        (reset |-> (pc == 32'b0));
+        // Note: `pc` is driven by a synchronous reset flop, so sampling on the
+        // same edge can observe the pre-update value. Require `pc` to be 0
+        // one cycle after reset is asserted.
+        ($past(reset, 1) |-> (pc == 32'b0));
     endproperty
     assert property (p_pc_zero_during_reset)
-        else $error("[fetch_assertions] PC must be 0 during reset; reset=%b, pc=%0h", reset, pc);
+        else $error("[fetch_assertions] PC must be 0 one cycle after reset; reset=%b, pc=%0h", reset, pc);
 
 `else
     // Procedural equivalents for simulators with limited SVA support (e.g. xsim)
     logic [31:0] pc_prev;
     logic [1:0]  pc_src_prev;
     logic        stall_prev;
+    logic        reset_prev;
 
     always_ff @(posedge clk) begin
         pc_prev     <= pc;
         pc_src_prev <= pc_src;
         stall_prev  <= stall;
+        reset_prev  <= reset;
     end
 
     always_ff @(posedge clk) begin
@@ -91,8 +96,8 @@ module fetch_assertions (
             $error("[fetch_assertions] PC must increment by 4 on sequential, non-stalled fetch; pc=%0h", pc);
 
         // D) During reset, the PC should be 0
-        if (reset && (pc != 32'b0))
-            $error("[fetch_assertions] PC must be 0 during reset; reset=%b, pc=%0h", reset, pc);
+        if (reset_prev && (pc != 32'b0))
+            $error("[fetch_assertions] PC must be 0 one cycle after reset; reset=%b, pc=%0h", reset, pc);
     end
 `endif
 
