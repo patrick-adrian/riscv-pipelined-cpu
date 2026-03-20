@@ -211,3 +211,5 @@ Fetch reset test is not thorough enough. Reset does not go high in between trans
 Once that was implemented, test fails because scoreboard does not account for resets in its virtual interface.
 Fixed scoreboard and reset test thoroughness. But then Assertion D began firing because if assertion and reset occur on the same edge, assertion might observe before reset goes high.
 So, changed assertion to check one cycle after reset asserted ($past).
+Updated fetch_tb.sv so that reset assertions are displayed in simulation:
+reset_prev is necessary to detect on edge only

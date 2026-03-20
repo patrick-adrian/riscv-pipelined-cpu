@@ -7,6 +7,7 @@
 module fetch_tb;
 
     logic clk;
+    logic reset_prev;
     initial clk = 0;
     always #5 clk = ~clk;
 
@@ -17,8 +18,20 @@ module fetch_tb;
 
     fetch_if vif(clk);
 
-    initial vif.cycle = 0;
+    initial begin
+        vif.cycle = 0;
+        reset_prev = 1'b0;
+    end
+
     always @(posedge clk) begin
+        // Emit one log line on reset assert/deassert so logs are readable.
+        if (vif.reset && !reset_prev)
+            $display("[TIME %0t] RESET ASSERTED", $time);
+        if (!vif.reset && reset_prev)
+            $display("[TIME %0t] RESET DEASSERTED", $time);
+
+        reset_prev <= vif.reset;
+
         if (vif.reset)
             vif.cycle <= 0;
         else
