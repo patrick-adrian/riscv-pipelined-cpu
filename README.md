@@ -44,6 +44,8 @@
 <li> Sat Mar 14: Add assertions for fetch stage. </li>
 <li> Mon Mar 16: Fix assertions B and C for fetch stage. </li>
 <li> Tues Mar 17: Fix test finish logic and regression script output. </li>
+<li> Thurs Mar 19: Fix scoreboard and driver single-cycle model. </li>
+<li> Fri Mar 20: Fix reset test thoroughness and reset assertion. </li>
 
 
 </ul>
