@@ -66,11 +66,11 @@ for test_name in "${TESTS[@]}"; do
 
     # Pass if sim.log contains "TEST PASSED"
     if grep -q "TEST PASSED" "$sim_log" 2>/dev/null; then
-        echo "PASS: ${test_name}"
+        echo "PASS"
         ((PASS_COUNT++)) || true
         SUMMARY_LINES+=("${test_name} PASS")
     else
-        echo "FAIL: ${test_name}"
+        echo "FAIL"
         ((FAIL_COUNT++)) || true
         SUMMARY_LINES+=("${test_name} FAIL")
     fi

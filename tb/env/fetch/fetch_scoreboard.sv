@@ -48,11 +48,11 @@ class fetch_scoreboard;
 
             if (next_expected_pc !== dut_pc) begin
                 mismatch_count++;
-                $display("[CYCLE %0d] SB TXN[%0d]: Mismatch! Model=%h DUT=%h \n",
-                         vif.cycle, txn.id, next_expected_pc, dut_pc);
+                $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: Mismatch! Model=%h DUT=%h\n",
+                         $time, vif.cycle, txn.id, next_expected_pc, dut_pc);
             end else begin
-                $display("[CYCLE %0d] SB TXN[%0d]: PASS: PC=%h \n",
-                         vif.cycle, txn.id, dut_pc);
+                $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: PASS: PC=%h\n",
+                         $time, vif.cycle, txn.id, dut_pc);
             end
             num_checked++;
 

@@ -15,8 +15,8 @@ class fetch_txn;
     }
 
     function void display(int cycle);
-        $display("[CYCLE %0d] DRV TXN[%0d]: src=%0d stall=%0b ex_t=%h ex_p4=%h pred=%h",
-                 cycle, id, pc_src, stall, pc_target_ex,
+        $display("[TIME %0t][CYCLE %0d] DRV TXN[%0d]: src=%0d stall=%0b ex_t=%h ex_p4=%h pred=%h",
+                 $time, cycle, id, pc_src, stall, pc_target_ex,
                  pc_plus4_ex, pred_pc_target);
     endfunction
 
