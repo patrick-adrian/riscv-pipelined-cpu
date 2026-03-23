@@ -1,19 +1,11 @@
-`timescale 1ns/1ps
+class fetch_reset_test extends fetch_base_test;
 
-// Reset test: assert reset, release, then one sequential transaction; verify via scoreboard.
-module fetch_reset_test;
+    function new(virtual fetch_if vif, fetch_env env);
+        super.new(vif, env);
+    endfunction
 
-    fetch_tb tb();
-    fetch_env env;
-
-    initial begin
-        tb.vif.reset = 1;
-        repeat (3) @(posedge tb.clk);
-        tb.vif.reset = 0;
-        repeat (1) @(posedge tb.clk);
-
-        env = new(tb.vif);
-        env.run();
+    virtual task run();
+        apply_reset();
 
         // TXN 0: sequential (pc_src=0), no stall
         begin
@@ -40,8 +32,8 @@ module fetch_reset_test;
 
         // Reset stays on after two txns
         wait (env.scoreboard.num_checked == 2);
-        @(posedge tb.clk);
-        tb.vif.reset = 1;
+        @(posedge vif.clk);
+        vif.reset = 1;
 
         // TXN 2: straight-line 4 -> 8
         begin
@@ -67,8 +59,8 @@ module fetch_reset_test;
 
         // Recovery test
         wait (env.scoreboard.num_checked == 4);
-        @(posedge tb.clk);
-        tb.vif.reset = 0;
+        @(posedge vif.clk);
+        vif.reset = 0;
 
         // TXN 4: sequential (pc_src=0), no stall
         begin
@@ -115,15 +107,7 @@ module fetch_reset_test;
             env.put_txn(t);
         end
 
-        env.wait_for_completion();
-        $display("Total checks: %0d", env.scoreboard.num_checked);
-        $display("Mismatches: %0d", env.scoreboard.mismatch_count);
-        if (env.scoreboard.mismatch_count == 0 &&
-            env.scoreboard.num_checked > 0)
-            $display("TEST PASSED");
-        else
-            $display("TEST FAIL");
-        $finish;
-    end
+        report_and_finish();
+    endtask
 
-endmodule
+endclass

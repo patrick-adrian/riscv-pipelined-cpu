@@ -1,14 +1,12 @@
-`timescale 1ns/1ps
-
-// Random test: long, purely randomized stream of fetch_txn to stress the stage.
-module fetch_random_test;
-
-    fetch_tb tb();
-    fetch_env env;
+class fetch_random_test extends fetch_base_test;
 
     int num_txns = 50;
 
-    initial begin
+    function new(virtual fetch_if vif, fetch_env env);
+        super.new(vif, env);
+    endfunction
+
+    virtual task run();
         int seed;
         bit has_seed;
 
@@ -31,15 +29,7 @@ module fetch_random_test;
             $display("Using constrained-random SEED=%0d (default, no SEED plusarg provided)", seed);
         end
 
-        // Apply reset
-        tb.vif.reset = 1;
-        repeat (3) @(posedge tb.clk);
-        tb.vif.reset = 0;
-        repeat (1) @(posedge tb.clk);
-
-        // Start environment
-        env = new(tb.vif);
-        env.run();
+        apply_reset();
 
         // Drive a randomized stream
         for (int i = 0; i < num_txns; i++) begin
@@ -48,16 +38,8 @@ module fetch_random_test;
             env.put_txn(t);
         end
 
-        env.wait_for_completion();
-        $display("Total checks: %0d", env.scoreboard.num_checked);
-        $display("Mismatches: %0d", env.scoreboard.mismatch_count);
-        if (env.scoreboard.mismatch_count == 0 &&
-            env.scoreboard.num_checked > 0)
-            $display("TEST PASSED");
-        else
-            $display("TEST FAIL");
-        $finish;
-    end
+        report_and_finish();
+    endtask
 
-endmodule
+endclass
 

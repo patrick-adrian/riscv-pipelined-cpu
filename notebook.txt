@@ -213,3 +213,22 @@ Fixed scoreboard and reset test thoroughness. But then Assertion D began firing 
 So, changed assertion to check one cycle after reset asserted ($past).
 Updated fetch_tb.sv so that reset assertions are displayed in simulation:
 reset_prev is necessary to detect on edge only
+---------------------------------------------------
+March 23, 2026
+Need to fix the fact that each test has its own top module, meaning it has to compile, elab, and simulate every test.
+This is inefficient and unscalable. Need to compile and elab only once, and simulate many times.
+Previously: each test instantiated an env and fetch_tb, and fetch_tb instantiated clock, DUT, and VIF
+New single tb_top.sv: instantiates clock, env, VIF, DUT, and creates test object via factory
+New fetch_base_test.sv: defines resets, env.wait_for_completion(), which is called by test
+Each test in tests/fetch is now a class instead of a module that extends fetch_base_test, and has a run() tasks that sends the transactions
+Meaning VIF also is referenced in each test now and not just the top tb.
+tb_top calls env.run() and test.run() (through run_test(testname))
+Makefile now only needs to compile once per build, and can simulate multiple times. tb_top just calls whichever test was passed and it sends different transactions.
+Regression script now creates a single build.log for compilation, and a sim.log for each test.
+Boom. Scalable.
+---------------------------------
+"protected" -> accessible within class and subclasses
+"public" -> fully accessible
+"local" -> same class only
+"virtual" -> allows derived/child class to override method from base (parent) class
+"automatic" -> allocating variables on the stack

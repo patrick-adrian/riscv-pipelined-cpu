@@ -51,13 +51,19 @@ PASS_COUNT=0
 FAIL_COUNT=0
 SUMMARY_LINES=()
 
+# Build shared simulation snapshot once, then run tests via +TEST at runtime.
+build_log="${RESULTS_DIR}/build.log"
+echo "Compiling/elaborating shared snapshot..."
+make compile > "$build_log" 2>&1
+make elab >> "$build_log" 2>&1
+
 for test_name in "${TESTS[@]}"; do
     test_dir="${RESULTS_DIR}/${test_name}"
     mkdir -p "$test_dir"
     sim_log="${test_dir}/sim.log"
 
     echo -n "Running ${test_name}... "
-    make TEST="$test_name" > "$sim_log" 2>&1 || true
+    make run TEST="$test_name" > "$sim_log" 2>&1 || true
 
     # Move waveform if present (ignore errors if missing)
     if [[ -f waveform.vcd ]]; then

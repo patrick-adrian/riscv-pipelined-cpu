@@ -1,25 +1,11 @@
-`timescale 1ns/1ps
+class fetch_branch_test extends fetch_base_test;
 
-// Branch test: exercise all branch/redirection sources.
-//  - predicted branch (pc_src=1)
-//  - execute plus4 redirect (pc_src=2)
-//  - execute absolute target redirect (pc_src=3)
-//  - mix in a few straight-line and stall cycles
-module fetch_branch_test;
+    function new(virtual fetch_if vif, fetch_env env);
+        super.new(vif, env);
+    endfunction
 
-    fetch_tb tb();
-    fetch_env env;
-
-    initial begin
-        // Apply reset
-        tb.vif.reset = 1;
-        repeat (3) @(posedge tb.clk);
-        tb.vif.reset = 0;
-        repeat (1) @(posedge tb.clk);
-
-        // Start environment
-        env = new(tb.vif);
-        env.run();
+    virtual task run();
+        apply_reset();
 
         // TXN 0: straight-line from 0 -> 4
         begin
@@ -87,16 +73,8 @@ module fetch_branch_test;
             env.put_txn(t);
         end
 
-        env.wait_for_completion();
-        $display("Total checks: %0d", env.scoreboard.num_checked);
-        $display("Mismatches: %0d", env.scoreboard.mismatch_count);
-        if (env.scoreboard.mismatch_count == 0 &&
-            env.scoreboard.num_checked > 0)
-            $display("TEST PASSED");
-        else
-            $display("TEST FAIL");
-        $finish;
-    end
+        report_and_finish();
+    endtask
 
-endmodule
+endclass
 

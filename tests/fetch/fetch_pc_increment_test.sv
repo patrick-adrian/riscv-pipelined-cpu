@@ -1,24 +1,13 @@
-`timescale 1ns/1ps
-
-// PC increment test: drive a sequence of pure sequential instructions
-// (pc_src=0, no stalls) and let the scoreboard verify PC += 4 each cycle.
-module fetch_pc_increment_test;
-
-    fetch_tb tb();
-    fetch_env env;
+class fetch_pc_increment_test extends fetch_base_test;
 
     int num_txns = 16;
 
-    initial begin
-        // Apply reset
-        tb.vif.reset = 1;
-        repeat (3) @(posedge tb.clk);
-        tb.vif.reset = 0;
-        repeat (1) @(posedge tb.clk);
+    function new(virtual fetch_if vif, fetch_env env);
+        super.new(vif, env);
+    endfunction
 
-        // Start environment
-        env = new(tb.vif);
-        env.run();
+    virtual task run();
+        apply_reset();
 
         // Drive a straight-line sequence
         for (int i = 0; i < num_txns; i++) begin
@@ -33,16 +22,8 @@ module fetch_pc_increment_test;
             env.put_txn(t);
         end
 
-        env.wait_for_completion();
-        $display("Total checks: %0d", env.scoreboard.num_checked);
-        $display("Mismatches: %0d", env.scoreboard.mismatch_count);
-        if (env.scoreboard.mismatch_count == 0 &&
-            env.scoreboard.num_checked > 0)
-            $display("TEST PASSED");
-        else
-            $display("TEST FAIL");
-        $finish;
-    end
+        report_and_finish();
+    endtask
 
-endmodule
+endclass
 
