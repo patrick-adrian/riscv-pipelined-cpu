@@ -46,7 +46,7 @@
 <li> Tues Mar 17: Fix test finish logic and regression script output. </li>
 <li> Thurs Mar 19: Fix scoreboard and driver single-cycle model. </li>
 <li> Fri Mar 20: Fix reset test thoroughness and reset assertion. </li>
-
+<li> Mon Mar 23: Fix tb_tob, convert tests from modules to classes, to allow for "compile once sim many" </li>
 
 </ul>
 
