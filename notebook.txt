@@ -244,3 +244,5 @@ Scoreboard: Observe "obs" now and not just DUT pc (will allow to check PC + 4 la
 Good because separates stimulus from observation.
 Consumes "obs" until sampled DUT control signals match transaction sent by driver
 Interface: Clocking block used to sync passive monitor
+-----------------
+Added scoreboard and assertions to check PC+4.

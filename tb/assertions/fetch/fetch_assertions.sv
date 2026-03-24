@@ -15,6 +15,7 @@ module fetch_assertions (
     input logic        reset,
     input logic        stall,
     input logic [31:0] pc,
+    input logic [31:0] pc_plus4,
     input logic [1:0]  pc_src
 );
 
@@ -68,6 +69,16 @@ module fetch_assertions (
     assert property (p_pc_zero_during_reset)
         else $error("[fetch_assertions] PC must be 0 one cycle after reset; reset=%b, pc=%0h", reset, pc);
 
+    // -------------------------------------------------------------------------
+    // E) The fetch stage adder output must always equal PC + 4
+    // -------------------------------------------------------------------------
+    property p_pc_plus4_matches_pc;
+        @(posedge clk)
+        (pc_plus4 == pc + 32'd4);
+    endproperty
+    assert property (p_pc_plus4_matches_pc)
+        else $error("[fetch_assertions] PC+4 must equal PC + 4; pc=%0h pc_plus4=%0h", pc, pc_plus4);
+
 `else
     // Procedural equivalents for simulators with limited SVA support (e.g. xsim)
     logic [31:0] pc_prev;
@@ -98,6 +109,10 @@ module fetch_assertions (
         // D) During reset, the PC should be 0
         if (reset_prev && (pc != 32'b0))
             $error("[fetch_assertions] PC must be 0 one cycle after reset; reset=%b, pc=%0h", reset, pc);
+
+        // E) The fetch stage adder output must always equal PC + 4
+        if (pc_plus4 != pc + 32'd4)
+            $error("[fetch_assertions] PC+4 must equal PC + 4; pc=%0h pc_plus4=%0h", pc, pc_plus4);
     end
 `endif
 

@@ -6,6 +6,7 @@ class fetch_scoreboard;
 
     logic [31:0] expected_pc;
     logic [31:0] next_expected_pc;
+    logic [31:0] expected_pc_plus4;
 
     int num_checked = 0;
     int mismatch_count = 0;
@@ -22,6 +23,8 @@ class fetch_scoreboard;
     task run();
         fetch_txn txn;
         fetch_obs obs;
+        bit pc_mismatch;
+        bit pc_plus4_mismatch;
 
         forever begin
             // Get the next expected input transaction.
@@ -50,13 +53,18 @@ class fetch_scoreboard;
                 endcase
             end
 
-            if (next_expected_pc !== obs.pc) begin
+            expected_pc_plus4 = next_expected_pc + 32'd4;
+            pc_mismatch = (next_expected_pc !== obs.pc);
+            pc_plus4_mismatch = (expected_pc_plus4 !== obs.pc_plus4);
+
+            if (pc_mismatch || pc_plus4_mismatch) begin
                 mismatch_count++;
-                $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: Mismatch! Model=%h DUT=%h\n",
-                         $time, obs.cycle, txn.id, next_expected_pc, obs.pc);
+                $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: Mismatch! exp_pc=%h dut_pc=%h exp_pc_plus4=%h dut_pc_plus4=%h\n",
+                         $time, obs.cycle, txn.id, next_expected_pc, obs.pc,
+                         expected_pc_plus4, obs.pc_plus4);
             end else begin
-                $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: PASS: PC=%h\n",
-                         $time, obs.cycle, txn.id, obs.pc);
+                $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: PASS: PC=%h PC+4=%h\n",
+                         $time, obs.cycle, txn.id, obs.pc, obs.pc_plus4);
             end
             num_checked++;
 

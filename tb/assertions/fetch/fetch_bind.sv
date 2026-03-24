@@ -10,5 +10,6 @@ bind fetch_stage fetch_assertions u_fetch_assertions (
     .reset  (reset_i),
     .stall  (stall_fi_i),
     .pc     (pc_fi_o),
+    .pc_plus4 (pc_plus4_fi_o),
     .pc_src (pc_src_i)
 );
