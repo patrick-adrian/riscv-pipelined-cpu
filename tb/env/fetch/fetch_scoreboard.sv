@@ -1,8 +1,8 @@
 class fetch_scoreboard;
 
     virtual fetch_if vif;
-    mailbox #(fetch_txn)    drv_mbx;
-    mailbox #(logic [31:0]) mon_mbx;
+    mailbox #(fetch_txn) drv_mbx;
+    mailbox #(fetch_obs) mon_mbx;
 
     logic [31:0] expected_pc;
     logic [31:0] next_expected_pc;
@@ -12,7 +12,7 @@ class fetch_scoreboard;
 
     function new(virtual fetch_if vif,
                  mailbox #(fetch_txn) drv_mbx,
-                 mailbox #(logic [31:0]) mon_mbx);
+                 mailbox #(fetch_obs) mon_mbx);
         this.vif     = vif;
         this.drv_mbx = drv_mbx;
         this.mon_mbx = mon_mbx;
@@ -21,21 +21,25 @@ class fetch_scoreboard;
 
     task run();
         fetch_txn txn;
-        logic [31:0] dut_pc;
+        fetch_obs obs;
 
         forever begin
-            // Get the next transaction and the corresponding DUT PC sample
-            // taken on the same posedge that the driver applied this txn's
-            // control inputs.
+            // Get the next expected input transaction.
             drv_mbx.get(txn);
-            mon_mbx.get(dut_pc);
 
-            // Compute the expected next PC and compare it against the DUT's
-            // posedge-updated output.
+            // The passive monitor samples every fetch clock, including idle and
+            // reset-only cycles. Consume observations until the sampled control
+            // inputs match the next transaction that the driver applied.
+            do begin
+                mon_mbx.get(obs);
+            end while (!obs.matches_txn(txn));
+
+            // Compute the expected next PC and compare it against the sampled
+            // post-clock DUT output for the matching cycle.
             next_expected_pc = expected_pc;
 
             // Reset forces the DUT PC back to 0; keep the reference model in sync.
-            if (vif.reset) begin
+            if (obs.reset) begin
                 next_expected_pc = 0;
             end else if (!txn.stall) begin
                 case(txn.pc_src)
@@ -46,13 +50,13 @@ class fetch_scoreboard;
                 endcase
             end
 
-            if (next_expected_pc !== dut_pc) begin
+            if (next_expected_pc !== obs.pc) begin
                 mismatch_count++;
                 $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: Mismatch! Model=%h DUT=%h\n",
-                         $time, vif.cycle, txn.id, next_expected_pc, dut_pc);
+                         $time, obs.cycle, txn.id, next_expected_pc, obs.pc);
             end else begin
                 $display("[TIME %0t][CYCLE %0d] SB  TXN[%0d]: PASS: PC=%h\n",
-                         $time, vif.cycle, txn.id, dut_pc);
+                         $time, obs.cycle, txn.id, obs.pc);
             end
             num_checked++;
 

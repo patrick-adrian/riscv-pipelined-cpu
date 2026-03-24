@@ -232,3 +232,15 @@ Boom. Scalable.
 "local" -> same class only
 "virtual" -> allows derived/child class to override method from base (parent) class
 "automatic" -> allocating variables on the stack
+-----------------------------------------------------
+March 24, 2026
+To better mimic UVM:
+Need to remove coupling btwn. driver and monitor, make monitor passive
+Right now monitor only samples after a transaction has been sent by driver. It needs to sample EVERY posedge (especially for reset tests).
+Driver: removed drv_done mailbox and driver-monitor handshake
+Monitor: remove drv_done mailbox, now samples DUT every posedge. It samples EVERY signal now into an "obs" object, not just PC.
+Env: remove drv_done mailbox
+Scoreboard: Observe "obs" now and not just DUT pc (will allow to check PC + 4 later)
+Good because separates stimulus from observation.
+Consumes "obs" until sampled DUT control signals match transaction sent by driver
+Interface: Clocking block used to sync passive monitor
