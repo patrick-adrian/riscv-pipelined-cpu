@@ -31,7 +31,7 @@ class fetch_reset_test extends fetch_base_test;
         end
 
         // Reset stays on after two txns
-        wait (env.scoreboard.num_checked == 2);
+        env.wait_until_checked(2);
         @(posedge vif.clk);
         vif.reset = 1;
 
@@ -58,7 +58,7 @@ class fetch_reset_test extends fetch_base_test;
         end
 
         // Recovery test
-        wait (env.scoreboard.num_checked == 4);
+        env.wait_until_checked(4);
         @(posedge vif.clk);
         vif.reset = 0;
 

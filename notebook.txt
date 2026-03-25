@@ -246,3 +246,10 @@ Consumes "obs" until sampled DUT control signals match transaction sent by drive
 Interface: Clocking block used to sync passive monitor
 -----------------
 Added scoreboard and assertions to check PC+4.
+-----------------------------------------------------
+March 25, 2026
+Tests (in fetch_base_test.sv) reports directly from env.scoreboard.
+Need to abstract and decouple (not reusable).
+Moved completion tracking and end-of-test coordination logic into environment.
+Now tests just call env.wait_for_completion() and env.report_results().
+Sync helper: env.wait_until_checked().

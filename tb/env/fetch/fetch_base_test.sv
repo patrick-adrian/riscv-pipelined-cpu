@@ -21,13 +21,7 @@ class fetch_base_test;
 
     task report_and_finish();
         env.wait_for_completion();
-        $display("Total checks: %0d", env.scoreboard.num_checked);
-        $display("Mismatches: %0d", env.scoreboard.mismatch_count);
-        if (env.scoreboard.mismatch_count == 0 &&
-            env.scoreboard.num_checked > 0)
-            $display("TEST PASSED");
-        else
-            $display("TEST FAIL");
+        env.report_results();
     endtask
 
 endclass
