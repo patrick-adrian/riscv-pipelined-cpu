@@ -32,8 +32,7 @@ class fetch_reset_test extends fetch_base_test;
 
         // Reset stays on after two txns
         env.wait_until_checked(2);
-        @(posedge vif.clk);
-        vif.reset = 1;
+        assert_reset();
 
         // TXN 2: straight-line 4 -> 8
         begin
@@ -59,8 +58,8 @@ class fetch_reset_test extends fetch_base_test;
 
         // Recovery test
         env.wait_until_checked(4);
-        @(posedge vif.clk);
-        vif.reset = 0;
+        drive_idle_controls();
+        deassert_reset();
 
         // TXN 4: sequential (pc_src=0), no stall
         begin

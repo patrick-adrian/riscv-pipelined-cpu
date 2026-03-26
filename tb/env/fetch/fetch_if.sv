@@ -12,6 +12,7 @@ interface fetch_if(input logic clk);
     logic [31:0] pc;
     logic [31:0] pc_plus4;
 
+    int          txn_tag;
     int          cycle;
 
     // Clocking block used to synchronize the passive monitor to each fetch

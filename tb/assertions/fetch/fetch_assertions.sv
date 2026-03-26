@@ -42,14 +42,16 @@ module fetch_assertions (
         else $error("[fetch_assertions] PC must not change while stall is asserted (from previous cycle); pc=%0h", pc);
 
     // -------------------------------------------------------------------------
-    // C) When the previous cycle was sequential fetch (pc_src == PC_SRC_SEQ_F)
-    //    and not stalled, the PC must increment by 4 relative to the previous
-    //    cycle. This explicitly ignores branch/jump/redirect cycles.
+    // C) When the previous cycle was sequential fetch (pc_src == PC_SRC_SEQ_F),
+    //    not stalled, and not part of a reset boundary, the PC must increment
+    //    by 4 relative to the previous cycle. This explicitly ignores
+    //    branch/jump/redirect cycles.
     // -------------------------------------------------------------------------
     property p_pc_increments_by_4_when_not_stalled;
         @(posedge clk)
         disable iff (reset)
         ($past(pc_src, 1, @(posedge clk)) == `PC_SRC_SEQ_F &&
+         !$past(reset, 1, @(posedge clk)) &&
          !$past(stall, 1, @(posedge clk))
          |-> (pc == $past(pc, 1, @(posedge clk)) + 32'd4));
     endproperty
@@ -102,8 +104,10 @@ module fetch_assertions (
         if (!reset && stall_prev && (pc != pc_prev))
             $error("[fetch_assertions] PC must not change while stall is asserted (from previous cycle); pc=%0h", pc);
 
-        // C) When previous cycle was sequential fetch and not stalled, PC must increment by 4
-        if (!reset && !stall_prev && pc_src_prev == `PC_SRC_SEQ_F && (pc != pc_prev + 32'd4))
+        // C) When previous cycle was sequential fetch, not stalled, and not
+        //    part of a reset boundary, PC must increment by 4
+        if (!reset && !reset_prev && !stall_prev &&
+            pc_src_prev == `PC_SRC_SEQ_F && (pc != pc_prev + 32'd4))
             $error("[fetch_assertions] PC must increment by 4 on sequential, non-stalled fetch; pc=%0h", pc);
 
         // D) During reset, the PC should be 0

@@ -25,6 +25,7 @@ class fetch_driver;
             vif.pc_target_ex   <= txn.pc_target_ex;
             vif.pc_plus4_ex    <= txn.pc_plus4_ex;
             vif.pred_pc_target <= txn.pred_pc_target;
+            vif.txn_tag        <= txn.id;
 
             txn.display(vif.cycle);
             num_sent++;

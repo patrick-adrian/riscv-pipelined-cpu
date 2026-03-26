@@ -31,25 +31,26 @@ class fetch_scoreboard;
             drv_mbx.get(txn);
 
             // The passive monitor samples every fetch clock, including idle and
-            // reset-only cycles. Consume observations until the sampled control
-            // inputs match the next transaction that the driver applied.
+            // reset-only cycles. Only observations carrying the driver's TB tag
+            // are scoreboard work for this transaction.
             do begin
                 mon_mbx.get(obs);
-            end while (!obs.matches_txn(txn));
+            end while (obs.txn_tag != txn.id);
 
             // Compute the expected next PC and compare it against the sampled
             // post-clock DUT output for the matching cycle.
             next_expected_pc = expected_pc;
 
-            // Reset forces the DUT PC back to 0; keep the reference model in sync.
+            // Reset is driven to be stable before the sampling posedge; when the
+            // observation sees reset high, that cycle's DUT PC is expected at 0.
             if (obs.reset) begin
                 next_expected_pc = 0;
-            end else if (!txn.stall) begin
-                case(txn.pc_src)
+            end else if (!obs.stall) begin
+                case(obs.pc_src)
                     2'd0: next_expected_pc = expected_pc + 4;
-                    2'd1: next_expected_pc = txn.pred_pc_target;
-                    2'd2: next_expected_pc = txn.pc_plus4_ex;
-                    2'd3: next_expected_pc = txn.pc_target_ex;
+                    2'd1: next_expected_pc = obs.pred_pc_target;
+                    2'd2: next_expected_pc = obs.pc_plus4_ex;
+                    2'd3: next_expected_pc = obs.pc_target_ex;
                 endcase
             end
 

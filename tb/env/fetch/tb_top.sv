@@ -21,6 +21,13 @@ module tb_top;
 
     initial begin
         vif.cycle = 0;
+        vif.txn_tag = -1;
+        vif.reset = 1'b0;
+        vif.pc_src = 2'd0;
+        vif.stall = 1'b1;
+        vif.pc_target_ex = 32'h0;
+        vif.pc_plus4_ex = 32'h0;
+        vif.pred_pc_target = 32'h0;
         reset_prev = 1'b0;
     end
 

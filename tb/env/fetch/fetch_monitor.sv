@@ -19,6 +19,7 @@ class fetch_monitor;
             @(vif.cb);
             #1ps;
 
+            obs.txn_tag        = vif.txn_tag;
             obs.cycle          = vif.cycle;
             obs.reset          = vif.reset;
             obs.pc_src         = vif.pc_src;
