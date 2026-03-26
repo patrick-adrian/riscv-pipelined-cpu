@@ -46,7 +46,10 @@
 <li> Tues Mar 17: Fix test finish logic and regression script output. </li>
 <li> Thurs Mar 19: Fix scoreboard and driver single-cycle model. </li>
 <li> Fri Mar 20: Fix reset test thoroughness and reset assertion. </li>
-<li> Mon Mar 23: Fix tb_top, convert tests from modules to classes to allow for "compile once sim many" </li>
+<li> Mon Mar 23: Fix tb_top, convert tests from modules to classes to allow for "compile once sim many". </li>
+<li> Tues Mar 24: Decouple driver and monitor and make monitor passive. </li>
+<li> Wed Mar 25: Abstract scoreboard from tests for more UVM accuracy. </li>
+<li> Thurs Mar 26: Clean up reset contract. </li>
 
 </ul>
 

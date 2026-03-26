@@ -253,7 +253,7 @@ Need to abstract and decouple (not reusable).
 Moved completion tracking and end-of-test coordination logic into environment.
 Now tests just call env.wait_for_completion() and env.report_results().
 Sync helper: env.wait_until_checked().
------------------
+-----------------------------------------------------
 March 26, 2026
 Need to clean up reset test semantics so reset-only behavior is separate from optional post-reset bubble behavior.
 Tests should not interact with the VIF directly. Need to create method in the env.
@@ -265,3 +265,6 @@ drive_idle_controls() is necessary in fetch_reset_test to force a benign post-re
 the first post-reset cycle can still see stale controls
 this particular test expects a clean restart from PC=0
 therefore it needs an explicit idle bubble"
+--------------
+Add reset injections in fetch_random_test.
+Add fetch stall test.

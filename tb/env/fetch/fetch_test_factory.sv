@@ -23,5 +23,9 @@ function automatic fetch_base_test create_test(
         fetch_random_test t = new(vif, env);
         return t;
     end
+    if (name == "fetch_stall_test") begin
+        fetch_stall_test t = new(vif, env);
+        return t;
+    end
     return null;
 endfunction

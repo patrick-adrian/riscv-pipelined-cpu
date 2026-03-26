@@ -34,7 +34,24 @@ class fetch_random_test extends fetch_base_test;
         // Drive a randomized stream
         for (int i = 0; i < num_txns; i++) begin
             automatic fetch_txn t = new();
+            int pcnt = 0;
+
             assert(t.randomize());
+            
+            if (vif.reset == 1'b0) begin
+                pcnt = 30;
+            end else begin
+                pcnt = 70;
+            end
+            if($urandom_range(0, 100) < pcnt) begin
+                env.wait_until_checked(i); 
+                if (vif.reset == 1'b0) begin
+                    assert_reset();
+                end else begin
+                    drive_idle_controls();
+                    deassert_reset();
+                end
+            end
             env.put_txn(t);
         end
 
