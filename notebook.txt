@@ -268,3 +268,9 @@ therefore it needs an explicit idle bubble"
 --------------
 Add reset injections in fetch_random_test.
 Add fetch stall test.
+------------------------------------------------------
+March 27, 2026
+Added decode testbench.
+Still need to add assertions.
+Main differences: scoreboard calculates expected values using txns now instead of obs objects, and compares that against monitor's sampled obs objects.
+Added a light sequencer instead of env sending txns directly to driver and scoreboard.
