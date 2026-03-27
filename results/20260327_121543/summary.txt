@@ -1,0 +1,11 @@
+REGRESSION SUMMARY
+------------------
+decode_smoke_test PASS
+decode_reset_test PASS
+decode_stall_test PASS
+decode_flush_test PASS
+decode_precedence_test PASS
+decode_imm_random_test PASS
+
+PASS: 6
+FAIL: 0

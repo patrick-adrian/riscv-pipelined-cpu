@@ -1,0 +1,6 @@
+decode_smoke_test
+decode_reset_test
+decode_stall_test
+decode_flush_test
+decode_precedence_test
+decode_imm_random_test

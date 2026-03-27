@@ -51,11 +51,29 @@ PASS_COUNT=0
 FAIL_COUNT=0
 SUMMARY_LINES=()
 
-# Build shared simulation snapshot once, then run tests via +TEST at runtime.
+# Ensure all tests in this list target the same stage prefix and use that stage
+# for the one-time compile/elab snapshot.
+FIRST_TEST="${TESTS[0]}"
+STAGE_PREFIX="${FIRST_TEST%%_*}"
+if [[ -z "$STAGE_PREFIX" || "$STAGE_PREFIX" == "$FIRST_TEST" ]]; then
+    echo "Error: Test name '$FIRST_TEST' does not follow <stage>_<name> convention." >&2
+    exit 1
+fi
+
+for test_name in "${TESTS[@]}"; do
+    test_stage="${test_name%%_*}"
+    if [[ "$test_stage" != "$STAGE_PREFIX" ]]; then
+        echo "Error: Mixed stage tests in one regression list are not supported." >&2
+        echo "  Found '$test_name' (stage '$test_stage') but expected stage '$STAGE_PREFIX'." >&2
+        exit 1
+    fi
+done
+
+# Build shared simulation snapshot once for this stage, then run tests via +TEST.
 build_log="${RESULTS_DIR}/build.log"
-echo "Compiling/elaborating shared snapshot..."
-make compile > "$build_log" 2>&1
-make elab >> "$build_log" 2>&1
+echo "Compiling/elaborating shared snapshot for stage '${STAGE_PREFIX}'..."
+make compile TEST="${FIRST_TEST}" > "$build_log" 2>&1
+make elab TEST="${FIRST_TEST}" >> "$build_log" 2>&1
 
 for test_name in "${TESTS[@]}"; do
     test_dir="${RESULTS_DIR}/${test_name}"
