@@ -18,3 +18,4 @@ xsim.dir
 *.vcd.lz
 *.vcd.lzo
 .cursor
+failures.txt

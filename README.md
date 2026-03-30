@@ -50,6 +50,7 @@
 <li> Tues Mar 24: Decouple driver and monitor and make monitor passive. </li>
 <li> Wed Mar 25: Abstract scoreboard from tests for more UVM accuracy. </li>
 <li> Thurs Mar 26: Clean up reset contract. </li>
+<li> Fri Mar 27: Add decode testbench and regression results. </li>
 
 </ul>
 
