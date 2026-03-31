@@ -4,9 +4,10 @@
 //  File:         csr_decoder.sv
 //  Description:  performs decoding for the csr_control signal
 //
-//  Author:       Viggo Wozniak
-//  Project:      RISC-V Processor
-//  Repository:   https://github.com/Biggo03/RISC-V-Pipelined
+//  Author:                     Viggo Wozniak
+//  Reviewed/annotated by:      Patrick Pineda
+//  
+//  DEPENDENCIES: instr_macros.sv, control_macros.sv
 //
 //  Parameters:   N/A
 //

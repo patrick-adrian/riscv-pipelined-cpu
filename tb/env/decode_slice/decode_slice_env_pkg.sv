@@ -1,0 +1,6 @@
+`include "decode_if.sv"
+`include "decode_ref_model.sv"
+`include "decode_driver.sv"
+`include "decode_monitor.sv"
+`include "decode_scoreboard.sv"
+`include "decode_env.sv"

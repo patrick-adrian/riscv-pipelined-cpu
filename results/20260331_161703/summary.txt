@@ -1,0 +1,6 @@
+REGRESSION SUMMARY
+------------------
+decode_slice_smoke_test FAIL
+
+PASS: 0
+FAIL: 1

@@ -274,3 +274,8 @@ Added decode testbench.
 Still need to add assertions.
 Main differences: scoreboard calculates expected values using txns now instead of obs objects, and compares that against monitor's sampled obs objects.
 Added a light sequencer instead of env sending txns directly to driver and scoreboard.
+------------------------------------------------------
+March 31, 2026
+Decode testbench contains a fatal flaw: randomizing imm_src_de_i
+So, created decode_slice testbench that includes main_decoder.sv (skipping control_unit.sv for now)
+Then, tb_control_unit, then finally, tb_fetch_decode_control
