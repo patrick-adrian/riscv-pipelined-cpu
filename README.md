@@ -51,6 +51,7 @@
 <li> Wed Mar 25: Abstract scoreboard from tests for more UVM accuracy. </li>
 <li> Thurs Mar 26: Clean up reset contract. </li>
 <li> Fri Mar 27: Add decode testbench and regression results. </li>
+<li> Tues Mar 31: Add decode_slice testbench, assertions, and regression results. </li>
 
 </ul>
 

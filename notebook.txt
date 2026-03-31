@@ -279,3 +279,9 @@ March 31, 2026
 Decode testbench contains a fatal flaw: randomizing imm_src_de_i
 So, created decode_slice testbench that includes main_decoder.sv (skipping control_unit.sv for now)
 Then, tb_control_unit, then finally, tb_fetch_decode_control
+----------------------
+Assertions for decode_slice:
+Only funct7_de_o[5] is only driven because it's the only bit that matters:
+funct7[5] == 1 → SUB
+funct7[5] == 0 → ADD
+So don't check for entire funct7.. rest of bits remain X/Z
