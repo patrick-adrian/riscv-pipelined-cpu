@@ -51,17 +51,40 @@ PASS_COUNT=0
 FAIL_COUNT=0
 SUMMARY_LINES=()
 
-# Ensure all tests in this list target the same stage prefix and use that stage
+# Derive the stage for a test by finding which tests/<stage>/ directory contains it.
+# Handles multi-word stages like decode_slice (progressively tries longer prefixes).
+derive_stage() {
+    local test_name="$1"
+    local IFS='_'
+    local parts=($test_name)
+    local candidate=""
+    for part in "${parts[@]}"; do
+        if [[ -z "$candidate" ]]; then
+            candidate="$part"
+        else
+            candidate="${candidate}_${part}"
+        fi
+        if [[ -f "tests/${candidate}/${test_name}.sv" ]]; then
+            echo "$candidate"
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Ensure all tests in this list target the same stage and use that stage
 # for the one-time compile/elab snapshot.
 FIRST_TEST="${TESTS[0]}"
-STAGE_PREFIX="${FIRST_TEST%%_*}"
-if [[ -z "$STAGE_PREFIX" || "$STAGE_PREFIX" == "$FIRST_TEST" ]]; then
-    echo "Error: Test name '$FIRST_TEST' does not follow <stage>_<name> convention." >&2
+STAGE_PREFIX="$(derive_stage "$FIRST_TEST")" || {
+    echo "Error: Cannot determine stage for test '$FIRST_TEST' (no matching tests/<stage>/ directory)." >&2
     exit 1
-fi
+}
 
 for test_name in "${TESTS[@]}"; do
-    test_stage="${test_name%%_*}"
+    test_stage="$(derive_stage "$test_name")" || {
+        echo "Error: Cannot determine stage for test '$test_name'." >&2
+        exit 1
+    }
     if [[ "$test_stage" != "$STAGE_PREFIX" ]]; then
         echo "Error: Mixed stage tests in one regression list are not supported." >&2
         echo "  Found '$test_name' (stage '$test_stage') but expected stage '$STAGE_PREFIX'." >&2
@@ -72,8 +95,8 @@ done
 # Build shared simulation snapshot once for this stage, then run tests via +TEST.
 build_log="${RESULTS_DIR}/build.log"
 echo "Compiling/elaborating shared snapshot for stage '${STAGE_PREFIX}'..."
-make compile TEST="${FIRST_TEST}" > "$build_log" 2>&1
-make elab TEST="${FIRST_TEST}" >> "$build_log" 2>&1
+make compile STAGE="${STAGE_PREFIX}" TEST="${FIRST_TEST}" > "$build_log" 2>&1
+make elab STAGE="${STAGE_PREFIX}" TEST="${FIRST_TEST}" >> "$build_log" 2>&1
 
 for test_name in "${TESTS[@]}"; do
     test_dir="${RESULTS_DIR}/${test_name}"
@@ -81,7 +104,7 @@ for test_name in "${TESTS[@]}"; do
     sim_log="${test_dir}/sim.log"
 
     echo -n "Running ${test_name}... "
-    make run TEST="$test_name" > "$sim_log" 2>&1 || true
+    make run STAGE="${STAGE_PREFIX}" TEST="$test_name" > "$sim_log" 2>&1 || true
 
     # Move waveform if present (ignore errors if missing)
     if [[ -f waveform.vcd ]]; then
