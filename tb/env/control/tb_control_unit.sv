@@ -71,7 +71,7 @@ module tb_control_unit;
 
     initial begin
         if (!$value$plusargs("TEST=%s", testname))
-            testname = "test_basic_instr";
+            testname = "control_basic_instr_test";
 
         $display("Running test: %0s", testname);
 

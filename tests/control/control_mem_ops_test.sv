@@ -1,6 +1,6 @@
 `include "instr_macros.sv"
 
-class test_mem_ops extends control_base_test;
+class control_mem_ops_test extends control_base_test;
 
     function new(virtual control_if vif, control_env env);
         super.new(vif, env);

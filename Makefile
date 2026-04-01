@@ -39,7 +39,7 @@ ifeq ($(STAGE),control)
   TB_ENV_PKG_SV := $(wildcard tb/env/control/control_env_pkg.sv)
   TEST_BASE_SV := $(wildcard tb/env/control/control_base_test.sv)
   TEST_FACTORY_SV := $(wildcard tb/env/control/control_test_factory.sv)
-  TEST_CLASS_SV := $(shell find tests/control -name "*.sv" | sort)
+  TEST_CLASS_SV := $(shell find tests/control -name "*_test.sv" | sort)
 endif
 
 ifeq ($(STAGE),decode_slice)
@@ -90,4 +90,4 @@ help:
 	@echo "  make simulate TEST=fetch_smoke_test"
 	@echo "  make simulate TEST=fetch_random_test SEED=1234"
 	@echo "  make simulate STAGE=decode_slice TEST=decode_slice_smoke_test"
-	@echo "  make simulate STAGE=control TEST=test_basic_instr"
+	@echo "  make simulate STAGE=control TEST=control_basic_instr_test"

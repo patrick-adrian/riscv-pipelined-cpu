@@ -1,0 +1,4 @@
+# Control unit tests (tb/env/control/tb_control_unit.sv)
+control_basic_instr_test
+control_branch_jump_test
+control_mem_ops_test
