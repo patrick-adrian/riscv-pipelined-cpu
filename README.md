@@ -52,6 +52,7 @@
 <li> Thurs Mar 26: Clean up reset contract. </li>
 <li> Fri Mar 27: Add decode testbench and regression results. </li>
 <li> Tues Mar 31: Add decode_slice testbench, assertions, and regression results. </li>
+<li> Wed Apr 1: Add control testbench.</li>
 
 </ul>
 

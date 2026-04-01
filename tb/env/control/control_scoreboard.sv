@@ -5,7 +5,6 @@ class control_scoreboard;
 
     int num_checked = 0;
     int mismatch_count = 0;
-    bit prev_reset = 1'b0;
 
     function new(mailbox #(control_txn) drv_mbx, mailbox #(control_obs) mon_mbx);
         this.drv_mbx = drv_mbx;
@@ -18,33 +17,18 @@ class control_scoreboard;
         control_ref_model::control_exp_t exp;
         string decoded_type;
         bit mm;
-        logic [22:0] flat_outputs;
 
         forever begin
             drv_mbx.get(txn);
+            mon_mbx.get(obs);
 
-            do begin
-                mon_mbx.get(obs);
-            end while (obs.txn_id != txn.id);
-
-            if (txn.reset || obs.reset) begin
+            if (obs.txn_id !== txn.id) begin
+                mismatch_count++;
+                $display("[TIME %0t] SB TXN[%0d]: MISMATCH txn_id: exp=%0d got=%0d",
+                         $time, txn.id, txn.id, obs.txn_id);
                 num_checked++;
-                prev_reset = 1'b1;
                 continue;
             end
-
-            flat_outputs = {
-                obs.imm_src, obs.result_src, obs.branch_op, obs.alu_src,
-                obs.pc_base_src, obs.reg_write, obs.mem_write, obs.csr_we,
-                obs.alu_control, obs.width_src, obs.csr_control, obs.csr_src
-            };
-
-            if (prev_reset && $isunknown(flat_outputs)) begin
-                mismatch_count++;
-                $display("[TIME %0t][CYCLE %0d] SB TXN[%0d]: MISMATCH post-reset outputs contain X/Z",
-                         $time, obs.cycle, txn.id);
-            end
-            prev_reset = 1'b0;
 
             exp = control_ref_model::decode_expected(txn.opcode, txn.funct3, txn.funct7);
             decoded_type = control_ref_model::instruction_type(txn.opcode, txn.funct3, txn.funct7);
@@ -65,8 +49,8 @@ class control_scoreboard;
 
             if (mm) begin
                 mismatch_count++;
-                $display("[TIME %0t][CYCLE %0d] SB TXN[%0d]: MISMATCH (%0s)",
-                         $time, obs.cycle, txn.id, decoded_type);
+                $display("[TIME %0t] SB TXN[%0d]: MISMATCH (%0s)",
+                         $time, txn.id, decoded_type);
                 $display("  fields: op=%07b f3=%03b f7=%07b", txn.opcode, txn.funct3, txn.funct7);
                 $display("  imm_src:     exp=%03b got=%03b", exp.imm_src, obs.imm_src);
                 $display("  result_src:  exp=%03b got=%03b", exp.result_src, obs.result_src);
@@ -81,8 +65,8 @@ class control_scoreboard;
                 $display("  csr_control: exp=%02b got=%02b", exp.csr_control, obs.csr_control);
                 $display("  csr_src:     exp=%0b got=%0b\n", exp.csr_src, obs.csr_src);
             end else begin
-                $display("[TIME %0t][CYCLE %0d] SB TXN[%0d]: PASS (%0s)\n",
-                         $time, obs.cycle, txn.id, decoded_type);
+                $display("[TIME %0t] SB TXN[%0d]: PASS (%0s)\n",
+                         $time, txn.id, decoded_type);
             end
 
             num_checked++;

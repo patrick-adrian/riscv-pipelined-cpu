@@ -285,3 +285,9 @@ Only funct7_de_o[5] is only driven because it's the only bit that matters:
 funct7[5] == 1 → SUB
 funct7[5] == 0 → ADD
 So don't check for entire funct7.. rest of bits remain X/Z
+------------------------------------------------------
+April 1, 2026
+Added control unit testbench. 
+At first I included global signals like reset, clock, and cycle in virtual interface.
+Since control unit is purely combinational, not necessary.
+To sync driver and monitor, added a handshake via mailbox and manual delays.

@@ -9,10 +9,11 @@ class control_env;
     mailbox #(control_txn) drv_mbx;
     mailbox #(control_txn) scb_drv_mbx;
     mailbox #(control_obs) mon_mbx;
+    mailbox #(int)         mon_trig;
 
     int txn_id = 0;
     int num_txns_sent = 0;
-    int default_timeout_cycles = 1000;
+    int default_timeout_ns = 100_000;
 
     function new(virtual control_if vif);
         this.vif = vif;
@@ -20,9 +21,10 @@ class control_env;
         drv_mbx     = new();
         scb_drv_mbx = new();
         mon_mbx     = new();
+        mon_trig    = new();
 
-        driver     = new(vif, drv_mbx);
-        monitor    = new(vif, mon_mbx);
+        driver     = new(vif, drv_mbx, mon_trig);
+        monitor    = new(vif, mon_mbx, mon_trig);
         scoreboard = new(scb_drv_mbx, mon_mbx);
     endfunction
 
@@ -45,17 +47,17 @@ class control_env;
         return scoreboard.mismatch_count != 0;
     endfunction
 
-    task wait_for_completion(int timeout_cycles = -1);
+    task wait_for_completion(int timeout_ns = -1);
         int waited = 0;
-        if (timeout_cycles < 0) timeout_cycles = default_timeout_cycles;
+        if (timeout_ns < 0) timeout_ns = default_timeout_ns;
 
         if (num_txns_sent == 0)
             $fatal(1, "wait_for_completion() called before any transactions sent");
 
         while (scoreboard.num_checked < num_txns_sent) begin
-            @(posedge vif.clk);
+            #1ns;
             waited++;
-            if (waited >= timeout_cycles)
+            if (waited >= timeout_ns)
                 $fatal(1, "Timeout: checked=%0d sent=%0d mismatches=%0d",
                        scoreboard.num_checked, num_txns_sent, scoreboard.mismatch_count);
         end

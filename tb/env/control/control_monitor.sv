@@ -1,8 +1,6 @@
 class control_obs;
 
     int          txn_id;
-    int          cycle;
-    logic        reset;
     logic [6:0]  opcode;
     logic [2:0]  funct3;
     logic [6:0]  funct7;
@@ -26,41 +24,52 @@ endclass
 class control_monitor;
 
     virtual control_if vif;
-    mailbox #(control_obs) mbx;
+    mailbox #(control_obs) mon_mbx;
+    mailbox #(int)         mon_trig;
+
+    localparam time OUTPUT_SETTLE = 1ps;
+
     int num_sampled = 0;
 
-    function new(virtual control_if vif, mailbox #(control_obs) mbx);
-        this.vif = vif;
-        this.mbx = mbx;
+    function new(virtual control_if vif,
+                 mailbox #(control_obs) mon_mbx,
+                 mailbox #(int) mon_trig);
+        this.vif      = vif;
+        this.mon_mbx  = mon_mbx;
+        this.mon_trig = mon_trig;
     endfunction
 
     task run();
+        int sid;
+
         forever begin
-            control_obs obs = new();
-            @(vif.cb);
-            #1ps;
+            mon_trig.get(sid);
 
-            obs.txn_id      = vif.txn_id;
-            obs.cycle       = vif.cycle;
-            obs.reset       = vif.reset;
-            obs.opcode      = vif.opcode;
-            obs.funct3      = vif.funct3;
-            obs.funct7      = vif.funct7;
-            obs.imm_src     = vif.imm_src;
-            obs.result_src  = vif.result_src;
-            obs.branch_op   = vif.branch_op;
-            obs.alu_src     = vif.alu_src;
-            obs.pc_base_src = vif.pc_base_src;
-            obs.reg_write   = vif.reg_write;
-            obs.mem_write   = vif.mem_write;
-            obs.csr_we      = vif.csr_we;
-            obs.alu_control = vif.alu_control;
-            obs.width_src   = vif.width_src;
-            obs.csr_control = vif.csr_control;
-            obs.csr_src     = vif.csr_src;
+            // Sample outputs after driver-reported input stabilization.
+            #(OUTPUT_SETTLE);
 
-            mbx.put(obs);
-            num_sampled++;
+            begin
+                control_obs obs = new();
+                obs.txn_id      = sid;
+                obs.opcode      = vif.opcode;
+                obs.funct3      = vif.funct3;
+                obs.funct7      = vif.funct7;
+                obs.imm_src     = vif.imm_src;
+                obs.result_src  = vif.result_src;
+                obs.branch_op   = vif.branch_op;
+                obs.alu_src     = vif.alu_src;
+                obs.pc_base_src = vif.pc_base_src;
+                obs.reg_write   = vif.reg_write;
+                obs.mem_write   = vif.mem_write;
+                obs.csr_we      = vif.csr_we;
+                obs.alu_control = vif.alu_control;
+                obs.width_src   = vif.width_src;
+                obs.csr_control = vif.csr_control;
+                obs.csr_src     = vif.csr_src;
+
+                mon_mbx.put(obs);
+                num_sampled++;
+            end
         end
     endtask
 

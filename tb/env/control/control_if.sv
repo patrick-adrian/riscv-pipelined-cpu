@@ -1,12 +1,10 @@
-interface control_if(input logic clk);
+// Combinational DUT: no clock or reset on interface. txn_id is TB-only tagging.
+interface control_if;
 
-    // TB -> DUT inputs
-    logic       reset;
     logic [6:0] opcode;
     logic [2:0] funct3;
     logic [6:0] funct7;
 
-    // DUT outputs
     logic [2:0] imm_src;
     logic [2:0] result_src;
     logic [1:0] branch_op;
@@ -20,17 +18,6 @@ interface control_if(input logic clk);
     logic [1:0] csr_control;
     logic       csr_src;
 
-    // TB metadata
     int         txn_id;
-    int         cycle;
-
-    clocking cb @(posedge clk);
-        default input #1step;
-        input reset;
-        input opcode, funct3, funct7;
-        input imm_src, result_src, branch_op;
-        input alu_src, pc_base_src, reg_write, mem_write, csr_we;
-        input alu_control, width_src, csr_control, csr_src;
-    endclocking
 
 endinterface
