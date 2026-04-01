@@ -16,10 +16,15 @@ SEED  ?=
 
 # Defaults
 TOP := tb_top
+ENV_DIR := tb/env/$(STAGE)
 
 # Stage-specific overrides
 ifeq ($(STAGE),decode_slice)
   TOP       := tb_decode_slice
+endif
+ifeq ($(STAGE),control)
+  TOP       := tb_control_unit
+  ENV_DIR   := tb/env/control
 endif
 
 # Directories
@@ -30,8 +35,17 @@ TEST_BASE_SV := $(wildcard tb/env/$(STAGE)/$(STAGE)_base_test.sv)
 TEST_FACTORY_SV := $(wildcard tb/env/$(STAGE)/$(STAGE)_test_factory.sv)
 TEST_CLASS_SV := $(shell find tests/$(STAGE) -name "*_test.sv" | sort)
 
+ifeq ($(STAGE),control)
+  TB_ENV_PKG_SV := $(wildcard tb/env/control/control_env_pkg.sv)
+  TEST_BASE_SV := $(wildcard tb/env/control/control_base_test.sv)
+  TEST_FACTORY_SV := $(wildcard tb/env/control/control_test_factory.sv)
+  TEST_CLASS_SV := $(shell find tests/control -name "*.sv" | sort)
+endif
+
 ifeq ($(STAGE),decode_slice)
   TB_TOP_SV := tb/env/decode_slice/tb_decode_slice.sv
+else ifeq ($(STAGE),control)
+  TB_TOP_SV := tb/env/control/tb_control_unit.sv
 else
   TB_TOP_SV := tb/env/$(STAGE)/tb_top.sv
 endif
@@ -41,7 +55,7 @@ ASSERT_SV  := $(wildcard tb/assertions/$(STAGE)/*.sv)
 SRC_SV     := $(COMMON_SV) $(RTL_SV) $(TB_ENV_PKG_SV) $(TEST_BASE_SV) $(TEST_CLASS_SV) $(TEST_FACTORY_SV) $(TB_TOP_SV) $(ASSERT_SV)
 
 # Include directories (stage env + stage assertions for `include and package visibility)
-INCLUDES   := common tb/env/$(STAGE) tb/assertions/$(STAGE)
+INCLUDES   := common $(ENV_DIR) tb/assertions/$(STAGE)
 
 .PHONY: all compile elab run simulate waves clean help
 
@@ -76,3 +90,4 @@ help:
 	@echo "  make simulate TEST=fetch_smoke_test"
 	@echo "  make simulate TEST=fetch_random_test SEED=1234"
 	@echo "  make simulate STAGE=decode_slice TEST=decode_slice_smoke_test"
+	@echo "  make simulate STAGE=control TEST=test_basic_instr"

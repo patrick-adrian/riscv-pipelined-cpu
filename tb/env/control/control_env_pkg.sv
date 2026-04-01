@@ -1,0 +1,6 @@
+`include "control_if.sv"
+`include "control_ref_model.sv"
+`include "control_driver.sv"
+`include "control_monitor.sv"
+`include "control_scoreboard.sv"
+`include "control_env.sv"
