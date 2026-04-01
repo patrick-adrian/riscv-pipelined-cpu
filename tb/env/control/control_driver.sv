@@ -21,9 +21,6 @@ class control_driver;
     mailbox #(int)         mon_trig;
     int num_sent = 0;
 
-    localparam time INPUT_SETTLE = 1ps;
-    localparam time INTER_TXN_GAP = 1ns;
-
     function new(virtual control_if vif,
                  mailbox #(control_txn) mbx,
                  mailbox #(int) mon_trig);
@@ -46,12 +43,12 @@ class control_driver;
             txn.display();
             num_sent++;
 
-            // Let combinational logic settle before the monitor samples.
-            #(INPUT_SETTLE);
+            // Delta cycles: yield so combinational DUT updates propagate before sample.
+            #0;
             mon_trig.put(txn.id);
 
-            // Small gap before the next transaction.
-            #(INTER_TXN_GAP);
+            // Extra delta before next transaction (time unchanged; ordering vs other processes).
+            #0;
         end
     endtask
 

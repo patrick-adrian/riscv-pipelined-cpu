@@ -291,3 +291,5 @@ Added control unit testbench.
 At first I included global signals like reset, clock, and cycle in virtual interface.
 Since control unit is purely combinational, not necessary.
 To sync driver and monitor, added a handshake via mailbox and manual delays.
+----------------------
+Replaced manual delays with delta cycle (#0)

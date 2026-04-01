@@ -27,8 +27,6 @@ class control_monitor;
     mailbox #(control_obs) mon_mbx;
     mailbox #(int)         mon_trig;
 
-    localparam time OUTPUT_SETTLE = 1ps;
-
     int num_sampled = 0;
 
     function new(virtual control_if vif,
@@ -45,8 +43,8 @@ class control_monitor;
         forever begin
             mon_trig.get(sid);
 
-            // Sample outputs after driver-reported input stabilization.
-            #(OUTPUT_SETTLE);
+            // Delta cycle after trigger so outputs are stable in this timestep.
+            #0;
 
             begin
                 control_obs obs = new();

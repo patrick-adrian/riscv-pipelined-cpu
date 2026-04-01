@@ -13,7 +13,7 @@ class control_env;
 
     int txn_id = 0;
     int num_txns_sent = 0;
-    int default_timeout_ns = 100_000;
+    int default_max_delta_waits = 100_000;
 
     function new(virtual control_if vif);
         this.vif = vif;
@@ -47,19 +47,19 @@ class control_env;
         return scoreboard.mismatch_count != 0;
     endfunction
 
-    task wait_for_completion(int timeout_ns = -1);
+    task wait_for_completion(int max_delta_waits = -1);
         int waited = 0;
-        if (timeout_ns < 0) timeout_ns = default_timeout_ns;
+        if (max_delta_waits < 0) max_delta_waits = default_max_delta_waits;
 
         if (num_txns_sent == 0)
             $fatal(1, "wait_for_completion() called before any transactions sent");
 
         while (scoreboard.num_checked < num_txns_sent) begin
-            #1ns;
+            #0;
             waited++;
-            if (waited >= timeout_ns)
-                $fatal(1, "Timeout: checked=%0d sent=%0d mismatches=%0d",
-                       scoreboard.num_checked, num_txns_sent, scoreboard.mismatch_count);
+            if (waited >= max_delta_waits)
+                $fatal(1, "Timeout: checked=%0d sent=%0d mismatches=%0d (delta waits=%0d)",
+                       scoreboard.num_checked, num_txns_sent, scoreboard.mismatch_count, waited);
         end
     endtask
 
