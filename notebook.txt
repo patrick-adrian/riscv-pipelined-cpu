@@ -293,3 +293,5 @@ Since control unit is purely combinational, not necessary.
 To sync driver and monitor, added a handshake via mailbox and manual delays.
 ----------------------
 Replaced manual delays with delta cycle (#0)
+Problem: monitor is not passive anymore (handshake)
+Need to add valid signal in between txns.

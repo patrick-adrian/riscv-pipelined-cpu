@@ -21,34 +21,27 @@ class control_obs;
 endclass
 
 
+// Fully passive: samples the bus when driver asserts vif.valid (no mailbox handshake).
 class control_monitor;
 
     virtual control_if vif;
     mailbox #(control_obs) mon_mbx;
-    mailbox #(int)         mon_trig;
 
     int num_sampled = 0;
 
-    function new(virtual control_if vif,
-                 mailbox #(control_obs) mon_mbx,
-                 mailbox #(int) mon_trig);
-        this.vif      = vif;
-        this.mon_mbx  = mon_mbx;
-        this.mon_trig = mon_trig;
+    function new(virtual control_if vif, mailbox #(control_obs) mon_mbx);
+        this.vif     = vif;
+        this.mon_mbx = mon_mbx;
     endfunction
 
     task run();
-        int sid;
-
         forever begin
-            mon_trig.get(sid);
-
-            // Delta cycle after trigger so outputs are stable in this timestep.
+            wait (vif.valid === 1'b1);
             #0;
 
             begin
                 control_obs obs = new();
-                obs.txn_id      = sid;
+                obs.txn_id      = vif.txn_id;
                 obs.opcode      = vif.opcode;
                 obs.funct3      = vif.funct3;
                 obs.funct7      = vif.funct7;

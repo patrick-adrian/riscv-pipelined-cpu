@@ -18,15 +18,11 @@ class control_driver;
 
     virtual control_if vif;
     mailbox #(control_txn) mbx;
-    mailbox #(int)         mon_trig;
     int num_sent = 0;
 
-    function new(virtual control_if vif,
-                 mailbox #(control_txn) mbx,
-                 mailbox #(int) mon_trig);
-        this.vif      = vif;
-        this.mbx      = mbx;
-        this.mon_trig = mon_trig;
+    function new(virtual control_if vif, mailbox #(control_txn) mbx);
+        this.vif = vif;
+        this.mbx = mbx;
     endfunction
 
     task run();
@@ -34,6 +30,9 @@ class control_driver;
 
         forever begin
             mbx.get(txn);
+
+            vif.valid  = 1'b0;
+            #0;
 
             vif.opcode = txn.opcode;
             vif.funct3 = txn.funct3;
@@ -43,11 +42,10 @@ class control_driver;
             txn.display();
             num_sent++;
 
-            // Delta cycles: yield so combinational DUT updates propagate before sample.
+            vif.valid = 1'b1;
             #0;
-            mon_trig.put(txn.id);
 
-            // Extra delta before next transaction (time unchanged; ordering vs other processes).
+            vif.valid = 1'b0;
             #0;
         end
     endtask

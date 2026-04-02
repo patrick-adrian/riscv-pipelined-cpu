@@ -1,0 +1,8 @@
+REGRESSION SUMMARY
+------------------
+control_basic_instr_test PASS
+control_branch_jump_test PASS
+control_mem_ops_test PASS
+
+PASS: 3
+FAIL: 0

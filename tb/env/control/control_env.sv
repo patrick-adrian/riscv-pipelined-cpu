@@ -9,7 +9,6 @@ class control_env;
     mailbox #(control_txn) drv_mbx;
     mailbox #(control_txn) scb_drv_mbx;
     mailbox #(control_obs) mon_mbx;
-    mailbox #(int)         mon_trig;
 
     int txn_id = 0;
     int num_txns_sent = 0;
@@ -21,10 +20,9 @@ class control_env;
         drv_mbx     = new();
         scb_drv_mbx = new();
         mon_mbx     = new();
-        mon_trig    = new();
 
-        driver     = new(vif, drv_mbx, mon_trig);
-        monitor    = new(vif, mon_mbx, mon_trig);
+        driver     = new(vif, drv_mbx);
+        monitor    = new(vif, mon_mbx);
         scoreboard = new(scb_drv_mbx, mon_mbx);
     endfunction
 

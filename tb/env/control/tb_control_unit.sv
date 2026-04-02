@@ -15,6 +15,7 @@ module tb_control_unit;
     control_if vif();
 
     initial begin
+        vif.valid  = 1'b0;
         vif.txn_id = -1;
         vif.opcode = 7'b0;
         vif.funct3 = 3'b0;

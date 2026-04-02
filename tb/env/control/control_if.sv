@@ -1,6 +1,8 @@
 // Combinational DUT: no clock or reset on interface. txn_id is TB-only tagging.
+// valid: driver pulses high when opcode/funct/txn_id are driven; passive monitor samples while valid.
 interface control_if;
 
+    logic       valid;
     logic [6:0] opcode;
     logic [2:0] funct3;
     logic [6:0] funct7;
