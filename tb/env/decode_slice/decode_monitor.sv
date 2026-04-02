@@ -16,6 +16,13 @@ class ds_obs;
     logic [4:0]  rs1_de;
     logic [4:0]  rs2_de;
     logic [2:0]  funct3_de;
+    logic [6:0]  funct7_de;
+
+    logic [31:0] pc_de;
+    logic [31:0] pc_plus4_de;
+    logic [31:0] pred_pc_target_de;
+    logic        pc_src_pred_de;
+    logic [11:0] csr_addr_de;
 
     function void display(string prefix = "MON");
         $display("[CYCLE %0d] %s: txn_id=%0d valid=%0b instr=%h op=%07b imm_src=%03b imm=%h",
@@ -57,6 +64,13 @@ class ds_monitor;
             obs.rs1_de    = vif.rs1_de;
             obs.rs2_de    = vif.rs2_de;
             obs.funct3_de = vif.funct3_de;
+            obs.funct7_de = vif.funct7_de;
+
+            obs.pc_de            = vif.pc_de;
+            obs.pc_plus4_de      = vif.pc_plus4_de;
+            obs.pred_pc_target_de = vif.pred_pc_target_de;
+            obs.pc_src_pred_de   = vif.pc_src_pred_de;
+            obs.csr_addr_de      = vif.csr_addr_de;
 
             mbx.put(obs);
             num_sampled++;
