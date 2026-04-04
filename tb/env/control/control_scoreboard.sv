@@ -1,74 +1,119 @@
 class control_scoreboard;
 
-    mailbox #(control_txn) drv_mbx;
     mailbox #(control_obs) mon_mbx;
 
-    int num_checked = 0;
-    int mismatch_count = 0;
+    int         num_checked           = 0;
+    int         num_functional_checks = 0;
+    int         num_invariant_checks  = 0;
+    int         mismatch_count        = 0;
+    control_obs prev_obs;
 
-    function new(mailbox #(control_txn) drv_mbx, mailbox #(control_obs) mon_mbx);
-        this.drv_mbx = drv_mbx;
+    function new(mailbox #(control_obs) mon_mbx);
         this.mon_mbx = mon_mbx;
     endfunction
 
+    function automatic bit ctrl_matches(
+        input control_signals_t got,
+        input control_signals_t exp
+    );
+        return (got.imm_src     === exp.imm_src)     &&
+               (got.result_src  === exp.result_src)  &&
+               (got.branch_op   === exp.branch_op)   &&
+               (got.alu_src     === exp.alu_src)     &&
+               (got.pc_base_src === exp.pc_base_src) &&
+               (got.reg_write   === exp.reg_write)   &&
+               (got.mem_write   === exp.mem_write)   &&
+               (got.csr_we      === exp.csr_we)      &&
+               (got.alu_control === exp.alu_control) &&
+               (got.width_src   === exp.width_src)   &&
+               (got.csr_control === exp.csr_control) &&
+               (got.csr_src     === exp.csr_src);
+    endfunction
+
+    function automatic bit ctrl_is_known(input control_signals_t ctrl);
+        return !$isunknown({
+            ctrl.imm_src,
+            ctrl.result_src,
+            ctrl.branch_op,
+            ctrl.alu_src,
+            ctrl.pc_base_src,
+            ctrl.reg_write,
+            ctrl.mem_write,
+            ctrl.csr_we,
+            ctrl.alu_control,
+            ctrl.width_src,
+            ctrl.csr_control,
+            ctrl.csr_src
+        });
+    endfunction
+
+    function automatic bit ctrl_is_benign(input control_signals_t ctrl);
+        return (ctrl.reg_write === 1'b0) &&
+               (ctrl.mem_write === 1'b0) &&
+               (ctrl.csr_we    === 1'b0) &&
+               (ctrl.branch_op === `NON_BRANCH);
+    endfunction
+
+    task automatic report_ctrl_mismatch(
+        input string            label,
+        input int               cycle,
+        input logic [31:0]      instr,
+        input control_signals_t got,
+        input control_signals_t exp
+    );
+        $display("[TIME %0t] SB CYCLE[%0d]: %0s mismatch instr=%08h",
+                 $time, cycle, label, instr);
+        $display("  imm_src:     exp=%03b got=%03b", exp.imm_src, got.imm_src);
+        $display("  result_src:  exp=%03b got=%03b", exp.result_src, got.result_src);
+        $display("  branch_op:   exp=%02b got=%02b", exp.branch_op, got.branch_op);
+        $display("  alu_src:     exp=%0b got=%0b", exp.alu_src, got.alu_src);
+        $display("  pc_base_src: exp=%0b got=%0b", exp.pc_base_src, got.pc_base_src);
+        $display("  reg_write:   exp=%0b got=%0b", exp.reg_write, got.reg_write);
+        $display("  mem_write:   exp=%0b got=%0b", exp.mem_write, got.mem_write);
+        $display("  csr_we:      exp=%0b got=%0b", exp.csr_we, got.csr_we);
+        $display("  alu_control: exp=%04b got=%04b", exp.alu_control, got.alu_control);
+        $display("  width_src:   exp=%03b got=%03b", exp.width_src, got.width_src);
+        $display("  csr_control: exp=%02b got=%02b", exp.csr_control, got.csr_control);
+        $display("  csr_src:     exp=%0b got=%0b\n", exp.csr_src, got.csr_src);
+    endtask
+
     task run();
-        control_txn txn;
         control_obs obs;
         control_ref_model::control_exp_t exp;
-        string decoded_type;
-        bit mm;
+        control_signals_t exp_ctrl;
 
         forever begin
-            drv_mbx.get(txn);
             mon_mbx.get(obs);
 
-            if (obs.txn_id !== txn.id) begin
+            if (!ctrl_is_known(obs.ctrl)) begin
                 mismatch_count++;
-                $display("[TIME %0t] SB TXN[%0d]: MISMATCH txn_id: exp=%0d got=%0d",
-                         $time, txn.id, txn.id, obs.txn_id);
+                $display("[TIME %0t] SB CYCLE[%0d]: control outputs contain X/Z during sampled cycle",
+                         $time, obs.cycle);
                 num_checked++;
+                prev_obs = obs;
                 continue;
             end
 
-            exp = control_ref_model::decode_expected(txn.opcode, txn.funct3, txn.funct7);
-            decoded_type = control_ref_model::instruction_type(txn.opcode, txn.funct3, txn.funct7);
-
-            mm = 1'b0;
-            mm |= (obs.imm_src     !== exp.imm_src);
-            mm |= (obs.result_src  !== exp.result_src);
-            mm |= (obs.branch_op   !== exp.branch_op);
-            mm |= (obs.alu_src     !== exp.alu_src);
-            mm |= (obs.pc_base_src !== exp.pc_base_src);
-            mm |= (obs.reg_write   !== exp.reg_write);
-            mm |= (obs.mem_write   !== exp.mem_write);
-            mm |= (obs.csr_we      !== exp.csr_we);
-            mm |= (obs.alu_control !== exp.alu_control);
-            mm |= (obs.width_src   !== exp.width_src);
-            mm |= (obs.csr_control !== exp.csr_control);
-            mm |= (obs.csr_src     !== exp.csr_src);
-
-            if (mm) begin
-                mismatch_count++;
-                $display("[TIME %0t] SB TXN[%0d]: MISMATCH (%0s)",
-                         $time, txn.id, decoded_type);
-                $display("  fields: op=%07b f3=%03b f7=%07b", txn.opcode, txn.funct3, txn.funct7);
-                $display("  imm_src:     exp=%03b got=%03b", exp.imm_src, obs.imm_src);
-                $display("  result_src:  exp=%03b got=%03b", exp.result_src, obs.result_src);
-                $display("  branch_op:   exp=%02b got=%02b", exp.branch_op, obs.branch_op);
-                $display("  alu_src:     exp=%0b got=%0b",  exp.alu_src, obs.alu_src);
-                $display("  pc_base_src: exp=%0b got=%0b",  exp.pc_base_src, obs.pc_base_src);
-                $display("  reg_write:   exp=%0b got=%0b",  exp.reg_write, obs.reg_write);
-                $display("  mem_write:   exp=%0b got=%0b",  exp.mem_write, obs.mem_write);
-                $display("  csr_we:      exp=%0b got=%0b",  exp.csr_we, obs.csr_we);
-                $display("  alu_control: exp=%04b got=%04b", exp.alu_control, obs.alu_control);
-                $display("  width_src:   exp=%03b got=%03b", exp.width_src, obs.width_src);
-                $display("  csr_control: exp=%02b got=%02b", exp.csr_control, obs.csr_control);
-                $display("  csr_src:     exp=%0b got=%0b\n", exp.csr_src, obs.csr_src);
+            if (obs.reset || !obs.valid) begin
+                num_invariant_checks++;
             end else begin
-                $display("[TIME %0t] SB TXN[%0d]: PASS (%0s)\n",
-                         $time, txn.id, decoded_type);
+                num_functional_checks++;
+                exp      = control_ref_model::decode_expected_instr(obs.instr);
+                exp_ctrl = control_ref_model::to_control_signals(exp);
+
+                if (!ctrl_matches(obs.ctrl, exp_ctrl)) begin
+                    mismatch_count++;
+                    report_ctrl_mismatch(
+                        control_ref_model::instruction_type(obs.instr[6:0], obs.instr[14:12], obs.instr[31:25]),
+                        obs.cycle,
+                        obs.instr,
+                        obs.ctrl,
+                        exp_ctrl
+                    );
+                end
             end
 
+            prev_obs = obs;
             num_checked++;
         end
     endtask

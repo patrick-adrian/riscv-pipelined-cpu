@@ -7,6 +7,8 @@ class control_basic_instr_test extends control_base_test;
     endfunction
 
     virtual task run();
+        apply_reset(3);
+
         // R-type: ADD
         send_txn("ADD",
                  `R_TYPE_OP,

@@ -1,14 +1,26 @@
 class control_txn;
 
-    int          id;
-    string       instr_name;
-    logic [6:0]  opcode;
-    logic [2:0]  funct3;
-    logic [6:0]  funct7;
+    string       cycle_name;
+    bit          valid;
+    logic [31:0] instr;
 
-    function void display();
-        $display("[TIME %0t] DRV TXN[%0d]: name=%0s op=%07b f3=%03b f7=%07b",
-                 $time, id, instr_name, opcode, funct3, funct7);
+    static function automatic logic [31:0] encode_instr(
+        input logic [6:0] opcode,
+        input logic [2:0] funct3,
+        input logic [6:0] funct7
+    );
+        logic [31:0] instr_word;
+
+        instr_word         = 32'h0;
+        instr_word[6:0]    = opcode;
+        instr_word[14:12]  = funct3;
+        instr_word[31:25]  = funct7;
+        return instr_word;
+    endfunction
+
+    function void display(int cycle);
+        $display("[TIME %0t] DRV CYCLE[%0d]: name=%0s valid=%0b instr=%08h op=%07b f3=%03b f7=%07b",
+                 $time, cycle, cycle_name, valid, instr, instr[6:0], instr[14:12], instr[31:25]);
     endfunction
 
 endclass
@@ -27,26 +39,30 @@ class control_driver;
 
     task run();
         control_txn txn;
+        bit         have_txn;
+        int         cycle_count = 0;
 
         forever begin
-            mbx.get(txn);
+            @(posedge vif.clk);
+            cycle_count++;
 
-            vif.valid  = 1'b0;
-            #0;
+            if (vif.reset) begin
+                vif.valid <= 1'b0;
+                continue;
+            end
 
-            vif.opcode = txn.opcode;
-            vif.funct3 = txn.funct3;
-            vif.funct7 = txn.funct7;
-            vif.txn_id = txn.id;
+            have_txn = mbx.try_get(txn);
+            if (!have_txn) begin
+                vif.valid <= 1'b0;
+                continue;
+            end
 
-            txn.display();
+            vif.valid <= txn.valid;
+            if (txn.valid)
+                vif.instr <= txn.instr;
+
+            txn.display(cycle_count);
             num_sent++;
-
-            vif.valid = 1'b1;
-            #0;
-
-            vif.valid = 1'b0;
-            #0;
         end
     endtask
 

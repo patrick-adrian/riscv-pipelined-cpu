@@ -8,6 +8,22 @@ class control_base_test;
         this.env = env;
     endfunction
 
+    task assert_reset();
+        @(negedge vif.clk);
+        vif.reset = 1'b1;
+    endtask
+
+    task deassert_reset();
+        @(negedge vif.clk);
+        vif.reset = 1'b0;
+    endtask
+
+    task apply_reset(int cycles = 3);
+        assert_reset();
+        repeat (cycles) @(posedge vif.clk);
+        deassert_reset();
+    endtask
+
     task send_txn(
         input string name,
         input logic [6:0] opcode,
@@ -15,10 +31,9 @@ class control_base_test;
         input logic [6:0] funct7
     );
         control_txn t = new();
-        t.instr_name = name;
-        t.opcode     = opcode;
-        t.funct3     = funct3;
-        t.funct7     = funct7;
+        t.cycle_name = name;
+        t.valid      = 1'b1;
+        t.instr      = control_txn::encode_instr(opcode, funct3, funct7);
         env.put_txn(t);
     endtask
 

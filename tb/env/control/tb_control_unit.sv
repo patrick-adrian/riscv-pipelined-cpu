@@ -6,20 +6,23 @@ module tb_control_unit;
     control_env       env;
     control_base_test test_h;
     string            testname;
+    logic             clk = 1'b0;
+
+    localparam time CLK_PERIOD = 10ns;
 
     initial begin
         $dumpfile("waveform.vcd");
         $dumpvars(0, tb_control_unit);
     end
 
-    control_if vif();
+    always #(CLK_PERIOD/2) clk = ~clk;
+
+    control_if vif(clk);
 
     initial begin
+        vif.reset  = 1'b0;
         vif.valid  = 1'b0;
-        vif.txn_id = -1;
-        vif.opcode = 7'b0;
-        vif.funct3 = 3'b0;
-        vif.funct7 = 7'b0;
+        vif.instr  = 32'h0;
     end
 
     control_unit dut (

@@ -18,6 +18,27 @@ class control_ref_model;
         logic       csr_src;
     } control_exp_t;
 
+    static function automatic control_signals_t to_control_signals(
+        input control_exp_t exp
+    );
+        control_signals_t ctrl;
+
+        ctrl.imm_src     = exp.imm_src;
+        ctrl.result_src  = exp.result_src;
+        ctrl.branch_op   = exp.branch_op;
+        ctrl.alu_src     = exp.alu_src;
+        ctrl.pc_base_src = exp.pc_base_src;
+        ctrl.reg_write   = exp.reg_write;
+        ctrl.mem_write   = exp.mem_write;
+        ctrl.csr_we      = exp.csr_we;
+        ctrl.alu_control = exp.alu_control;
+        ctrl.width_src   = exp.width_src;
+        ctrl.csr_control = exp.csr_control;
+        ctrl.csr_src     = exp.csr_src;
+
+        return ctrl;
+    endfunction
+
     static function automatic logic [2:0] expected_width(input logic [2:0] funct3);
         case (funct3)
             `F3_WORD:   return `WIDTH_32;
@@ -82,7 +103,7 @@ class control_ref_model;
         exp.reg_write   = `NO_WRITE_REG;
         exp.mem_write   = `NO_WRITE_MEM;
         exp.csr_we      = `NO_WRITE_CSR;
-        exp.alu_control = 4'b0;
+        exp.alu_control = `ALU_ADD;
         exp.width_src   = `WIDTH_32;
         decode_csr(funct3, exp.csr_control, exp.csr_src);
 
@@ -174,6 +195,16 @@ class control_ref_model;
         endcase
 
         return exp;
+    endfunction
+
+    static function automatic control_exp_t decode_expected_instr(
+        input logic [31:0] instr
+    );
+        return decode_expected(instr[6:0], instr[14:12], instr[31:25]);
+    endfunction
+
+    static function automatic control_signals_t invalid_cycle_expected();
+        return to_control_signals(decode_expected(7'b0, 3'b000, 7'b0000000));
     endfunction
 
     static function automatic string instruction_type(

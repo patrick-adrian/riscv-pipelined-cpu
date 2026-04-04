@@ -53,6 +53,8 @@
 <li> Fri Mar 27: Add decode testbench and regression results. </li>
 <li> Tues Mar 31: Add decode_slice testbench, assertions, and regression results. </li>
 <li> Wed Apr 1: Add control testbench.</li>
+<li> Thurs Apr 2: Add rest of signals to decode_slice tb.</li>
+<li> Sat Apr 4: </li>
 
 </ul>
 

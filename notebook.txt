@@ -295,3 +295,18 @@ To sync driver and monitor, added a handshake via mailbox and manual delays.
 Replaced manual delays with delta cycle (#0)
 Problem: monitor is not passive anymore (handshake)
 Need to add valid signal in between txns. 
+------------------------------------------------------
+April 2, 2026
+Add rest of signals to decode_slice tb.
+Still need to remove reset from txn.
+Need to make some improvements before building fetch + control + decode_slice tb.
+Need to decouple fetch and decode_slice scoreboards and txn IDs.
+"Refactor fetch and decode_slice scoreboards so reset/idle cycles are modeled explicitly, not only when attached to a tagged transaction."
+Need to clock control tb for integration.
+Need to add more tests for decode_slice.
+------------------------------------------------------
+April 4, 2026
+Add clock to control tb for integration.
+Add reset contract to control tb, similar to that of fetch.
+Need to make fetch tb similar to that of control, so monitor does not rely on transactions sent by driver.
+Added reset test to control for later integration.

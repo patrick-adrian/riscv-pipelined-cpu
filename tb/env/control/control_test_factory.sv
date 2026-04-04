@@ -16,6 +16,10 @@ function automatic control_base_test create_test(
             control_mem_ops_test t = new(vif, env);
             return t;
         end
+        "control_reset_test": begin
+            control_reset_test t = new(vif, env);
+            return t;
+        end
         default: return null;
     endcase
 endfunction

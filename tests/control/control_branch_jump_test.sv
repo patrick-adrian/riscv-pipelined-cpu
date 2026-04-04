@@ -7,6 +7,8 @@ class control_branch_jump_test extends control_base_test;
     endfunction
 
     virtual task run();
+        apply_reset(2);
+
         // B-type: BEQ
         send_txn("BEQ",
                  `B_TYPE_OP,

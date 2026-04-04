@@ -7,6 +7,8 @@ class control_mem_ops_test extends control_base_test;
     endfunction
 
     virtual task run();
+        apply_reset(2);
+
         // I-type load: LW
         send_txn("LW",
                  `I_TYPE_LOAD_OP,

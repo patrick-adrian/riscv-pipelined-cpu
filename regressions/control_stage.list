@@ -2,3 +2,4 @@
 control_basic_instr_test
 control_branch_jump_test
 control_mem_ops_test
+control_reset_test
