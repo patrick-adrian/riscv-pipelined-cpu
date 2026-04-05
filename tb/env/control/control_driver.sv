@@ -31,6 +31,7 @@ class control_driver;
     virtual control_if vif;
     mailbox #(control_txn) mbx;
     int num_sent = 0;
+    logic reset_prev = 1'b0;
 
     function new(virtual control_if vif, mailbox #(control_txn) mbx);
         this.vif = vif;

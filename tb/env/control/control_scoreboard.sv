@@ -81,36 +81,48 @@ class control_scoreboard;
         control_obs obs;
         control_ref_model::control_exp_t exp;
         control_signals_t exp_ctrl;
+        bit check_failed;
+        string check_label;
 
         forever begin
             mon_mbx.get(obs);
+            check_failed = 1'b0;
+            check_label  = "INVALID";
 
             if (!ctrl_is_known(obs.ctrl)) begin
                 mismatch_count++;
+                check_failed = 1'b1;
                 $display("[TIME %0t] SB CYCLE[%0d]: control outputs contain X/Z during sampled cycle",
                          $time, obs.cycle);
-                num_checked++;
-                prev_obs = obs;
-                continue;
-            end
-
-            if (obs.reset || !obs.valid) begin
+            end else if (obs.reset || !obs.valid) begin
                 num_invariant_checks++;
             end else begin
                 num_functional_checks++;
+                check_label = control_ref_model::instruction_type(
+                    obs.instr[6:0], obs.instr[14:12], obs.instr[31:25]
+                );
                 exp      = control_ref_model::decode_expected_instr(obs.instr);
                 exp_ctrl = control_ref_model::to_control_signals(exp);
 
                 if (!ctrl_matches(obs.ctrl, exp_ctrl)) begin
                     mismatch_count++;
+                    check_failed = 1'b1;
                     report_ctrl_mismatch(
-                        control_ref_model::instruction_type(obs.instr[6:0], obs.instr[14:12], obs.instr[31:25]),
+                        check_label,
                         obs.cycle,
                         obs.instr,
                         obs.ctrl,
                         exp_ctrl
                     );
                 end
+            end
+
+            if (check_failed) begin
+                $display("[TIME %0t] SB CYCLE[%0d]: FAIL (%0s) instr=%08h\n",
+                         $time, obs.cycle, check_label, obs.instr);
+            end else begin
+                $display("[TIME %0t] SB CYCLE[%0d]: PASS (%0s) instr=%08h\n",
+                         $time, obs.cycle, check_label, obs.instr);
             end
 
             prev_obs = obs;
