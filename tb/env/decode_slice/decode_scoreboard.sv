@@ -1,6 +1,5 @@
 class ds_scoreboard;
 
-    mailbox #(ds_txn) drv_mbx;
     mailbox #(ds_obs) mon_mbx;
 
     logic [31:0] exp_instr;
@@ -13,8 +12,7 @@ class ds_scoreboard;
     int num_checked  = 0;
     int mismatch_count = 0;
 
-    function new(mailbox #(ds_txn) drv_mbx, mailbox #(ds_obs) mon_mbx);
-        this.drv_mbx = drv_mbx;
+    function new(mailbox #(ds_obs) mon_mbx);
         this.mon_mbx = mon_mbx;
         exp_instr = '0;
         exp_valid = 1'b0;
@@ -25,7 +23,6 @@ class ds_scoreboard;
     endfunction
 
     task run();
-        ds_txn  txn;
         ds_obs  obs;
 
         logic [6:0]  exp_op;
@@ -38,29 +35,28 @@ class ds_scoreboard;
         logic        op_mm, rd_mm, rs1_mm, rs2_mm, f3_mm, csr_mm, f7b5_mm;
         logic        pc_mm, pc_p4_mm, pred_mm, pred_src_mm;
         logic        any_mm;
+        bit          should_count;
 
         forever begin
-            drv_mbx.get(txn);
+            mon_mbx.get(obs);
 
-            do begin
-                mon_mbx.get(obs);
-            end while (obs.txn_id != txn.id);
-
-            // Update expected pipeline-register state (mirrors decode_stage flop + ds_driver inputs).
-            if (txn.reset || txn.flush) begin
+            // Update expected pipeline-register state from the previously sampled
+            // TB inputs. The monitor stays passive and simply reports what was on
+            // the interface for the cycle that produced the current DUT outputs.
+            if (obs.reset || obs.flush) begin
                 exp_instr = '0;
                 exp_valid = 1'b0;
                 exp_pc = '0;
                 exp_pc_plus4 = '0;
                 exp_pred_pc_target = '0;
                 exp_pc_src_pred = 1'b0;
-            end else if (!txn.stall) begin
-                exp_instr = txn.instr;
+            end else if (!obs.stall) begin
+                exp_instr = obs.instr_fi;
                 exp_valid = 1'b1;
-                exp_pc = txn.pc;
-                exp_pc_plus4 = txn.pc + 32'd4;
-                exp_pred_pc_target = 32'h0;
-                exp_pc_src_pred = 1'b0;
+                exp_pc = obs.pc_fi;
+                exp_pc_plus4 = obs.pc_plus4_fi;
+                exp_pred_pc_target = obs.pred_pc_target_fi;
+                exp_pc_src_pred = obs.pc_src_pred_fi;
             end
 
             exp_op       = exp_instr[6:0];
@@ -71,6 +67,7 @@ class ds_scoreboard;
             exp_rs2      = exp_instr[24:20];
             exp_funct3   = exp_instr[14:12];
             exp_csr_addr = exp_instr[31:20];
+            should_count = obs.tb_valid;
 
             if (!exp_valid) begin
                 imm_src_mm = (3'b0 !== obs.imm_src);
@@ -94,8 +91,8 @@ class ds_scoreboard;
 
                 if (any_mm) begin
                     mismatch_count++;
-                    $display("[TIME %0t][CYCLE %0d] SB TXN[%0d]: MISMATCH (invalid/exp clear)",
-                             $time, obs.cycle, txn.id);
+                    $display("[TIME %0t][CYCLE %0d] SB: MISMATCH (invalid/exp clear)",
+                             $time, obs.cycle);
                     $display("  valid exp=0 got=%0b", obs.valid);
                     $display("  instr=%h pc=%h pc+4=%h pred_tgt=%h pred_src=%0b",
                              obs.instr_de, obs.pc_de, obs.pc_plus4_de,
@@ -105,8 +102,8 @@ class ds_scoreboard;
                              obs.funct3_de, obs.csr_addr_de, obs.funct7_de[5],
                              obs.imm_src, obs.imm_ext_de);
                 end else begin
-                    $display("[TIME %0t][CYCLE %0d] SB TXN[%0d]: PASS (reset/flush)",
-                             $time, obs.cycle, txn.id);
+                    $display("[TIME %0t][CYCLE %0d] SB: PASS (reset/flush)",
+                             $time, obs.cycle);
                 end
             end else begin
                 imm_src_mm = (exp_imm_src !== obs.imm_src);
@@ -130,7 +127,7 @@ class ds_scoreboard;
 
                 if (any_mm) begin
                     mismatch_count++;
-                    $display("[TIME %0t][CYCLE %0d] SB TXN[%0d]: MISMATCH", $time, obs.cycle, txn.id);
+                    $display("[TIME %0t][CYCLE %0d] SB: MISMATCH", $time, obs.cycle);
                     $display("  instr:   exp=%h got=%h", exp_instr, obs.instr_de);
                     $display("  pc:      exp=%h got=%h", exp_pc, obs.pc_de);
                     $display("  pc+4:    exp=%h got=%h", exp_pc_plus4, obs.pc_plus4_de);
@@ -146,12 +143,13 @@ class ds_scoreboard;
                     $display("  imm_ext: exp=%h got=%h", exp_imm_ext, obs.imm_ext_de);
                     $display("  valid:   exp=%0b got=%0b\n", exp_valid, obs.valid);
                 end else begin
-                    $display("[TIME %0t][CYCLE %0d] SB TXN[%0d]: PASS op=%07b imm_src=%03b imm=%h\n",
-                             $time, obs.cycle, txn.id, obs.op_de, obs.imm_src, obs.imm_ext_de);
+                    $display("[TIME %0t][CYCLE %0d] SB: PASS op=%07b imm_src=%03b imm=%h\n",
+                             $time, obs.cycle, obs.op_de, obs.imm_src, obs.imm_ext_de);
                 end
             end
 
-            num_checked++;
+            if (should_count)
+                num_checked++;
         end
     endtask
 

@@ -310,3 +310,4 @@ Add clock to control tb for integration.
 Add reset contract to control tb, similar to that of fetch.
 Need to make fetch tb similar to that of control, so monitor does not rely on transactions sent by driver.
 Added reset test to control for later integration.
+Decoupled fetch and decode_slice scoreboards and txn IDs.

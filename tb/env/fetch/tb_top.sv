@@ -21,8 +21,8 @@ module tb_top;
 
     initial begin
         vif.cycle = 0;
-        vif.txn_tag = -1;
         vif.reset = 1'b0;
+        vif.tb_valid = 1'b0;
         vif.pc_src = 2'd0;
         vif.stall = 1'b1;
         vif.pc_target_ex = 32'h0;
@@ -38,11 +38,7 @@ module tb_top;
             $display("[TIME %0t] RESET DEASSERTED", $time);
 
         reset_prev <= vif.reset;
-
-        if (vif.reset)
-            vif.cycle <= 0;
-        else
-            vif.cycle <= vif.cycle + 1;
+        vif.cycle <= vif.cycle + 1;
     end
 
     fetch_stage dut (

@@ -12,20 +12,28 @@ class fetch_driver;
 
     task run();
         fetch_txn txn;
+        bit       have_txn;
 
         forever begin
-            mbx.get(txn);
+            @(posedge vif.clk);
 
-            // Drive control signals on the negative edge so they are stable
-            // before the next positive edge that clocks the DUT.
-            @(negedge vif.clk);
+            have_txn = mbx.try_get(txn);
+            if (!have_txn) begin
+                vif.tb_valid        <= 1'b0;
+                vif.pc_src          <= 2'd0;
+                vif.stall           <= 1'b1;
+                vif.pc_target_ex    <= 32'h0;
+                vif.pc_plus4_ex     <= 32'h0;
+                vif.pred_pc_target  <= 32'h0;
+                continue;
+            end
 
-            vif.pc_src         <= txn.pc_src;
-            vif.stall          <= txn.stall;
-            vif.pc_target_ex   <= txn.pc_target_ex;
-            vif.pc_plus4_ex    <= txn.pc_plus4_ex;
-            vif.pred_pc_target <= txn.pred_pc_target;
-            vif.txn_tag        <= txn.id;
+            vif.tb_valid        <= 1'b1;
+            vif.pc_src          <= txn.pc_src;
+            vif.stall           <= txn.stall;
+            vif.pc_target_ex    <= txn.pc_target_ex;
+            vif.pc_plus4_ex     <= txn.pc_plus4_ex;
+            vif.pred_pc_target  <= txn.pred_pc_target;
 
             txn.display(vif.cycle);
             num_sent++;

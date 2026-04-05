@@ -1,6 +1,7 @@
 interface ds_if(input logic clk);
 
     // TB → DUT inputs
+    logic        tb_valid;
     logic        reset;
     logic        stall;
     logic        flush;
@@ -30,19 +31,6 @@ interface ds_if(input logic clk);
     logic        valid_de;
 
     // TB metadata
-    int          txn_id;
     int          cycle;
-
-    clocking cb @(posedge clk);
-        default input #1step;
-        input  reset, stall, flush;
-        input  instr_fi, pc_fi;
-        input  imm_src;
-        input  instr_de, imm_ext_de, pc_de, pc_plus4_de;
-        input  pred_pc_target_de, csr_addr_de;
-        input  rd_de, rs1_de, rs2_de;
-        input  op_de, funct3_de, funct7_de;
-        input  pc_src_pred_de, valid_de;
-    endclocking
 
 endinterface

@@ -22,7 +22,7 @@ module tb_decode_slice;
 
     initial begin
         vif.cycle          = 0;
-        vif.txn_id         = -1;
+        vif.tb_valid       = 1'b0;
         vif.reset          = 1'b0;
         vif.stall          = 1'b1;
         vif.flush          = 1'b0;

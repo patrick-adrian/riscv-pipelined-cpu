@@ -1,6 +1,5 @@
 class ds_txn;
 
-    int          id;
     logic [31:0] instr;
     logic [31:0] pc;
     logic        reset;
@@ -8,8 +7,8 @@ class ds_txn;
     logic        flush;
 
     function void display(int cycle);
-        $display("[TIME %0t][CYCLE %0d] DRV TXN[%0d]: reset=%0b stall=%0b flush=%0b instr=%h pc=%h",
-                 $time, cycle, id, reset, stall, flush, instr, pc);
+        $display("[TIME %0t][CYCLE %0d] DRV: reset=%0b stall=%0b flush=%0b instr=%h pc=%h",
+                 $time, cycle, reset, stall, flush, instr, pc);
     endfunction
 
 endclass
@@ -28,21 +27,34 @@ class ds_driver;
 
     task run();
         ds_txn txn;
+        bit    have_txn;
 
         forever begin
-            mbx.get(txn);
+            @(posedge vif.clk);
 
-            @(negedge vif.clk);
+            have_txn = mbx.try_get(txn);
+            if (!have_txn) begin
+                vif.tb_valid           <= 1'b0;
+                vif.reset              <= 1'b0;
+                vif.stall              <= 1'b1;
+                vif.flush              <= 1'b0;
+                vif.instr_fi           <= 32'h0;
+                vif.pc_fi              <= 32'h0;
+                vif.pc_plus4_fi        <= 32'h4;
+                vif.pred_pc_target_fi  <= 32'h0;
+                vif.pc_src_pred_fi     <= 1'b0;
+                continue;
+            end
 
-            vif.reset            <= txn.reset;
-            vif.stall            <= txn.stall;
-            vif.flush            <= txn.flush;
-            vif.instr_fi         <= txn.instr;
-            vif.pc_fi            <= txn.pc;
-            vif.pc_plus4_fi      <= txn.pc + 32'd4;
-            vif.pred_pc_target_fi <= 32'h0;
-            vif.pc_src_pred_fi   <= 1'b0;
-            vif.txn_id           <= txn.id;
+            vif.tb_valid           <= 1'b1;
+            vif.reset              <= txn.reset;
+            vif.stall              <= txn.stall;
+            vif.flush              <= txn.flush;
+            vif.instr_fi           <= txn.instr;
+            vif.pc_fi              <= txn.pc;
+            vif.pc_plus4_fi        <= txn.pc + 32'd4;
+            vif.pred_pc_target_fi  <= 32'h0;
+            vif.pc_src_pred_fi     <= 1'b0;
 
             txn.display(vif.cycle);
             num_sent++;

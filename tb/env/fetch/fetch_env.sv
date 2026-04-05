@@ -7,26 +7,22 @@ class fetch_env;
     fetch_scoreboard scoreboard;
 
     mailbox #(fetch_txn) drv_mbx;
-    mailbox #(fetch_txn) scb_drv_mbx;
     mailbox #(fetch_obs) mon_mbx;
 
     int default_timeout_cycles;
-    int txn_id;
     int num_txns_sent;
 
     function new(virtual fetch_if vif);
         this.vif = vif;
 
         drv_mbx     = new();
-        scb_drv_mbx = new();
         mon_mbx     = new();
 
         driver     = new(vif, drv_mbx);
         monitor    = new(vif, mon_mbx);
-        scoreboard = new(vif, scb_drv_mbx, mon_mbx);
+        scoreboard = new(mon_mbx);
 
         default_timeout_cycles = 1000;
-        txn_id       = 0;
         num_txns_sent = 0;
     endfunction
 
@@ -40,9 +36,7 @@ class fetch_env;
 
     // Test injects transactions via put_txn (tests/fetch/*.sv).
     task put_txn(fetch_txn txn);
-        txn.id = txn_id++;
         drv_mbx.put(txn);
-        scb_drv_mbx.put(txn);
         num_txns_sent++;
     endtask
 

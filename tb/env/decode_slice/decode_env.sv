@@ -7,10 +7,8 @@ class ds_env;
     ds_scoreboard scoreboard;
 
     mailbox #(ds_txn) drv_mbx;
-    mailbox #(ds_txn) scb_drv_mbx;
     mailbox #(ds_obs) mon_mbx;
 
-    int txn_id = 0;
     int num_txns_sent = 0;
     int default_timeout_cycles = 1000;
 
@@ -18,12 +16,11 @@ class ds_env;
         this.vif = vif;
 
         drv_mbx     = new();
-        scb_drv_mbx = new();
         mon_mbx     = new();
 
         driver     = new(vif, drv_mbx);
         monitor    = new(vif, mon_mbx);
-        scoreboard = new(scb_drv_mbx, mon_mbx);
+        scoreboard = new(mon_mbx);
     endfunction
 
     task run();
@@ -35,9 +32,7 @@ class ds_env;
     endtask
 
     task put_txn(ds_txn txn);
-        txn.id = txn_id++;
         drv_mbx.put(txn);
-        scb_drv_mbx.put(txn);
         num_txns_sent++;
     endtask
 
