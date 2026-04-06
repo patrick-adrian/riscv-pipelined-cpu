@@ -15,16 +15,12 @@ endif
 SEED  ?=
 
 # Defaults
-TOP := tb_top
+TOP := tb_$(STAGE)
 ENV_DIR := tb/env/$(STAGE)
 
 # Stage-specific overrides
-ifeq ($(STAGE),decode_slice)
-  TOP       := tb_decode_slice
-endif
 ifeq ($(STAGE),control)
   TOP       := tb_control_unit
-  ENV_DIR   := tb/env/control
 endif
 
 # Directories
@@ -36,18 +32,9 @@ TEST_FACTORY_SV := $(wildcard tb/env/$(STAGE)/$(STAGE)_test_factory.sv)
 TEST_CLASS_SV := $(shell find tests/$(STAGE) -name "*_test.sv" | sort)
 
 ifeq ($(STAGE),control)
-  TB_ENV_PKG_SV := $(wildcard tb/env/control/control_env_pkg.sv)
-  TEST_BASE_SV := $(wildcard tb/env/control/control_base_test.sv)
-  TEST_FACTORY_SV := $(wildcard tb/env/control/control_test_factory.sv)
-  TEST_CLASS_SV := $(shell find tests/control -name "*_test.sv" | sort)
-endif
-
-ifeq ($(STAGE),decode_slice)
-  TB_TOP_SV := tb/env/decode_slice/tb_decode_slice.sv
-else ifeq ($(STAGE),control)
   TB_TOP_SV := tb/env/control/tb_control_unit.sv
 else
-  TB_TOP_SV := tb/env/$(STAGE)/tb_top.sv
+  TB_TOP_SV := tb/env/$(STAGE)/$(STAGE)_tb_top.sv
 endif
 
 # Stage-specific assertions (look under tb/assertions/<STAGE>)

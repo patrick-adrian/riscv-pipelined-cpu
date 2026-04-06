@@ -1,11 +1,11 @@
-class decode_slice_smoke_test extends ds_base_test;
+class decode_slice_smoke_test extends decode_slice_base_test;
 
-    function new(virtual ds_if vif, ds_env env);
+    function new(virtual decode_slice_if vif, decode_slice_env env);
         super.new(vif, env);
     endfunction
 
     virtual task run();
-        ds_txn t;
+        decode_slice_txn t;
 
         apply_reset();
 

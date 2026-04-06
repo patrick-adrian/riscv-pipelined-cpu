@@ -1,4 +1,4 @@
-class ds_txn;
+class decode_slice_txn;
 
     logic [31:0] instr;
     logic [31:0] pc;
@@ -13,19 +13,19 @@ class ds_txn;
 endclass
 
 
-class ds_driver;
+class decode_slice_driver;
 
-    virtual ds_if vif;
-    mailbox #(ds_txn) mbx;
+    virtual decode_slice_if vif;
+    mailbox #(decode_slice_txn) mbx;
     int num_sent = 0;
 
-    function new(virtual ds_if vif, mailbox #(ds_txn) mbx);
+    function new(virtual decode_slice_if vif, mailbox #(decode_slice_txn) mbx);
         this.vif = vif;
         this.mbx = mbx;
     endfunction
 
     task run();
-        ds_txn txn;
+        decode_slice_txn txn;
         bit    have_txn;
         int    cycle_count = 0;
         time   log_time;

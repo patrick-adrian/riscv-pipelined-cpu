@@ -1,6 +1,6 @@
-class ds_scoreboard;
+class decode_slice_scoreboard;
 
-    mailbox #(ds_obs) mon_mbx;
+    mailbox #(decode_slice_obs) mon_mbx;
 
     logic [31:0] exp_instr;
     logic        exp_valid;
@@ -12,7 +12,7 @@ class ds_scoreboard;
     int num_checked  = 0;
     int mismatch_count = 0;
 
-    function new(mailbox #(ds_obs) mon_mbx);
+    function new(mailbox #(decode_slice_obs) mon_mbx);
         this.mon_mbx = mon_mbx;
         exp_instr = '0;
         exp_valid = 1'b0;
@@ -23,7 +23,7 @@ class ds_scoreboard;
     endfunction
 
     task run();
-        ds_obs  obs;
+        decode_slice_obs  obs;
 
         logic [6:0]  exp_op;
         logic [2:0]  exp_imm_src;
@@ -60,8 +60,8 @@ class ds_scoreboard;
             end
 
             exp_op       = exp_instr[6:0];
-            exp_imm_src  = ds_ref_model::expected_imm_src(exp_op);
-            exp_imm_ext  = ds_ref_model::expected_imm_ext(exp_instr[31:7], exp_imm_src);
+            exp_imm_src  = decode_slice_ref_model::expected_imm_src(exp_op);
+            exp_imm_ext  = decode_slice_ref_model::expected_imm_ext(exp_instr[31:7], exp_imm_src);
             exp_rd       = exp_instr[11:7];
             exp_rs1      = exp_instr[19:15];
             exp_rs2      = exp_instr[24:20];

@@ -5,9 +5,9 @@ module tb_decode_slice;
 
     logic clk;
 
-    ds_env       env;
-    ds_base_test test_h;
-    string       testname;
+    decode_slice_env       env;
+    decode_slice_base_test test_h;
+    string                 testname;
 
     initial clk = 0;
     always #5 clk = ~clk;
@@ -17,26 +17,21 @@ module tb_decode_slice;
         $dumpvars(0, tb_decode_slice);
     end
 
-    ds_if vif(clk);
+    decode_slice_if vif(clk);
 
     initial begin
-        vif.cycle          = 0;
-        vif.tb_valid       = 1'b0;
-        vif.reset          = 1'b0;
-        vif.stall          = 1'b1;
-        vif.flush          = 1'b0;
-        vif.instr_fi       = 32'h0;
-        vif.pc_fi          = 32'h0;
-        vif.pc_plus4_fi    = 32'h4;
+        vif.tb_valid          = 1'b0;
+        vif.reset             = 1'b0;
+        vif.stall             = 1'b1;
+        vif.flush             = 1'b0;
+        vif.instr_fi          = 32'h0;
+        vif.pc_fi             = 32'h0;
+        vif.pc_plus4_fi       = 32'h4;
         vif.pred_pc_target_fi = 32'h0;
-        vif.pc_src_pred_fi = 1'b0;
+        vif.pc_src_pred_fi    = 1'b0;
     end
 
-    always @(posedge clk) begin
-        vif.cycle <= vif.cycle + 1;
-    end
-
-    // ---- Feedback wire: main_decoder closes the imm_src loop ----
+    // Feedback wire: main_decoder closes the imm_src loop.
     logic [2:0] imm_src_wire;
 
     decode_stage u_decode_stage (
@@ -82,7 +77,6 @@ module tb_decode_slice;
 
     assign vif.imm_src = imm_src_wire;
 
-    // ---- Test orchestration ----
     task automatic run_test(string name);
         test_h = create_test(name, vif, env);
         if (test_h == null)

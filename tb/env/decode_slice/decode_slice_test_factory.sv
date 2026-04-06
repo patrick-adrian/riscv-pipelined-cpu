@@ -1,7 +1,7 @@
-function automatic ds_base_test create_test(
+function automatic decode_slice_base_test create_test(
     string name,
-    virtual ds_if vif,
-    ds_env env
+    virtual decode_slice_if vif,
+    decode_slice_env env
 );
     case (name)
         "decode_slice_smoke_test": begin

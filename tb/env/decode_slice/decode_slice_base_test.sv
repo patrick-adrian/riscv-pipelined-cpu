@@ -1,9 +1,9 @@
-class ds_base_test;
+class decode_slice_base_test;
 
-    protected virtual ds_if vif;
-    protected ds_env       env;
+    protected virtual decode_slice_if vif;
+    protected decode_slice_env       env;
 
-    function new(virtual ds_if vif, ds_env env);
+    function new(virtual decode_slice_if vif, decode_slice_env env);
         this.vif = vif;
         this.env = env;
     endfunction
@@ -49,7 +49,7 @@ class ds_base_test;
     endtask
 
     virtual task run();
-        $fatal(1, "ds_base_test::run() must be overridden");
+        $fatal(1, "decode_slice_base_test::run() must be overridden");
     endtask
 
     task report_and_finish();

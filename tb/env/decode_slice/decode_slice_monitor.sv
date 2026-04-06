@@ -1,4 +1,4 @@
-class ds_obs;
+class decode_slice_obs;
 
     int          cycle;
     logic        tb_valid;
@@ -37,13 +37,13 @@ class ds_obs;
 endclass
 
 
-class ds_monitor;
+class decode_slice_monitor;
 
-    virtual ds_if vif;
-    mailbox #(ds_obs) mbx;
+    virtual decode_slice_if vif;
+    mailbox #(decode_slice_obs) mbx;
     int num_sampled = 0;
 
-    function new(virtual ds_if vif, mailbox #(ds_obs) mbx);
+    function new(virtual decode_slice_if vif, mailbox #(decode_slice_obs) mbx);
         this.vif = vif;
         this.mbx = mbx;
     endfunction
@@ -66,7 +66,7 @@ class ds_monitor;
             #1ps;
 
             if (have_prev) begin
-                ds_obs obs = new();
+                decode_slice_obs obs = new();
 
                 obs.cycle             = cycle_count;
                 obs.tb_valid          = prev_tb_valid;

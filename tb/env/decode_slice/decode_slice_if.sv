@@ -1,6 +1,6 @@
-interface ds_if(input logic clk);
+interface decode_slice_if(input logic clk);
 
-    // TB → DUT inputs
+    // TB -> DUT inputs
     logic        tb_valid;
     logic        reset;
     logic        stall;
@@ -11,7 +11,7 @@ interface ds_if(input logic clk);
     logic [31:0] pred_pc_target_fi;
     logic        pc_src_pred_fi;
 
-    // Main decoder → DUT feedback (wired in tb_top, observable by monitor)
+    // Main decoder -> DUT feedback (wired in the stage top, observable by monitor)
     logic [2:0]  imm_src;
 
     // DUT outputs
@@ -29,8 +29,5 @@ interface ds_if(input logic clk);
     logic [6:0]  funct7_de;
     logic        pc_src_pred_de;
     logic        valid_de;
-
-    // TB metadata
-    int          cycle;
 
 endinterface

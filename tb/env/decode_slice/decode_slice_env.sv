@@ -1,18 +1,18 @@
-class ds_env;
+class decode_slice_env;
 
-    virtual ds_if vif;
+    virtual decode_slice_if vif;
 
-    ds_driver     driver;
-    ds_monitor    monitor;
-    ds_scoreboard scoreboard;
+    decode_slice_driver     driver;
+    decode_slice_monitor    monitor;
+    decode_slice_scoreboard scoreboard;
 
-    mailbox #(ds_txn) drv_mbx;
-    mailbox #(ds_obs) mon_mbx;
+    mailbox #(decode_slice_txn) drv_mbx;
+    mailbox #(decode_slice_obs) mon_mbx;
 
     int default_timeout_cycles;
     int num_txns_sent;
 
-    function new(virtual ds_if vif);
+    function new(virtual decode_slice_if vif);
         this.vif = vif;
 
         drv_mbx     = new();
@@ -34,7 +34,7 @@ class ds_env;
         join_none
     endtask
 
-    task put_txn(ds_txn txn);
+    task put_txn(decode_slice_txn txn);
         drv_mbx.put(txn);
         num_txns_sent++;
     endtask

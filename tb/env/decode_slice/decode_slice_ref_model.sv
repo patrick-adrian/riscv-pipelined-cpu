@@ -1,9 +1,9 @@
 `include "instr_macros.sv"
 `include "control_macros.sv"
 
-class ds_ref_model;
+class decode_slice_ref_model;
 
-    // Mirrors main_decoder: opcode → imm_src encoding.
+    // Mirrors main_decoder: opcode -> imm_src encoding.
     static function logic [2:0] expected_imm_src(input logic [6:0] opcode);
         case (opcode)
             `R_TYPE_OP:      return `NA_EXT;
@@ -20,7 +20,7 @@ class ds_ref_model;
         endcase
     endfunction
 
-    // Mirrors imm_extend: instruction bits + imm_src → sign-extended immediate.
+    // Mirrors imm_extend: instruction bits + imm_src -> sign-extended immediate.
     static function logic [31:0] expected_imm_ext(
         input logic [31:7] instr_bits,
         input logic [2:0]  imm_src

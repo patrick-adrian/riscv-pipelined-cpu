@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `include "control_macros.sv"
 
-module tb_top;
+module tb_fetch;
 
     logic clk;
     fetch_env env;
@@ -13,13 +13,12 @@ module tb_top;
 
     initial begin
         $dumpfile("waveform.vcd");
-        $dumpvars(0, tb_top);
+        $dumpvars(0, tb_fetch);
     end
 
     fetch_if vif(clk);
 
     initial begin
-        vif.cycle = 0;
         vif.reset = 1'b0;
         vif.tb_valid = 1'b0;
         vif.pc_src = 2'd0;
@@ -27,10 +26,6 @@ module tb_top;
         vif.pc_target_ex = 32'h0;
         vif.pc_plus4_ex = 32'h0;
         vif.pred_pc_target = 32'h0;
-    end
-
-    always @(posedge clk) begin
-        vif.cycle <= vif.cycle + 1;
     end
 
     fetch_stage dut (
