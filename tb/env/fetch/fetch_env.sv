@@ -45,22 +45,31 @@ class fetch_env;
     endfunction
 
     task wait_until_checked(int check_count, int timeout_cycles = -1);
-        int waited_cycles = 0;
+        int target_checks;
 
         if (timeout_cycles < 0)
             timeout_cycles = default_timeout_cycles;
 
-        while (scoreboard.num_checked < check_count) begin
-            @(posedge vif.clk);
-            waited_cycles++;
+        target_checks = check_count;
 
-            if (waited_cycles >= timeout_cycles) begin
-                $fatal(1,
-                       "Timeout waiting for %0d scoreboard checks (checked=%0d, sent=%0d, mismatches=%0d)",
-                       check_count, scoreboard.num_checked, num_txns_sent,
-                       scoreboard.mismatch_count);
+        fork
+            begin
+                wait (scoreboard.num_checked >= target_checks);
             end
-        end
+
+            begin
+                repeat (timeout_cycles)
+                    @(posedge vif.clk);
+
+                if (scoreboard.num_checked < target_checks) begin
+                    $fatal(1,
+                           "Timeout waiting for %0d scoreboard checks (checked=%0d, sent=%0d, mismatches=%0d)",
+                           target_checks, scoreboard.num_checked, num_txns_sent,
+                           scoreboard.mismatch_count);
+                end
+            end
+        join_any
+        disable fork;
     endtask
 
     task wait_for_idle(int timeout_cycles = -1);

@@ -13,9 +13,12 @@ class fetch_driver;
     task run();
         fetch_txn txn;
         bit       have_txn;
+        int       cycle_count = 0;
+        time      log_time;
 
         forever begin
             @(posedge vif.clk);
+            cycle_count++;
 
             have_txn = mbx.try_get(txn);
             if (!have_txn) begin
@@ -35,7 +38,9 @@ class fetch_driver;
             vif.pc_plus4_ex     <= txn.pc_plus4_ex;
             vif.pred_pc_target  <= txn.pred_pc_target;
 
-            txn.display(vif.cycle);
+            log_time = $time;
+            #2ps;
+            txn.display(cycle_count, log_time);
             num_sent++;
         end
     endtask

@@ -12,9 +12,9 @@ class fetch_txn;
         pred_pc_target[1:0] == 2'b00;
     }
 
-    function void display(int cycle);
+    function void display(int cycle, time log_time);
         $display("[TIME %0t][CYCLE %0d] DRV: src=%0d stall=%0b ex_t=%h ex_p4=%h pred=%h",
-                 $time, cycle, pc_src, stall, pc_target_ex,
+                 log_time, cycle, pc_src, stall, pc_target_ex,
                  pc_plus4_ex, pred_pc_target);
     endfunction
 

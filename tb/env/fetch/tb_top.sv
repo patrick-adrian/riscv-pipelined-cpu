@@ -4,7 +4,6 @@
 module tb_top;
 
     logic clk;
-    logic reset_prev;
     fetch_env env;
     fetch_base_test test_h;
     string testname;
@@ -28,16 +27,9 @@ module tb_top;
         vif.pc_target_ex = 32'h0;
         vif.pc_plus4_ex = 32'h0;
         vif.pred_pc_target = 32'h0;
-        reset_prev = 1'b0;
     end
 
     always @(posedge clk) begin
-        if (vif.reset && !reset_prev)
-            $display("[TIME %0t] RESET ASSERTED", $time);
-        if (!vif.reset && reset_prev)
-            $display("[TIME %0t] RESET DEASSERTED", $time);
-
-        reset_prev <= vif.reset;
         vif.cycle <= vif.cycle + 1;
     end
 

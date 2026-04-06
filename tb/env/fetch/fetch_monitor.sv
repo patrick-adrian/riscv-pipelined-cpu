@@ -22,6 +22,7 @@ class fetch_monitor;
 
         forever begin
             @(posedge vif.clk);
+            cycle_count++;
             #1ps;
 
             if (have_prev) begin
@@ -40,7 +41,6 @@ class fetch_monitor;
 
                 mbx.put(obs);
                 num_sampled++;
-                cycle_count++;
             end
 
             prev_tb_valid       = vif.tb_valid;

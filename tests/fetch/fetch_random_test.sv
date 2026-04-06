@@ -41,7 +41,7 @@ class fetch_random_test extends fetch_base_test;
             if (vif.reset == 1'b0) begin
                 pcnt = 30;
             end else begin
-                pcnt = 70;
+                pcnt = 30;
             end
             if($urandom_range(0, 100) < pcnt) begin
                 env.wait_until_checked(i); 

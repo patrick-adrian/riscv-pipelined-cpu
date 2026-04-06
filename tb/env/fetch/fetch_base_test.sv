@@ -27,11 +27,13 @@ class fetch_base_test;
     task assert_reset();
         @(negedge vif.clk);
         vif.reset = 1'b1;
+        $display("[TIME %0t] RESET ASSERTED", $time);
     endtask
 
     task deassert_reset();
         @(negedge vif.clk);
         vif.reset = 1'b0;
+        $display("[TIME %0t] RESET DEASSERTED", $time);
     endtask
 
     task pulse_reset(int cycles = 1);
