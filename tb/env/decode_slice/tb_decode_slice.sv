@@ -4,7 +4,6 @@
 module tb_decode_slice;
 
     logic clk;
-    logic reset_prev;
 
     ds_env       env;
     ds_base_test test_h;
@@ -31,21 +30,10 @@ module tb_decode_slice;
         vif.pc_plus4_fi    = 32'h4;
         vif.pred_pc_target_fi = 32'h0;
         vif.pc_src_pred_fi = 1'b0;
-        reset_prev         = 1'b0;
     end
 
     always @(posedge clk) begin
-        if (vif.reset && !reset_prev)
-            $display("[TIME %0t] RESET ASSERTED", $time);
-        if (!vif.reset && reset_prev)
-            $display("[TIME %0t] RESET DEASSERTED", $time);
-
-        reset_prev <= vif.reset;
-
-        if (vif.reset)
-            vif.cycle <= 0;
-        else
-            vif.cycle <= vif.cycle + 1;
+        vif.cycle <= vif.cycle + 1;
     end
 
     // ---- Feedback wire: main_decoder closes the imm_src loop ----

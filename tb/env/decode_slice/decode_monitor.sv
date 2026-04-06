@@ -30,8 +30,8 @@ class ds_obs;
     logic [11:0] csr_addr_de;
 
     function void display(string prefix = "MON");
-        $display("[CYCLE %0d] %s: tb_valid=%0b valid=%0b instr=%h op=%07b imm_src=%03b imm=%h",
-                 cycle, prefix, tb_valid, valid, instr_de, op_de, imm_src, imm_ext_de);
+        $display("[CYCLE %0d] %0s: tb_valid=%0b reset=%0b stall=%0b flush=%0b instr=%h op=%07b imm_src=%03b imm=%h",
+                 cycle, prefix, tb_valid, reset, stall, flush, instr_de, op_de, imm_src, imm_ext_de);
     endfunction
 
 endclass
@@ -52,7 +52,6 @@ class ds_monitor;
         bit         have_prev = 1'b0;
         int         cycle_count = 0;
         logic       prev_tb_valid;
-        logic       prev_reset;
         logic       prev_stall;
         logic       prev_flush;
         logic [31:0] prev_instr_fi;
@@ -63,6 +62,7 @@ class ds_monitor;
 
         forever begin
             @(posedge vif.clk);
+            cycle_count++;
             #1ps;
 
             if (have_prev) begin
@@ -70,7 +70,7 @@ class ds_monitor;
 
                 obs.cycle             = cycle_count;
                 obs.tb_valid          = prev_tb_valid;
-                obs.reset             = prev_reset;
+                obs.reset             = vif.reset;
                 obs.stall             = prev_stall;
                 obs.flush             = prev_flush;
                 obs.instr_fi          = prev_instr_fi;
@@ -96,11 +96,9 @@ class ds_monitor;
 
                 mbx.put(obs);
                 num_sampled++;
-                cycle_count++;
             end
 
             prev_tb_valid          = vif.tb_valid;
-            prev_reset             = vif.reset;
             prev_stall             = vif.stall;
             prev_flush             = vif.flush;
             prev_instr_fi          = vif.instr_fi;

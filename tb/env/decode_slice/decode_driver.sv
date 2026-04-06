@@ -2,13 +2,12 @@ class ds_txn;
 
     logic [31:0] instr;
     logic [31:0] pc;
-    logic        reset;
     logic        stall;
     logic        flush;
 
-    function void display(int cycle);
-        $display("[TIME %0t][CYCLE %0d] DRV: reset=%0b stall=%0b flush=%0b instr=%h pc=%h",
-                 $time, cycle, reset, stall, flush, instr, pc);
+    function void display(int cycle, time log_time);
+        $display("[TIME %0t][CYCLE %0d] DRV: stall=%0b flush=%0b instr=%h pc=%h",
+                 log_time, cycle, stall, flush, instr, pc);
     endfunction
 
 endclass
@@ -28,14 +27,16 @@ class ds_driver;
     task run();
         ds_txn txn;
         bit    have_txn;
+        int    cycle_count = 0;
+        time   log_time;
 
         forever begin
             @(posedge vif.clk);
+            cycle_count++;
 
             have_txn = mbx.try_get(txn);
             if (!have_txn) begin
                 vif.tb_valid           <= 1'b0;
-                vif.reset              <= 1'b0;
                 vif.stall              <= 1'b1;
                 vif.flush              <= 1'b0;
                 vif.instr_fi           <= 32'h0;
@@ -47,7 +48,6 @@ class ds_driver;
             end
 
             vif.tb_valid           <= 1'b1;
-            vif.reset              <= txn.reset;
             vif.stall              <= txn.stall;
             vif.flush              <= txn.flush;
             vif.instr_fi           <= txn.instr;
@@ -56,7 +56,9 @@ class ds_driver;
             vif.pred_pc_target_fi  <= 32'h0;
             vif.pc_src_pred_fi     <= 1'b0;
 
-            txn.display(vif.cycle);
+            log_time = $time;
+            #2ps;
+            txn.display(cycle_count, log_time);
             num_sent++;
         end
     endtask

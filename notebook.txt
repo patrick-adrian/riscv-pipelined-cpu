@@ -322,3 +322,5 @@ So wait_for_completion just delays transactions being sent.
 -------------
 Removed drive_idle_controls because it's no longer needed after moving to one-cycle delay scoreboard.
 Obs samples vif.reset now instead of prev.reset.
+Fixed fetch stage logs
+Fixed decode_slice cycle tracking, logging, reset contract, and passive monitor to match that of fetch.
