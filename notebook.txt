@@ -311,3 +311,14 @@ Add reset contract to control tb, similar to that of fetch.
 Need to make fetch tb similar to that of control, so monitor does not rely on transactions sent by driver.
 Added reset test to control for later integration.
 Decoupled fetch and decode_slice scoreboards and txn IDs.
+------------------------------------------------------
+April 6, 2026
+Today I need to: Maybe fix timing and sim.logs? Add control assertions. Add more decode_slice tests.
+Then final check before creating fetch + control + decode_slice tb.
+Right now, resets are injected inbetween transactions being sent to the env (in the test itself).
+The scoreboard and monitor don't care about "transaction per check" anymore.
+Scoreboard uses observation object to calculate expected. If reset is on it accounts for that.
+So wait_for_completion just delays transactions being sent.
+-------------
+Removed drive_idle_controls because it's no longer needed after moving to one-cycle delay scoreboard.
+Obs samples vif.reset now instead of prev.reset.

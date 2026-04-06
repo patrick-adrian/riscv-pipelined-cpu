@@ -48,7 +48,6 @@ class fetch_random_test extends fetch_base_test;
                 if (vif.reset == 1'b0) begin
                     assert_reset();
                 end else begin
-                    drive_idle_controls();
                     deassert_reset();
                 end
             end

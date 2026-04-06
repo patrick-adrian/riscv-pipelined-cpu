@@ -13,7 +13,6 @@ class fetch_monitor;
     task run();
         bit         have_prev = 1'b0;
         int         cycle_count = 0;
-        logic       prev_reset;
         logic       prev_tb_valid;
         logic [1:0] prev_pc_src;
         logic       prev_stall;
@@ -29,7 +28,7 @@ class fetch_monitor;
                 fetch_obs obs = new();
 
                 obs.cycle          = cycle_count;
-                obs.reset          = prev_reset;
+                obs.reset          = vif.reset;
                 obs.tb_valid       = prev_tb_valid;
                 obs.pc_src         = prev_pc_src;
                 obs.stall          = prev_stall;
@@ -44,7 +43,6 @@ class fetch_monitor;
                 cycle_count++;
             end
 
-            prev_reset          = vif.reset;
             prev_tb_valid       = vif.tb_valid;
             prev_pc_src         = vif.pc_src;
             prev_stall          = vif.stall;

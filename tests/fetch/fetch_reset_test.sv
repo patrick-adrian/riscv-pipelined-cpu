@@ -58,7 +58,6 @@ class fetch_reset_test extends fetch_base_test;
 
         // Recovery test
         env.wait_until_checked(4);
-        drive_idle_controls();
         deassert_reset();
 
         // TXN 4: sequential (pc_src=0), no stall

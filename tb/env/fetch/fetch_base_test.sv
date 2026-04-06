@@ -34,13 +34,13 @@ class fetch_base_test;
         vif.reset = 1'b0;
     endtask
 
-    task pulse_reset(int cycles = 3);
+    task pulse_reset(int cycles = 1);
         assert_reset();
         repeat (cycles) @(posedge vif.clk);
         deassert_reset();
     endtask
 
-    task apply_reset(int cycles = 3);
+    task apply_reset(int cycles = 1);
         pulse_reset(cycles);
     endtask
 
