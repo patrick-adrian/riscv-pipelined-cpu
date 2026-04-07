@@ -59,7 +59,6 @@ class control_driver;
             vif.instr_de <= txn.tb_valid ? txn.instr_de : 32'h0;
 
             log_time = $time;
-            #2ps;
             txn.display(cycle_count, log_time);
             num_sent++;
         end

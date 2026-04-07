@@ -87,6 +87,7 @@ class control_scoreboard;
             if (!ctrl_is_known(obs.ctrl)) begin
                 mismatch_count++;
                 check_failed = 1'b1;
+                #1ps;
                 $display("[TIME %0t][CYCLE %0d] SB: control outputs contain X/Z during sampled cycle",
                          $time, obs.cycle);
             end else if (obs.reset) begin
@@ -112,6 +113,7 @@ class control_scoreboard;
                 end
             end
 
+            #1ps;
             if (check_failed) begin
                 $display("[TIME %0t][CYCLE %0d] SB: FAIL (%0s) instr=%08h\n",
                          $time, obs.cycle, check_label, obs.instr_de);
