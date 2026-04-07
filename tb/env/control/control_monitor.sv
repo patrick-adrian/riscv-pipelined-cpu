@@ -1,17 +1,16 @@
 class control_obs;
 
     int               cycle;
-    bit               valid;
+    bit               tb_valid;
     bit               reset;
-    logic [31:0]      instr;
+    logic [31:0]      instr_de;
     control_signals_t ctrl;
 
 endclass
 
 
-// Fully passive: emits one observation per cycle, before the driver updates the
-// next cycle's inputs. That enforces a deterministic one-cycle delay between
-// drive and check without modifying the combinational DUT.
+// Fully passive: samples one observation per posedge after the clocked TB
+// wrapper has updated its inputs for that cycle.
 class control_monitor;
 
     virtual control_if vif;
@@ -31,16 +30,18 @@ class control_monitor;
             control_obs obs = new();
 
             @(posedge vif.clk);
-
-            obs.cycle = cycle_count;
             cycle_count++;
-            obs.valid = vif.valid;
-            obs.reset = vif.reset;
-            obs.instr = vif.instr;
-            obs.ctrl  = vif.sample_ctrl();
+            #1ps;
+
+            obs.cycle    = cycle_count;
+            obs.tb_valid = vif.tb_valid;
+            obs.reset    = vif.reset;
+            obs.instr_de = vif.instr_de;
+            obs.ctrl     = vif.sample_ctrl();
 
             mon_mbx.put(obs);
-            num_sampled++;
+            if (obs.tb_valid)
+                num_sampled++;
         end
     endtask
 

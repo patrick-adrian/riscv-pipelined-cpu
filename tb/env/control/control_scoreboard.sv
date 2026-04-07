@@ -2,11 +2,10 @@ class control_scoreboard;
 
     mailbox #(control_obs) mon_mbx;
 
-    int         num_checked           = 0;
-    int         num_functional_checks = 0;
-    int         num_invariant_checks  = 0;
-    int         mismatch_count        = 0;
-    control_obs prev_obs;
+    int num_checked           = 0;
+    int num_functional_checks = 0;
+    int num_invariant_checks  = 0;
+    int mismatch_count        = 0;
 
     function new(mailbox #(control_obs) mon_mbx);
         this.mon_mbx = mon_mbx;
@@ -47,13 +46,6 @@ class control_scoreboard;
         });
     endfunction
 
-    function automatic bit ctrl_is_benign(input control_signals_t ctrl);
-        return (ctrl.reg_write === 1'b0) &&
-               (ctrl.mem_write === 1'b0) &&
-               (ctrl.csr_we    === 1'b0) &&
-               (ctrl.branch_op === `NON_BRANCH);
-    endfunction
-
     task automatic report_ctrl_mismatch(
         input string            label,
         input int               cycle,
@@ -61,7 +53,7 @@ class control_scoreboard;
         input control_signals_t got,
         input control_signals_t exp
     );
-        $display("[TIME %0t] SB CYCLE[%0d]: %0s mismatch instr=%08h",
+        $display("[TIME %0t][CYCLE %0d] SB: %0s mismatch instr=%08h",
                  $time, cycle, label, instr);
         $display("  imm_src:     exp=%03b got=%03b", exp.imm_src, got.imm_src);
         $display("  result_src:  exp=%03b got=%03b", exp.result_src, got.result_src);
@@ -89,19 +81,22 @@ class control_scoreboard;
             check_failed = 1'b0;
             check_label  = "INVALID";
 
+            if (!obs.tb_valid)
+                continue;
+
             if (!ctrl_is_known(obs.ctrl)) begin
                 mismatch_count++;
                 check_failed = 1'b1;
-                $display("[TIME %0t] SB CYCLE[%0d]: control outputs contain X/Z during sampled cycle",
+                $display("[TIME %0t][CYCLE %0d] SB: control outputs contain X/Z during sampled cycle",
                          $time, obs.cycle);
-            end else if (obs.reset || !obs.valid) begin
+            end else if (obs.reset) begin
                 num_invariant_checks++;
             end else begin
                 num_functional_checks++;
                 check_label = control_ref_model::instruction_type(
-                    obs.instr[6:0], obs.instr[14:12], obs.instr[31:25]
+                    obs.instr_de[6:0], obs.instr_de[14:12], obs.instr_de[31:25]
                 );
-                exp      = control_ref_model::decode_expected_instr(obs.instr);
+                exp      = control_ref_model::decode_expected_instr(obs.instr_de);
                 exp_ctrl = control_ref_model::to_control_signals(exp);
 
                 if (!ctrl_matches(obs.ctrl, exp_ctrl)) begin
@@ -110,7 +105,7 @@ class control_scoreboard;
                     report_ctrl_mismatch(
                         check_label,
                         obs.cycle,
-                        obs.instr,
+                        obs.instr_de,
                         obs.ctrl,
                         exp_ctrl
                     );
@@ -118,14 +113,13 @@ class control_scoreboard;
             end
 
             if (check_failed) begin
-                $display("[TIME %0t] SB CYCLE[%0d]: FAIL (%0s) instr=%08h\n",
-                         $time, obs.cycle, check_label, obs.instr);
+                $display("[TIME %0t][CYCLE %0d] SB: FAIL (%0s) instr=%08h\n",
+                         $time, obs.cycle, check_label, obs.instr_de);
             end else begin
-                $display("[TIME %0t] SB CYCLE[%0d]: PASS (%0s) instr=%08h\n",
-                         $time, obs.cycle, check_label, obs.instr);
+                $display("[TIME %0t][CYCLE %0d] SB: PASS (%0s) instr=%08h\n",
+                         $time, obs.cycle, check_label, obs.instr_de);
             end
 
-            prev_obs = obs;
             num_checked++;
         end
     endtask

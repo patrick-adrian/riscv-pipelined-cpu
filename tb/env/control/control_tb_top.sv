@@ -1,34 +1,34 @@
 `timescale 1ns/1ps
 `include "control_macros.sv"
 
-module tb_control_unit;
+module tb_control;
+
+    logic clk;
 
     control_env       env;
     control_base_test test_h;
     string            testname;
-    logic             clk = 1'b0;
 
-    localparam time CLK_PERIOD = 10ns;
+    initial clk = 0;
+    always #5 clk = ~clk;
 
     initial begin
         $dumpfile("waveform.vcd");
-        $dumpvars(0, tb_control_unit);
+        $dumpvars(0, tb_control);
     end
-
-    always #(CLK_PERIOD/2) clk = ~clk;
 
     control_if vif(clk);
 
     initial begin
-        vif.reset  = 1'b0;
-        vif.valid  = 1'b0;
-        vif.instr  = 32'h0;
+        vif.reset    = 1'b0;
+        vif.tb_valid = 1'b0;
+        vif.instr_de = 32'h0;
     end
 
     control_unit dut (
-        .op_de_i            (vif.opcode),
-        .funct3_de_i        (vif.funct3),
-        .funct7_de_i        (vif.funct7),
+        .op_de_i            (vif.op_de),
+        .funct3_de_i        (vif.funct3_de),
+        .funct7_de_i        (vif.funct7_de),
         .imm_src_de_o       (vif.imm_src),
         .result_src_de_o    (vif.result_src),
         .branch_op_de_o     (vif.branch_op),

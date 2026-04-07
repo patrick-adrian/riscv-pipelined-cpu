@@ -18,11 +18,6 @@ SEED  ?=
 TOP := tb_$(STAGE)
 ENV_DIR := tb/env/$(STAGE)
 
-# Stage-specific overrides
-ifeq ($(STAGE),control)
-  TOP       := tb_control_unit
-endif
-
 # Directories
 RTL_SV     := $(shell find rtl -name "*.sv" | sort)
 COMMON_SV  := common/adder.sv common/flop.sv
@@ -30,12 +25,7 @@ TB_ENV_PKG_SV := $(wildcard tb/env/$(STAGE)/$(STAGE)_env_pkg.sv)
 TEST_BASE_SV := $(wildcard tb/env/$(STAGE)/$(STAGE)_base_test.sv)
 TEST_FACTORY_SV := $(wildcard tb/env/$(STAGE)/$(STAGE)_test_factory.sv)
 TEST_CLASS_SV := $(shell find tests/$(STAGE) -name "*_test.sv" | sort)
-
-ifeq ($(STAGE),control)
-  TB_TOP_SV := tb/env/control/tb_control_unit.sv
-else
-  TB_TOP_SV := tb/env/$(STAGE)/$(STAGE)_tb_top.sv
-endif
+TB_TOP_SV := tb/env/$(STAGE)/$(STAGE)_tb_top.sv
 
 # Stage-specific assertions (look under tb/assertions/<STAGE>)
 ASSERT_SV  := $(wildcard tb/assertions/$(STAGE)/*.sv)
