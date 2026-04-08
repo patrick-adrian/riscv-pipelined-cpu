@@ -55,6 +55,9 @@
 <li> Wed Apr 1: Add control testbench.</li>
 <li> Thurs Apr 2: Add rest of signals to decode_slice tb.</li>
 <li> Sat Apr 4: More tb fixes to prep for fetch + decode + control integration TB. </li>
+<li> Mon Apr 6: Fixed logging and some discrepancies across fetch and decode TBs. </li>
+<li> Tues Apr 7: Fixed logging and some discrepancies for control TB. </li>
+<li> Wed Apr 8: </li>
 
 </ul>
 

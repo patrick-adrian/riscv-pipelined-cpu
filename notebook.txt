@@ -332,4 +332,9 @@ Then, check for naming discrepanices between control and fetch and decode_slice;
 Then clean the Makefile if possible.
 Finally, run the control regression suite for validation.
 Two problems: fetch needs to monitor every cycle
-control logging?
+Also make sure that decode does too
+Make the resets consistent for each letest
+Fixed control logging so DRV is first, because its combinational and not one-cycle delayed.
+------------------------------------------------------
+April 8, 2026
+Fix fetch scoreboard to check every cycle, and "Driven" or "Idle" states.

@@ -18,10 +18,12 @@ class fetch_scoreboard;
         fetch_obs obs;
         bit pc_mismatch;
         bit pc_plus4_mismatch;
+        string check_kind;
 
         forever begin
             mon_mbx.get(obs);
             next_expected_pc = expected_pc;
+            check_kind = obs.tb_valid ? "DRIVEN" : "IDLE";
 
             if (obs.reset) begin
                 next_expected_pc = 0;
@@ -34,23 +36,18 @@ class fetch_scoreboard;
                 endcase
             end
 
-            if (!obs.tb_valid) begin
-                expected_pc = next_expected_pc;
-                continue;
-            end
-
             expected_pc_plus4 = next_expected_pc + 32'd4;
             pc_mismatch = (next_expected_pc !== obs.pc);
             pc_plus4_mismatch = (expected_pc_plus4 !== obs.pc_plus4);
 
             if (pc_mismatch || pc_plus4_mismatch) begin
                 mismatch_count++;
-                $display("[TIME %0t][CYCLE %0d] SB: Mismatch! exp_pc=%h dut_pc=%h exp_pc_plus4=%h dut_pc_plus4=%h\n",
-                         $time, obs.cycle, next_expected_pc, obs.pc,
+                $display("[TIME %0t][CYCLE %0d] SB: %0s mismatch! exp_pc=%h dut_pc=%h exp_pc_plus4=%h dut_pc_plus4=%h\n",
+                         $time, obs.cycle, check_kind, next_expected_pc, obs.pc,
                          expected_pc_plus4, obs.pc_plus4);
             end else begin
-                $display("[TIME %0t][CYCLE %0d] SB: PASS: PC=%h PC+4=%h\n",
-                         $time, obs.cycle, obs.pc, obs.pc_plus4);
+                $display("[TIME %0t][CYCLE %0d] SB: %0s PASS: PC=%h PC+4=%h\n",
+                         $time, obs.cycle, check_kind, obs.pc, obs.pc_plus4);
             end
             num_checked++;
 
