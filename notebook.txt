@@ -338,3 +338,4 @@ Fixed control logging so DRV is first, because its combinational and not one-cyc
 ------------------------------------------------------
 April 8, 2026
 Fix fetch scoreboard to check every cycle, and "Driven" or "Idle" states.
+Fix decode scoreboard to do the same. Scoreboard logic shouldn't change whether a txn is driven or not. It still depends on reset, flush, stall, and sampled object. That's it.
