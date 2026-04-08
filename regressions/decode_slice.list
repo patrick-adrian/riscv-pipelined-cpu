@@ -1,1 +1,6 @@
 decode_slice_smoke_test
+decode_slice_random_test
+decode_slice_stall_test
+decode_slice_flush_test
+decode_slice_reset_recovery_test
+decode_slice_stall_flush_precedence_test

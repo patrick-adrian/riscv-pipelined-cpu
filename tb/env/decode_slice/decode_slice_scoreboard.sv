@@ -9,8 +9,9 @@ class decode_slice_scoreboard;
     logic [31:0] exp_pred_pc_target;
     logic        exp_pc_src_pred;
 
-    int num_checked  = 0;
-    int mismatch_count = 0;
+    int num_checked        = 0;
+    int num_driven_checked = 0;
+    int mismatch_count     = 0;
 
     function new(mailbox #(decode_slice_obs) mon_mbx);
         this.mon_mbx = mon_mbx;
@@ -111,6 +112,8 @@ class decode_slice_scoreboard;
             end
 
             num_checked++;
+            if (obs.tb_valid)
+                num_driven_checked++;
         end
     endtask
 

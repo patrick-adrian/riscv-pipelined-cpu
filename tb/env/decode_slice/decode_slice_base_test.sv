@@ -48,6 +48,22 @@ class decode_slice_base_test;
         pulse_reset(cycles);
     endtask
 
+    task send_txn(
+        logic        stall,
+        logic        flush,
+        logic [31:0] instr,
+        logic [31:0] pc
+    );
+        decode_slice_txn t;
+
+        t = new();
+        t.stall = stall;
+        t.flush = flush;
+        t.instr = instr;
+        t.pc    = pc;
+        env.put_txn(t);
+    endtask
+
     virtual task run();
         $fatal(1, "decode_slice_base_test::run() must be overridden");
     endtask

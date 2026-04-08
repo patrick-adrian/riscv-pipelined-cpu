@@ -1,9 +1,13 @@
 class decode_slice_txn;
 
-    logic [31:0] instr;
-    logic [31:0] pc;
-    logic        stall;
-    logic        flush;
+    rand logic [31:0] instr;
+    rand logic [31:0] pc;
+    rand logic        stall;
+    rand logic        flush;
+
+    constraint pc_align {
+        pc[1:0] == 2'b00;
+    }
 
     function void display(int cycle, time log_time);
         $display("[TIME %0t][CYCLE %0d] DRV: stall=%0b flush=%0b instr=%h pc=%h",

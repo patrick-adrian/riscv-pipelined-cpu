@@ -53,17 +53,17 @@ class decode_slice_env;
 
         fork
             begin
-                wait (scoreboard.num_checked >= target_checks);
+                wait (scoreboard.num_driven_checked >= target_checks);
             end
 
             begin
                 repeat (timeout_cycles)
                     @(posedge vif.clk);
 
-                if (scoreboard.num_checked < target_checks) begin
+                if (scoreboard.num_driven_checked < target_checks) begin
                     $fatal(1,
-                           "Timeout waiting for %0d scoreboard checks (checked=%0d, sent=%0d, mismatches=%0d)",
-                           target_checks, scoreboard.num_checked, num_txns_sent,
+                           "Timeout waiting for %0d driven scoreboard checks (driven_checked=%0d, total_checked=%0d, sent=%0d, mismatches=%0d)",
+                           target_checks, scoreboard.num_driven_checked, scoreboard.num_checked, num_txns_sent,
                            scoreboard.mismatch_count);
                 end
             end
@@ -85,9 +85,10 @@ class decode_slice_env;
 
     task report_results();
         $display("Total checks: %0d", scoreboard.num_checked);
+        $display("Driven checks: %0d", scoreboard.num_driven_checked);
         $display("Mismatches: %0d", scoreboard.mismatch_count);
 
-        if (!has_failures() && scoreboard.num_checked > 0)
+        if (!has_failures() && scoreboard.num_driven_checked > 0)
             $display("TEST PASSED");
         else
             $display("TEST FAIL");

@@ -1,0 +1,11 @@
+REGRESSION SUMMARY
+------------------
+decode_slice_smoke_test PASS
+decode_slice_random_test PASS
+decode_slice_stall_test PASS
+decode_slice_flush_test PASS
+decode_slice_reset_recovery_test PASS
+decode_slice_stall_flush_precedence_test PASS
+
+PASS: 6
+FAIL: 0
