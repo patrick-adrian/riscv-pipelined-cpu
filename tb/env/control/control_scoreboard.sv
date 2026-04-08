@@ -3,6 +3,7 @@ class control_scoreboard;
     mailbox #(control_obs) mon_mbx;
 
     int num_checked           = 0;
+    int num_driven_checked    = 0;
     int num_functional_checks = 0;
     int num_invariant_checks  = 0;
     int mismatch_count        = 0;
@@ -74,29 +75,31 @@ class control_scoreboard;
         control_ref_model::control_exp_t exp;
         control_signals_t exp_ctrl;
         bit check_failed;
+        string check_kind;
         string check_label;
 
         forever begin
             mon_mbx.get(obs);
             check_failed = 1'b0;
-            check_label  = "INVALID";
-
-            if (!obs.tb_valid)
-                continue;
+            check_kind   = obs.tb_valid ? "DRIVEN" : "IDLE";
+            check_label  = "UNKNOWN";
 
             if (!ctrl_is_known(obs.ctrl)) begin
                 mismatch_count++;
                 check_failed = 1'b1;
+                check_label = "X/Z";
                 #1ps;
-                $display("[TIME %0t][CYCLE %0d] SB: control outputs contain X/Z during sampled cycle",
-                         $time, obs.cycle);
+                $display("[TIME %0t][CYCLE %0d] SB: %0s control outputs contain X/Z during sampled cycle",
+                         $time, obs.cycle, check_kind);
             end else if (obs.reset) begin
+                check_label = "RESET";
                 num_invariant_checks++;
             end else begin
-                num_functional_checks++;
                 check_label = control_ref_model::instruction_type(
                     obs.instr_de[6:0], obs.instr_de[14:12], obs.instr_de[31:25]
                 );
+                if (obs.tb_valid)
+                    num_functional_checks++;
                 exp      = control_ref_model::decode_expected_instr(obs.instr_de);
                 exp_ctrl = control_ref_model::to_control_signals(exp);
 
@@ -115,14 +118,16 @@ class control_scoreboard;
 
             #1ps;
             if (check_failed) begin
-                $display("[TIME %0t][CYCLE %0d] SB: FAIL (%0s) instr=%08h\n",
-                         $time, obs.cycle, check_label, obs.instr_de);
+                $display("[TIME %0t][CYCLE %0d] SB: %0s FAIL (%0s) instr=%08h\n",
+                         $time, obs.cycle, check_kind, check_label, obs.instr_de);
             end else begin
-                $display("[TIME %0t][CYCLE %0d] SB: PASS (%0s) instr=%08h\n",
-                         $time, obs.cycle, check_label, obs.instr_de);
+                $display("[TIME %0t][CYCLE %0d] SB: %0s PASS (%0s) instr=%08h\n",
+                         $time, obs.cycle, check_kind, check_label, obs.instr_de);
             end
 
             num_checked++;
+            if (obs.tb_valid)
+                num_driven_checked++;
         end
     endtask
 
