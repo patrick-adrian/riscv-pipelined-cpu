@@ -16,6 +16,7 @@ class decode_slice_reset_recovery_test extends decode_slice_base_test;
         // Reset must dominate even while the driver continues to send traffic.
         send_txn(1'b0, 1'b0, 32'h0080A103, 32'h0000_0004); // ignored by reset
         send_txn(1'b1, 1'b0, 32'h0020A823, 32'h0000_0008); // ignored by reset
+        env.wait_until_checked(3);
 
         deassert_reset();
 

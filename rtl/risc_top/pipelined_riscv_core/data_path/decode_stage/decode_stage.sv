@@ -20,7 +20,7 @@ module decode_stage (
     input  logic        reset_i,
 
     // Data inputs
-    input  logic [31:0] instr_fi_i,             // fetched instruction from fetch stage
+    input  logic [31:0] instr_fi_i,             // fetched instruction from memory
     input  logic [31:0] pc_fi_i,                // program counter for this instruction, for branch/jump calculations and for storing in the pipeline register
     input  logic [31:0] pc_plus4_fi_i,          // pc + 4, for computing address for next stage
     input  logic [31:0] pred_pc_target_fi_i,    // branch target from branch predictor

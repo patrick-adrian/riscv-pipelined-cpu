@@ -16,6 +16,7 @@ class control_reset_test extends control_base_test;
                  `F3_ADD_SUB,
                  `FUNCT7_ADD_SRL);
 
+        env.wait_until_checked(1);
         assert_reset();
 
         // Send valid instructions with back-to-back traffic during reset.
@@ -28,6 +29,7 @@ class control_reset_test extends control_base_test;
                  `F3_WORD,
                  7'b0000000);
 
+        env.wait_until_checked(3);
         deassert_reset();
 
          // Finish with back-to-back valid traffic after reset deassertion.
