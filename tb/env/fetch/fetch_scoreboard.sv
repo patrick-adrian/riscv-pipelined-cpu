@@ -6,8 +6,9 @@ class fetch_scoreboard;
     logic [31:0] next_expected_pc;
     logic [31:0] expected_pc_plus4;
 
-    int num_checked = 0;
-    int mismatch_count = 0;
+    int num_checked        = 0;
+    int num_driven_checked = 0;
+    int mismatch_count     = 0;
 
     function new(mailbox #(fetch_obs) mon_mbx);
         this.mon_mbx = mon_mbx;
@@ -50,6 +51,8 @@ class fetch_scoreboard;
                          $time, obs.cycle, check_kind, obs.pc, obs.pc_plus4);
             end
             num_checked++;
+            if (obs.tb_valid)
+                num_driven_checked++;
 
             expected_pc = next_expected_pc;
         end

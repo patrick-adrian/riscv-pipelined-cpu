@@ -342,3 +342,10 @@ Fix decode scoreboard to do the same. Scoreboard logic shouldn't change whether 
 Decode tests weren't checking all txns. This was because now all sampled cycles count towards number checked, and test finishes early. Fixed that.
 Todo: decode_slice tests, and control assertions
 Done^
+------------------------------------------------------
+April 9, 2026
+Fixed reset tests by adding env.wait_until_checked
+Planning how to begin fetch_decode integrated bench
+------------------------------------------------------
+April 10, 2026
+Fixed fetch num_driven check

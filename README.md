@@ -57,7 +57,9 @@
 <li> Sat Apr 4: More tb fixes to prep for fetch + decode + control integration TB. </li>
 <li> Mon Apr 6: Fixed logging and some discrepancies across fetch and decode TBs. </li>
 <li> Tues Apr 7: Fixed logging and some discrepancies for control TB. </li>
-<li> Wed Apr 8: </li>
+<li> Wed Apr 8: Fetch and decode scoreboard improvements. </li>
+<li> Thurs Apr 9: Reset test fix and planning for fetch_decode bench. </li>
+<li> Fri Apr 10: </li>
 
 </ul>
 
