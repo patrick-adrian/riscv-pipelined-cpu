@@ -1,6 +1,7 @@
 class fetch_decode_txn;
 
     string       cycle_name;
+    // Control stimulus that steers fetch and decode for one cycle.
     logic [1:0]  pc_src;
     logic        stall_fi;
     logic        stall_de;

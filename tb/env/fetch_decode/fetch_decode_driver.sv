@@ -13,6 +13,7 @@ class fetch_decode_driver;
     endfunction
 
     task automatic drive_defaults();
+        // Default control inputs keep fetch/decode advancing sequentially.
         vif.is_new_txn        = 1'b0;
         vif.pc_src            = `PC_SRC_SEQ_F;
         vif.stall_fi          = 1'b0;
@@ -40,6 +41,8 @@ class fetch_decode_driver;
                 continue;
             end
 
+            // All transaction fields are control-owned stimulus applied into the
+            // integrated slice; fetch and decode react to them on the next edge.
             vif.is_new_txn        = 1'b1;
             vif.pc_src            = txn.pc_src;
             vif.stall_fi          = txn.stall_fi;

@@ -7,13 +7,16 @@ class integrated_scoreboard;
 
     mailbox #(integrated_obs) mon_mbx;
 
+    // Fetch history needed to predict current and next fetch PCs.
     logic [31:0] held_fetch_pc;
 
+    // Pending fetch outputs become the next decode inputs when decode advances.
     bit          pending_valid;
     logic [31:0] pending_instr;
     logic [31:0] pending_pc;
     int          pending_flow_id;
 
+    // Held decode state is reused during decode stalls.
     bit          held_valid;
     logic [31:0] held_instr;
     logic [31:0] held_pc;
@@ -150,6 +153,8 @@ class integrated_scoreboard;
             exp_pc_this_cycle = expected_pc_this_cycle(obs);
             exp_pc_next = compute_pc_next(obs);
 
+            // Reconstruct the decode-stage view from prior fetch activity and
+            // current control stall/flush behavior.
             cur_decode_valid   = 1'b0;
             cur_decode_instr   = 32'h0;
             cur_decode_pc      = 32'h0;
@@ -184,6 +189,8 @@ class integrated_scoreboard;
                 exp_ctrl_decoded = control_ref_model::decode_expected_instr(32'h0);
             exp_ctrl = control_ref_model::to_control_signals(exp_ctrl_decoded);
 
+            // Check fetch sequencing, decode field extraction, and control decode
+            // as separate concerns even though they are sampled together.
             fetch_failed = (exp_pc_this_cycle !== obs.pc) || (exp_pc_next !== obs.pc_next);
             decode_failed = (cur_decode_valid !== obs.valid_d) ||
                             (cur_decode_instr !== obs.instr_d) ||
@@ -223,7 +230,7 @@ class integrated_scoreboard;
                              exp_ctrl.csr_we, obs.ctrl.csr_we);
                 end
             end else begin
-                $display("[TIME %0t][CYCLE %0d] FDC_SB: %0s PASS pc=%08h instr_f=%08h instr_d=%08h flow=%0d",
+                $display("[TIME %0t][CYCLE %0d] FDC_SB: %0s PASS pc=%08h instr_f=%08h instr_d=%08h flow=%0d\n",
                          $time, obs.cycle, kind, obs.pc, obs.instr_f, obs.instr_d, obs.flow_id);
             end
 

@@ -9,6 +9,8 @@ module tb_fetch_decode;
     fetch_decode_base_test test_h;
     string                 testname;
 
+    // Decode exports the raw funct7 field; the integrated control check only
+    // consumes bit 5, so the testbench normalizes the rest before control sees it.
     logic [6:0] raw_funct7_d;
 
     initial clk = 0;
@@ -24,6 +26,7 @@ module tb_fetch_decode;
     ) vif(clk);
 
     initial begin
+        // Default control stimulus that steers fetch/decode until a test drives it.
         vif.reset             = 1'b1;
         vif.is_new_txn        = 1'b0;
         vif.pc_src            = `PC_SRC_SEQ_F;
@@ -37,6 +40,7 @@ module tb_fetch_decode;
         vif.clear_program();
     end
 
+    // Fetch stage under test.
     fetch_stage u_fetch_stage (
         .clk_i               (clk),
         .reset_i             (vif.reset),
@@ -49,6 +53,7 @@ module tb_fetch_decode;
         .pc_plus4_fi_o       (vif.pc_plus4_f)
     );
 
+    // Fetch next-PC calculation for scoreboard visibility.
     always_comb begin
         case (vif.pc_src)
             `PC_SRC_SEQ_F:    vif.pc_next_f = vif.pc_f + 32'd4;
@@ -59,6 +64,7 @@ module tb_fetch_decode;
         endcase
     end
 
+    // Fetch-side instruction memory model.
     instr_mem_model #(
         .DEPTH(64)
     ) u_instr_mem (
@@ -67,6 +73,7 @@ module tb_fetch_decode;
         .prog_if (vif)
     );
 
+    // Decode stage under test.
     decode_stage u_decode_stage (
         .clk_i               (clk),
         .reset_i             (vif.reset),
@@ -98,6 +105,7 @@ module tb_fetch_decode;
     // to keep the integrated slice deterministic.
     assign vif.funct7_d = {6'b0, raw_funct7_d[5]};
 
+    // Control unit driven from decode outputs.
     control_unit u_control_unit (
         .op_de_i            (vif.opcode_d),
         .funct3_de_i        (vif.funct3_d),

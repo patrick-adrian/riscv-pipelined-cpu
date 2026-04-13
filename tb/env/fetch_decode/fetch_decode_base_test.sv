@@ -48,6 +48,8 @@ class fetch_decode_base_test;
 
     task send_ctrl_txn(
         input string      name,
+        // Control-owned inputs that steer fetch and determine whether decode
+        // advances, stalls, or flushes on the following cycle.
         input logic [1:0] pc_src = `PC_SRC_SEQ_F,
         input logic       stall_fi = 1'b0,
         input logic       stall_de = 1'b0,

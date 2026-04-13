@@ -1,0 +1,9 @@
+REGRESSION SUMMARY
+------------------
+fetch_decode_imem_smoke_test PASS
+fetch_decode_program_test PASS
+fetch_decode_stall_test PASS
+fetch_decode_flush_redirect_test PASS
+
+PASS: 4
+FAIL: 0

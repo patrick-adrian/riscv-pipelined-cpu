@@ -49,14 +49,19 @@ class integrated_monitor;
             obs.is_new_txn       = vif.is_new_txn;
             obs.is_bubble        = (!vif.valid_d) || (vif.instr_d == `NOP_INSTR);
             obs.flow_id          = vif.valid_d ? current_flow_id : INVALID_FLOW_ID;
+            // Sample control-owned redirect inputs first so fetch/decode checks
+            // can be interpreted against the same cycle's steering decisions.
             obs.pc_src           = vif.pc_src;
             obs.pc_target_ex     = vif.pc_target_ex;
             obs.pc_plus4_ex      = vif.pc_plus4_ex;
             obs.pred_pc_target_fi= vif.pred_pc_target_fi;
             obs.pc_src_pred_fi   = vif.pc_src_pred_fi;
+            // Fetch observations come directly from the fetch-stage outputs.
             obs.pc               = vif.pc_f;
             obs.pc_next          = vif.pc_next_f;
             obs.instr_f          = vif.instr_f;
+            // Decode observations and control decode outputs are sampled together
+            // because they are produced from the same decode-stage instruction.
             obs.instr_d          = vif.instr_d;
             obs.imm              = vif.imm_d;
             obs.rs1              = vif.rs1_d;
@@ -68,8 +73,8 @@ class integrated_monitor;
             obs.funct7           = vif.funct7_d;
             obs.ctrl             = vif.sample_ctrl();
 
-            $display("[CYCLE %0d] PC=%08h INSTR_F=%08h INSTR_D=%08h FLOW=%0d",
-                     obs.cycle, obs.pc, obs.instr_f, obs.instr_d, obs.flow_id);
+            $display("[TIME %0t][CYCLE %0d] PC=%08h INSTR_F=%08h INSTR_D=%08h FLOW=%0d",
+                     $time, obs.cycle, obs.pc, obs.instr_f, obs.instr_d, obs.flow_id);
 
             mbx.put(obs);
             num_sampled++;

@@ -17,9 +17,11 @@ typedef struct packed {
 
 interface fetch_decode_control_if #(parameter int IMEM_DEPTH = 64) (input logic clk);
 
+    // Testbench handshake and shared reset.
     logic reset;
     logic is_new_txn;
 
+    // Control-driven fetch steering inputs.
     logic [1:0]  pc_src;
     logic        stall_fi;
     logic        stall_de;
@@ -29,13 +31,16 @@ interface fetch_decode_control_if #(parameter int IMEM_DEPTH = 64) (input logic 
     logic [31:0] pred_pc_target_fi;
     logic        pc_src_pred_fi;
 
+    // Backing store for fetch instruction memory.
     logic [31:0] program_mem[0:IMEM_DEPTH-1];
 
+    // Fetch-stage observations.
     logic [31:0] pc_f;
     logic [31:0] pc_next_f;
     logic [31:0] pc_plus4_f;
     logic [31:0] instr_f;
 
+    // Decode-stage observations.
     logic [31:0] instr_d;
     logic [31:0] imm_d;
     logic [31:0] pc_d;
@@ -51,6 +56,7 @@ interface fetch_decode_control_if #(parameter int IMEM_DEPTH = 64) (input logic 
     logic        pc_src_pred_d;
     logic        valid_d;
 
+    // Control-unit outputs derived from decode fields.
     logic [2:0] imm_src_ctrl;
     logic [2:0] result_src_ctrl;
     logic [1:0] branch_op_ctrl;

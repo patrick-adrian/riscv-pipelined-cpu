@@ -2,6 +2,8 @@ class fetch_decode_env;
 
     virtual fetch_decode_control_if vif;
 
+    // Driver injects control stimulus, monitor samples fetch/decode/control,
+    // and the scoreboard checks each stage-specific view.
     fetch_decode_driver    driver;
     integrated_monitor     monitor;
     integrated_scoreboard  scoreboard;

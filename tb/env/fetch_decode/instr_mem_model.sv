@@ -8,6 +8,8 @@ module instr_mem_model #(
     fetch_decode_control_if        prog_if
 );
 
+    // Pure fetch-side model: translate the current fetch PC into an instruction
+    // word using the program image loaded through the shared interface.
     always_comb begin
         if (pc_i[31:2] >= DEPTH)
             instr_o = `NOP_INSTR;

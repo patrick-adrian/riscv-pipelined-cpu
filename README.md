@@ -59,7 +59,9 @@
 <li> Tues Apr 7: Fixed logging and some discrepancies for control TB. </li>
 <li> Wed Apr 8: Fetch and decode scoreboard improvements. </li>
 <li> Thurs Apr 9: Reset test fix and planning for fetch_decode bench. </li>
-<li> Fri Apr 10: </li>
+<li> Fri Apr 10: Inital fetch_decode tb commit. </li>
+<li> Sun Apr 12: Look into waveform automation: todo. </li>
+<li> Mon Apr 13:  </li>
 
 </ul>
 

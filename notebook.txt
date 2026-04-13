@@ -349,3 +349,11 @@ Planning how to begin fetch_decode integrated bench
 ------------------------------------------------------
 April 10, 2026
 Fixed fetch num_driven check
+------------------------------------------------------
+April 12, 2026
+Make a mermaid diagram for the fetch_reset_test. Make sure to reference @results/20260410_102727/fetch_reset_test/sim.log and @tests/fetch/fetch_reset_test.sv for accuracy. It should essentially be the same as what would be seen in its respective waveform.vcd
+NVM, just automate gtkwave to PNG LATER, maybe add scoreboard debug signals.
+------------------------------------------------------
+April 13, 2026
+Add comments to indicate which signals belong to each stage
+Fixed logging

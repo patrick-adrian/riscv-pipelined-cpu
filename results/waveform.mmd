@@ -1,0 +1,64 @@
+timeline
+    title fetch_reset_test waveform-style timeline
+
+    section Clock / reset
+      0 ns : init
+           : clk=0
+           : reset=0
+           : stall=1
+      10 ns : RESET ASSERTED
+      20 ns : RESET DEASSERTED
+      50 ns : RESET ASSERTED
+      80 ns : RESET DEASSERTED
+
+    section Driven stimulus
+      25 ns : TXN0 driven
+           : pc_src=0 stall=0
+           : ex_t=0x00000000 ex_p4=0x00000000 pred=0x00000000
+      35 ns : TXN1 driven
+           : pc_src=0 stall=0
+           : ex_t=0x00000000 ex_p4=0x00000004 pred=0x00000000
+      55 ns : TXN2 driven while reset=1
+           : pc_src=0 stall=0
+           : ex_t=0x00000000 ex_p4=0x00000008 pred=0x00000000
+      65 ns : TXN3 driven while reset=1
+           : pc_src=1 stall=0
+           : pred=0x00000020
+      85 ns : TXN4 driven
+           : pc_src=0 stall=0
+           : ex_t=0x00000000 ex_p4=0x00000000 pred=0x00000000
+      95 ns : TXN5 driven
+           : pc_src=0 stall=0
+           : ex_t=0x00000000 ex_p4=0x00000004 pred=0x00000000
+      105 ns : TXN6 driven
+            : pc_src=0 stall=0
+            : ex_t=0x00000000 ex_p4=0x00000008 pred=0x00000000
+      115 ns : TXN7 driven
+            : pc_src=1 stall=0
+            : pred=0x00000020
+
+    section Observed fetch outputs
+      15 ns : IDLE
+           : PC=0x00000000 PC+4=0x00000004
+      25 ns : IDLE after first reset release
+           : PC=0x00000000 PC+4=0x00000004
+      35 ns : TXN0 result
+           : PC=0x00000004 PC+4=0x00000008
+      45 ns : TXN1 result
+           : PC=0x00000008 PC+4=0x0000000C
+      55 ns : reset bubble
+           : PC=0x00000000 PC+4=0x00000004
+      65 ns : TXN2 masked by reset
+           : PC=0x00000000 PC+4=0x00000004
+      75 ns : TXN3 masked by reset
+           : PC=0x00000000 PC+4=0x00000004
+      85 ns : recovery bubble after reset release
+           : PC=0x00000000 PC+4=0x00000004
+      95 ns : TXN4 result
+           : PC=0x00000004 PC+4=0x00000008
+      105 ns : TXN5 result
+            : PC=0x00000008 PC+4=0x0000000C
+      115 ns : TXN6 result
+            : PC=0x0000000C PC+4=0x00000010
+      125 ns : TXN7 predicted-branch result
+            : PC=0x00000020 PC+4=0x00000024
