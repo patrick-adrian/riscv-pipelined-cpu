@@ -67,6 +67,8 @@
 
 </ul>
 
+<h1> UVM Architecture</h1>
+<img width="1000" height="580" alt="um" src="https://github.com/user-attachments/assets/56b85a02-f317-46e2-a16a-d06819279b36" />
 <h1> RISC-V Format and Instruction Set</h1>
 <img width="946" height="577" alt="riscv32_format" src="https://github.com/user-attachments/assets/0765fe23-b1ce-49bf-9e6d-af0b28f10014" />
 <img width="1654" height="2339" alt="RV32I_BaseInstructionSet" src="https://github.com/user-attachments/assets/78626772-ff0e-4074-a373-e643c356704b" />
