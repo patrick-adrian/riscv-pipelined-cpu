@@ -61,7 +61,9 @@
 <li> Thurs Apr 9: Reset test fix and planning for fetch_decode bench. </li>
 <li> Fri Apr 10: Inital fetch_decode tb commit. </li>
 <li> Sun Apr 12: Look into waveform automation: todo. </li>
-<li> Mon Apr 13:  </li>
+<li> Mon Apr 13: Add comments in fetch_decode tb, fix logging. </li>
+<li> Tues Apr 14: ALU UVM testbench compilation and simulation (separate repo). </li>
+<li> Wed Apr 15: Planning to convert fetch into full UVM. </li>
 
 </ul>
 
