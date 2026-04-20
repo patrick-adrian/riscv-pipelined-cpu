@@ -1,13 +1,11 @@
 class fetch_sequencer extends uvm_sequencer #(fetch_txn);
 
     virtual fetch_if vif;
-    protected bit    reset_asserted;
 
     `uvm_component_utils(fetch_sequencer)
 
     function new(string name = "fetch_sequencer", uvm_component parent = null);
         super.new(name, parent);
-        reset_asserted = 1'b0;
     endfunction
 
     function void build_phase(uvm_phase phase);
@@ -19,15 +17,26 @@ class fetch_sequencer extends uvm_sequencer #(fetch_txn);
     endfunction
 
     task assert_reset();
-        reset_asserted = 1'b1;
+        if (vif == null) begin
+            `uvm_fatal("FETCH/SEQ/VIF", "cannot assert reset without a valid virtual interface")
+        end
+        vif.reset <= 1'b1;
+        `uvm_info("FETCH/RST", "assert reset", UVM_MEDIUM)
     endtask
 
     task deassert_reset();
-        reset_asserted = 1'b0;
+        if (vif == null) begin
+            `uvm_fatal("FETCH/SEQ/VIF", "cannot deassert reset without a valid virtual interface")
+        end
+        vif.reset <= 1'b0;
+        `uvm_info("FETCH/RST", "deassert reset", UVM_MEDIUM)
     endtask
 
     function bit get_reset_asserted();
-        return reset_asserted;
+        if (vif == null) begin
+            `uvm_fatal("FETCH/SEQ/VIF", "cannot read reset state without a valid virtual interface")
+        end
+        return vif.reset;
     endfunction
 
 endclass

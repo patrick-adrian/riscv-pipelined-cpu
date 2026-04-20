@@ -367,3 +367,5 @@ Planning to convert fetch tb into full UVM.
 April 20, 2026
 Inital fetch UVM tb commit.
 Todo: Fix clocking block logic, "reset release needs a recovery bubble so the existing fetch assertions stay quiet during deassertion", inital reset in tb_top.
+Fixed driver to become a pure, blocking consumer of sequence items, no reset or pin control.
+Need to fix logs and cycle timing? Right now sequencer is the one that asserts and deasserts reset, base sequence calls apply_reset that does both.

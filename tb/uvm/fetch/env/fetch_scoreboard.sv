@@ -8,6 +8,7 @@ class fetch_scoreboard extends uvm_component;
 
     int num_checked;
     int num_driven_checked;
+    int num_active_driven_checked;
     int mismatch_count;
 
     protected bit           have_prev_obs;
@@ -23,6 +24,7 @@ class fetch_scoreboard extends uvm_component;
         expected_pc_plus4  = 32'h4;
         num_checked        = 0;
         num_driven_checked = 0;
+        num_active_driven_checked = 0;
         mismatch_count     = 0;
         have_prev_obs      = 1'b0;
     endfunction
@@ -40,7 +42,7 @@ class fetch_scoreboard extends uvm_component;
         next_expected_pc = expected_pc;
         check_kind = prev_obs.tb_valid ? "DRIVEN" : "IDLE";
 
-        if (obs.reset) begin
+        if (prev_obs.reset) begin
             next_expected_pc = 32'h0;
         end else if (!prev_obs.stall) begin
             case (prev_obs.pc_src)
@@ -73,6 +75,9 @@ class fetch_scoreboard extends uvm_component;
         num_checked++;
         if (prev_obs.tb_valid) begin
             num_driven_checked++;
+            if (!prev_obs.reset) begin
+                num_active_driven_checked++;
+            end
         end
 
         expected_pc = next_expected_pc;
@@ -92,11 +97,13 @@ class fetch_scoreboard extends uvm_component;
         fatal_count = server.get_severity_count(UVM_FATAL);
         pass        = (mismatch_count == 0) &&
                       (num_driven_checked > 0) &&
+                      (num_active_driven_checked > 0) &&
                       (error_count == 0) &&
                       (fatal_count == 0);
 
         $display("Total checks: %0d", num_checked);
         $display("Driven checks: %0d", num_driven_checked);
+        $display("Active driven checks: %0d", num_active_driven_checked);
         $display("Mismatches: %0d", mismatch_count);
 
         if (pass) begin
@@ -104,6 +111,8 @@ class fetch_scoreboard extends uvm_component;
         end else begin
             if (num_driven_checked == 0) begin
                 `uvm_error("FETCH/SB", "No driven transactions reached the scoreboard")
+            end else if (num_active_driven_checked == 0) begin
+                `uvm_error("FETCH/SB", "No driven transactions were checked while reset was deasserted")
             end
             $display("TEST FAIL");
         end

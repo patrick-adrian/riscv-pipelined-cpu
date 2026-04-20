@@ -22,7 +22,6 @@ class fetch_agent extends uvm_agent;
         super.connect_phase(phase);
 
         driver.seq_item_port.connect(sequencer.seq_item_export);
-        driver.sequencer_h = sequencer;
     endfunction
 
 endclass
