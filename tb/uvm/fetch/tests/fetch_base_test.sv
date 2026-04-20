@@ -17,6 +17,13 @@ class fetch_base_test extends uvm_test;
         return null;
     endfunction
 
+    protected task run_reset_sequence();
+        fetch_reset_seq reset_seq;
+
+        reset_seq = fetch_reset_seq::type_id::create("reset_seq");
+        reset_seq.start(null);
+    endtask
+
     task run_phase(uvm_phase phase);
         fetch_base_seq seq;
 
@@ -26,6 +33,7 @@ class fetch_base_test extends uvm_test;
         end
 
         phase.raise_objection(this);
+        run_reset_sequence();
         seq.start(env.agent.sequencer);
         phase.drop_objection(this);
     endtask

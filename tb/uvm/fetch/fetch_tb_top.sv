@@ -19,7 +19,7 @@ module tb_fetch;
     fetch_if vif(clk);
 
     initial begin
-        vif.reset          = 1'b1;
+        vif.reset          = 1'b0;
         vif.tb_valid       = 1'b0;
         vif.pc_src         = 2'd0;
         vif.stall          = 1'b1;

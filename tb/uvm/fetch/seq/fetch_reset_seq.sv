@@ -1,92 +1,25 @@
-class fetch_reset_seq extends fetch_base_seq;
+class fetch_reset_seq extends uvm_sequence;
 
     `uvm_object_utils(fetch_reset_seq)
+
+    virtual fetch_if vif;
 
     function new(string name = "fetch_reset_seq");
         super.new(name);
     endfunction
 
     task body();
-        fetch_txn t;
+        if (!uvm_config_db#(virtual fetch_if)::get(null, "", "vif", vif)) begin
+            `uvm_fatal("RESET_SEQ", "virtual interface not found")
+        end
 
-        apply_reset();
+        vif.reset <= 1'b1;
+        `uvm_info("FETCH/RST", "assert reset", UVM_MEDIUM)
+        repeat (5) @(posedge vif.clk);
 
-        t = fetch_txn::type_id::create("txn0");
-        start_item(t);
-        t.pc_src         = 2'd0;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0000;
-        t.pred_pc_target = 32'h0000_0000;
-        finish_item(t);
-
-        t = fetch_txn::type_id::create("txn1");
-        start_item(t);
-        t.pc_src         = 2'd0;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0004;
-        t.pred_pc_target = 32'h0000_0000;
-        finish_item(t);
-
-        assert_reset();
-
-        t = fetch_txn::type_id::create("txn2");
-        start_item(t);
-        t.pc_src         = 2'd0;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0008;
-        t.pred_pc_target = 32'h0000_0000;
-        finish_item(t);
-
-        t = fetch_txn::type_id::create("txn3");
-        start_item(t);
-        t.pc_src         = 2'd1;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0000;
-        t.pred_pc_target = 32'h0000_0020;
-        finish_item(t);
-
-        deassert_reset();
-        wait_cycles(1);
-
-        t = fetch_txn::type_id::create("txn4");
-        start_item(t);
-        t.pc_src         = 2'd0;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0000;
-        t.pred_pc_target = 32'h0000_0000;
-        finish_item(t);
-
-        t = fetch_txn::type_id::create("txn5");
-        start_item(t);
-        t.pc_src         = 2'd0;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0004;
-        t.pred_pc_target = 32'h0000_0000;
-        finish_item(t);
-
-        t = fetch_txn::type_id::create("txn6");
-        start_item(t);
-        t.pc_src         = 2'd0;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0008;
-        t.pred_pc_target = 32'h0000_0000;
-        finish_item(t);
-
-        t = fetch_txn::type_id::create("txn7");
-        start_item(t);
-        t.pc_src         = 2'd1;
-        t.stall          = 1'b0;
-        t.pc_target_ex   = 32'h0000_0000;
-        t.pc_plus4_ex    = 32'h0000_0000;
-        t.pred_pc_target = 32'h0000_0020;
-        finish_item(t);
+        vif.reset <= 1'b0;
+        `uvm_info("FETCH/RST", "deassert reset", UVM_MEDIUM)
+        @(posedge vif.clk);
     endtask
 
 endclass

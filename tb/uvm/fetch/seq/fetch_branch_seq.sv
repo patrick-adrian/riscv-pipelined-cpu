@@ -9,8 +9,6 @@ class fetch_branch_seq extends fetch_base_seq;
     task body();
         fetch_txn t;
 
-        apply_reset();
-
         t = fetch_txn::type_id::create("txn0");
         start_item(t);
         t.pc_src         = 2'd0;

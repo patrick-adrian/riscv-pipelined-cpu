@@ -18,6 +18,7 @@ package fetch_uvm_pkg;
     `include "seq/fetch_pc_increment_seq.sv"
     `include "seq/fetch_stall_seq.sv"
     `include "seq/fetch_reset_seq.sv"
+    `include "seq/fetch_reset_recovery_seq.sv"
     `include "seq/fetch_random_seq.sv"
 
     `include "tests/fetch_base_test.sv"

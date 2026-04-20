@@ -31,29 +31,13 @@ class fetch_random_seq extends fetch_base_seq;
                       UVM_LOW)
         end
 
-        apply_reset();
-
         for (int i = 0; i < num_txns; i++) begin
-            if ($urandom_range(0, 100) < 30) begin
-                if (reset_is_asserted()) begin
-                    deassert_reset();
-                    wait_cycles(1);
-                end else begin
-                    assert_reset();
-                end
-            end
-
             t = fetch_txn::type_id::create($sformatf("txn%0d", i));
             start_item(t);
             if (!t.randomize()) begin
                 `uvm_fatal("FETCH/RAND", $sformatf("randomize failed for transaction %0d", i))
             end
             finish_item(t);
-        end
-
-        if (reset_is_asserted()) begin
-            deassert_reset();
-            wait_cycles(1);
         end
     endtask
 

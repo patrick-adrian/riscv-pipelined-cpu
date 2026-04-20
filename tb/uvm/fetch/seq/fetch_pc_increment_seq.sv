@@ -12,8 +12,6 @@ class fetch_pc_increment_seq extends fetch_base_seq;
     task body();
         fetch_txn t;
 
-        apply_reset();
-
         for (int i = 0; i < num_txns; i++) begin
             t = fetch_txn::type_id::create($sformatf("txn%0d", i));
             start_item(t);
