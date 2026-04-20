@@ -64,6 +64,7 @@
 <li> Mon Apr 13: Add comments in fetch_decode tb, fix logging. </li>
 <li> Tues Apr 14: ALU UVM testbench compilation and simulation (separate repo). </li>
 <li> Wed Apr 15: Planning to convert fetch into full UVM. </li>
+<li> Mon Apr 20: Initial fetch stage UVM tb. </li>
 
 </ul>
 

@@ -51,8 +51,9 @@ PASS_COUNT=0
 FAIL_COUNT=0
 SUMMARY_LINES=()
 
-# Derive the stage for a test by finding which tests/<stage>/ directory contains it.
-# Handles multi-word stages like decode_slice (progressively tries longer prefixes).
+# Derive the stage for a test by finding which legacy tests/<stage>/ or
+# UVM tb/uvm/<stage>/tests/ directory contains it. Handles multi-word stages
+# like decode_slice (progressively tries longer prefixes).
 derive_stage() {
     local test_name="$1"
     local IFS='_'
@@ -64,7 +65,8 @@ derive_stage() {
         else
             candidate="${candidate}_${part}"
         fi
-        if [[ -f "tests/${candidate}/${test_name}.sv" ]]; then
+        if [[ -f "tests/${candidate}/${test_name}.sv" ]] || \
+           [[ -f "tb/uvm/${candidate}/tests/${test_name}.sv" ]]; then
             echo "$candidate"
             return 0
         fi

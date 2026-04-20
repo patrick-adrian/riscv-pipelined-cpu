@@ -363,3 +363,7 @@ ALU UVM testbench compilation and simulation
 ------------------------------------------------------
 April 15, 2026
 Planning to convert fetch tb into full UVM.
+------------------------------------------------------
+April 20, 2026
+Inital fetch UVM tb commit.
+Todo: Fix clocking block logic, "reset release needs a recovery bubble so the existing fetch assertions stay quiet during deassertion", inital reset in tb_top.
