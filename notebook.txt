@@ -375,3 +375,4 @@ Moved checking into check_phase?
 ------------------------------------------------------
 Apr 21, 2026
 Golden reference models?
+Agent can now be passive or active

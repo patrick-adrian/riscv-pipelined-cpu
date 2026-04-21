@@ -13,15 +13,22 @@ class fetch_agent extends uvm_agent;
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
 
-        sequencer = fetch_sequencer::type_id::create("sequencer", this);
-        driver    = fetch_driver::type_id::create("driver", this);
-        monitor   = fetch_monitor::type_id::create("monitor", this);
+        // Always build monitor
+        monitor = fetch_monitor::type_id::create("monitor", this);
+
+        // Only build driver + sequencer if active
+        if (is_active == UVM_ACTIVE) begin
+            sequencer = fetch_sequencer::type_id::create("sequencer", this);
+            driver    = fetch_driver::type_id::create("driver", this);
+        end
     endfunction
 
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
 
-        driver.seq_item_port.connect(sequencer.seq_item_export);
+        if (is_active == UVM_ACTIVE) begin
+            driver.seq_item_port.connect(sequencer.seq_item_export);
+        end
     endfunction
 
 endclass
