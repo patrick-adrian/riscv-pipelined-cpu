@@ -370,3 +370,8 @@ Todo: Fix clocking block logic, "reset release needs a recovery bubble so the ex
 Fixed driver to become a pure, blocking consumer of sequence items, no reset or pin control.
 Need to fix logs and cycle timing? Right now sequencer is the one that asserts and deasserts reset, base sequence calls apply_reset that does both.
 Moved reset behaviour into a sequence. Removed reset logic from driver and sequencer.
+Need to separate stages: build_phase, run_phase, extract_phase, check_phase, report_phase, and use analysis ports.
+Moved checking into check_phase?
+------------------------------------------------------
+Apr 21, 2026
+Golden reference models?
