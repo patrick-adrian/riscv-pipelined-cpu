@@ -33,7 +33,6 @@ class fetch_monitor extends uvm_monitor;
             obs = fetch_obs_txn::type_id::create($sformatf("obs_%0d", cycle_count));
             obs.cycle          = cycle_count;
             obs.reset          = vif.reset;
-            obs.tb_valid       = vif.tb_valid;
             obs.pc_src         = vif.pc_src;
             obs.stall          = vif.stall;
             obs.pc_target_ex   = vif.pc_target_ex;

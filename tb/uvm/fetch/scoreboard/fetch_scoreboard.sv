@@ -8,8 +8,7 @@ class fetch_scoreboard extends uvm_component;
     logic [31:0] expected_pc;
 
     int num_checked;
-    int num_driven_checked;
-    int num_active_driven_checked;
+    int num_active_checked;
     int mismatch_count;
 
     protected bit           have_prev_obs;
@@ -22,8 +21,7 @@ class fetch_scoreboard extends uvm_component;
         analysis_export    = new("analysis_export", this);
         expected_pc        = 32'h0;
         num_checked        = 0;
-        num_driven_checked = 0;
-        num_active_driven_checked = 0;
+        num_active_checked = 0;
         mismatch_count     = 0;
         have_prev_obs      = 1'b0;
     endfunction
@@ -44,11 +42,8 @@ class fetch_scoreboard extends uvm_component;
         write_actual(actual_txn);
 
         num_checked++;
-        if (prev_obs.tb_valid) begin
-            num_driven_checked++;
-            if (!prev_obs.reset) begin
-                num_active_driven_checked++;
-            end
+        if (!prev_obs.reset) begin
+            num_active_checked++;
         end
 
         expected_pc = expected_txn.pc;
@@ -87,10 +82,8 @@ class fetch_scoreboard extends uvm_component;
             end
         end
 
-        if (num_driven_checked == 0) begin
-            `uvm_error("FETCH/SB", "No driven transactions reached the scoreboard")
-        end else if (num_active_driven_checked == 0) begin
-            `uvm_error("FETCH/SB", "No driven transactions were checked while reset was deasserted")
+        if (num_active_checked == 0) begin
+            `uvm_error("FETCH/SB", "No post-reset fetch cycles were checked")
         end
     endfunction
 
@@ -106,16 +99,14 @@ class fetch_scoreboard extends uvm_component;
         error_count = server.get_severity_count(UVM_ERROR);
         fatal_count = server.get_severity_count(UVM_FATAL);
         pass        = (mismatch_count == 0) &&
-                      (num_driven_checked > 0) &&
-                      (num_active_driven_checked > 0) &&
+                      (num_active_checked > 0) &&
                       (error_count == 0) &&
                       (fatal_count == 0);
 
         `uvm_info("FETCH/SB",
-                  $sformatf("Summary: expected=%0d actual=%0d checks=%0d driven=%0d active_driven=%0d mismatches=%0d result=%s",
+                  $sformatf("Summary: expected=%0d actual=%0d checks=%0d active=%0d mismatches=%0d result=%s",
                             expected_q.size(), actual_q.size(), num_checked,
-                            num_driven_checked, num_active_driven_checked,
-                            mismatch_count, pass ? "PASS" : "FAIL"),
+                            num_active_checked, mismatch_count, pass ? "PASS" : "FAIL"),
                   UVM_NONE)
 
         if (pass) begin

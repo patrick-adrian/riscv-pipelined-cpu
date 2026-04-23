@@ -2,7 +2,6 @@ class fetch_obs_txn extends uvm_sequence_item;
 
     int unsigned       cycle;
     logic              reset;
-    logic              tb_valid;
     logic [1:0]        pc_src;
     logic              stall;
     logic [31:0]       pc_target_ex;
@@ -14,7 +13,6 @@ class fetch_obs_txn extends uvm_sequence_item;
     `uvm_object_utils_begin(fetch_obs_txn)
         `uvm_field_int(cycle, UVM_DEFAULT)
         `uvm_field_int(reset, UVM_DEFAULT)
-        `uvm_field_int(tb_valid, UVM_DEFAULT)
         `uvm_field_int(pc_src, UVM_DEFAULT)
         `uvm_field_int(stall, UVM_DEFAULT)
         `uvm_field_int(pc_target_ex, UVM_DEFAULT)
@@ -29,8 +27,8 @@ class fetch_obs_txn extends uvm_sequence_item;
     endfunction
 
     function string convert2string();
-        return $sformatf("cycle=%0d reset=%0b tb_valid=%0b pc_src=%0d stall=%0b pc_target_ex=%08h pc_plus4_ex=%08h pred_pc_target=%08h pc=%08h pc_plus4=%08h",
-                         cycle, reset, tb_valid, pc_src, stall, pc_target_ex,
+        return $sformatf("cycle=%0d reset=%0b pc_src=%0d stall=%0b pc_target_ex=%08h pc_plus4_ex=%08h pred_pc_target=%08h pc=%08h pc_plus4=%08h",
+                         cycle, reset, pc_src, stall, pc_target_ex,
                          pc_plus4_ex, pred_pc_target, pc, pc_plus4);
     endfunction
 

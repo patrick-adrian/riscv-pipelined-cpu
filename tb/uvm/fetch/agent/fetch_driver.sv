@@ -31,7 +31,6 @@ class fetch_driver extends uvm_driver #(fetch_seq_item);
     endtask
 
     protected task drive_txn(fetch_seq_item req);
-        vif.drv_cb.tb_valid        <= 1'b1;
         vif.drv_cb.pc_src          <= req.pc_src;
         vif.drv_cb.stall           <= req.stall;
         vif.drv_cb.pc_target_ex    <= req.pc_target_ex;

@@ -1,7 +1,9 @@
 interface fetch_if(input logic clk);
 
+    // Active-high synchronous reset
     logic        reset;
-    logic        tb_valid;
+
+    // Control-driven fetch steering inputs
     logic [1:0]  pc_src;
     logic        stall;
     logic [31:0] pc_target_ex;
@@ -10,9 +12,9 @@ interface fetch_if(input logic clk);
     logic [31:0] pc;
     logic [31:0] pc_plus4;
 
+    // Driver clocking block
     clocking drv_cb @(posedge clk);
         output reset;
-        output tb_valid;
         output pc_src;
         output stall;
         output pc_target_ex;
@@ -22,9 +24,9 @@ interface fetch_if(input logic clk);
         input  pc_plus4;
     endclocking
 
+    // Monitor clocking block
     clocking mon_cb @(posedge clk);
         input reset;
-        input tb_valid;
         input pc_src;
         input stall;
         input pc_target_ex;

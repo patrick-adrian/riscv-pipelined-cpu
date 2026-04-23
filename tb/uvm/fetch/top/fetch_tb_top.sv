@@ -20,7 +20,6 @@ module tb_fetch;
 
     initial begin
         vif.reset          = 1'b0;
-        vif.tb_valid       = 1'b0;
         vif.pc_src         = 2'd0;
         vif.stall          = 1'b1;
         vif.pc_target_ex   = 32'h0;
