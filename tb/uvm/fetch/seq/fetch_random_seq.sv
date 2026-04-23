@@ -10,7 +10,7 @@ class fetch_random_seq extends fetch_base_seq;
     endfunction
 
     task body();
-        fetch_txn t;
+        fetch_seq_item t;
         int seed;
         bit has_seed;
 
@@ -32,7 +32,7 @@ class fetch_random_seq extends fetch_base_seq;
         end
 
         for (int i = 0; i < num_txns; i++) begin
-            t = fetch_txn::type_id::create($sformatf("txn%0d", i));
+            t = fetch_seq_item::type_id::create($sformatf("txn%0d", i));
             start_item(t);
             if (!t.randomize()) begin
                 `uvm_fatal("FETCH/RAND", $sformatf("randomize failed for transaction %0d", i))

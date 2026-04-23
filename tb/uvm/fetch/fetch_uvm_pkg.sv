@@ -3,13 +3,13 @@ package fetch_uvm_pkg;
     import uvm_pkg::*;
     `include "uvm_macros.svh"
 
-    `include "env/fetch_txn.sv"
-    `include "env/fetch_obs_txn.sv"
-    `include "env/fetch_sequencer.sv"
-    `include "env/fetch_driver.sv"
-    `include "env/fetch_monitor.sv"
-    `include "env/fetch_scoreboard.sv"
-    `include "env/fetch_agent.sv"
+    `include "txn/fetch_seq_item.sv"
+    `include "txn/fetch_obs_txn.sv"
+    `include "agent/fetch_sequencer.sv"
+    `include "agent/fetch_driver.sv"
+    `include "agent/fetch_monitor.sv"
+    `include "scoreboard/fetch_scoreboard.sv"
+    `include "agent/fetch_agent.sv"
     `include "env/fetch_env.sv"
 
     `include "seq/fetch_base_seq.sv"

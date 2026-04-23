@@ -1,4 +1,4 @@
-class fetch_sequencer extends uvm_sequencer #(fetch_txn);
+class fetch_sequencer extends uvm_sequencer #(fetch_seq_item);
 
     `uvm_component_utils(fetch_sequencer)
 

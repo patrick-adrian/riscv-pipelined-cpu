@@ -7,9 +7,9 @@ class fetch_stall_seq extends fetch_base_seq;
     endfunction
 
     task body();
-        fetch_txn t;
+        fetch_seq_item t;
 
-        t = fetch_txn::type_id::create("txn0");
+        t = fetch_seq_item::type_id::create("txn0");
         start_item(t);
         t.pc_src         = 2'd0;
         t.stall          = 1'b0;
@@ -18,7 +18,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0000;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn1");
+        t = fetch_seq_item::type_id::create("txn1");
         start_item(t);
         t.pc_src         = 2'd0;
         t.stall          = 1'b1;
@@ -27,7 +27,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0000;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn2");
+        t = fetch_seq_item::type_id::create("txn2");
         start_item(t);
         t.pc_src         = 2'd0;
         t.stall          = 1'b0;
@@ -36,7 +36,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0000;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn3");
+        t = fetch_seq_item::type_id::create("txn3");
         start_item(t);
         t.pc_src         = 2'd0;
         t.stall          = 1'b1;
@@ -45,7 +45,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0000;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn4");
+        t = fetch_seq_item::type_id::create("txn4");
         start_item(t);
         t.pc_src         = 2'd1;
         t.stall          = 1'b0;
@@ -54,7 +54,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0020;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn5");
+        t = fetch_seq_item::type_id::create("txn5");
         start_item(t);
         t.pc_src         = 2'd0;
         t.stall          = 1'b1;
@@ -63,7 +63,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0000;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn6");
+        t = fetch_seq_item::type_id::create("txn6");
         start_item(t);
         t.pc_src         = 2'd2;
         t.stall          = 1'b0;
@@ -72,7 +72,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0000;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn7");
+        t = fetch_seq_item::type_id::create("txn7");
         start_item(t);
         t.pc_src         = 2'd0;
         t.stall          = 1'b1;
@@ -81,7 +81,7 @@ class fetch_stall_seq extends fetch_base_seq;
         t.pred_pc_target = 32'h0000_0000;
         finish_item(t);
 
-        t = fetch_txn::type_id::create("txn8");
+        t = fetch_seq_item::type_id::create("txn8");
         start_item(t);
         t.pc_src         = 2'd3;
         t.stall          = 1'b1;

@@ -26,11 +26,11 @@ COMMON_SV  := common/adder.sv common/flop.sv
 ASSERT_SV  := $(wildcard tb/assertions/$(STAGE)/*.sv)
 
 ifeq ($(STAGE),fetch)
-TB_FETCH_IF_SV := tb/uvm/fetch/env/fetch_if.sv
+TB_FETCH_IF_SV := tb/uvm/fetch/if/fetch_if.sv
 TB_UVM_PKG_SV  := tb/uvm/fetch/fetch_uvm_pkg.sv
-TB_TOP_SV      := tb/uvm/fetch/fetch_tb_top.sv
+TB_TOP_SV      := tb/uvm/fetch/top/fetch_tb_top.sv
 SRC_SV         := $(COMMON_SV) $(RTL_SV) $(TB_FETCH_IF_SV) $(TB_UVM_PKG_SV) $(TB_TOP_SV) $(ASSERT_SV)
-INCLUDES       := common $(VIVADO_HOME)/data/xsim/system_verilog/uvm_include tb/uvm/fetch tb/uvm/fetch/env tb/uvm/fetch/seq tb/uvm/fetch/tests tb/assertions/$(STAGE)
+INCLUDES       := common $(VIVADO_HOME)/data/xsim/system_verilog/uvm_include tb/uvm/fetch tb/uvm/fetch/top tb/uvm/fetch/env tb/uvm/fetch/agent tb/uvm/fetch/seq tb/uvm/fetch/txn tb/uvm/fetch/scoreboard tb/uvm/fetch/if tb/uvm/fetch/tests tb/assertions/$(STAGE)
 XVLOG_OPTS     := --uvm_version 1.2 -L uvm -d XSIM_SVA_OFF
 XELAB_OPTS     := --uvm_version 1.2 -L uvm --timescale 1ns/1ps
 RUN_TEST_ARGS  := -testplusarg UVM_TESTNAME=$(TEST)

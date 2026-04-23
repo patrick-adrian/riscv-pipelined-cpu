@@ -161,8 +161,8 @@ class fetch_scoreboard extends uvm_component;
             endcase
         end
 
-        expected_pc_plus4    = next_expected_pc + 32'd4;
-        expected_txn.pc      = next_expected_pc;
+        expected_pc_plus4     = next_expected_pc + 32'd4;
+        expected_txn.pc       = next_expected_pc;
         expected_txn.pc_plus4 = expected_pc_plus4;
 
         return expected_txn;

@@ -376,3 +376,7 @@ Moved checking into check_phase?
 Apr 21, 2026
 Golden reference models?
 Agent can now be passive or active
+------------------------------------------------------
+Apr 23, 2026
+Assigning VIF from configuration space? - UVM Cookbook
+Cleaned up fetch UVM tb structure, renamed fetch_txn to fetch_seq_item

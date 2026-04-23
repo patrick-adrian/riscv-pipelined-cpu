@@ -1,4 +1,4 @@
-class fetch_txn extends uvm_sequence_item;
+class fetch_seq_item extends uvm_sequence_item;
 
     rand logic [1:0]  pc_src;
     rand logic        stall;
@@ -12,7 +12,7 @@ class fetch_txn extends uvm_sequence_item;
         pred_pc_target[1:0] == 2'b00;
     }
 
-    `uvm_object_utils_begin(fetch_txn)
+    `uvm_object_utils_begin(fetch_seq_item)
         `uvm_field_int(pc_src, UVM_DEFAULT)
         `uvm_field_int(stall, UVM_DEFAULT)
         `uvm_field_int(pc_target_ex, UVM_DEFAULT)
@@ -20,7 +20,7 @@ class fetch_txn extends uvm_sequence_item;
         `uvm_field_int(pred_pc_target, UVM_DEFAULT)
     `uvm_object_utils_end
 
-    function new(string name = "fetch_txn");
+    function new(string name = "fetch_seq_item");
         super.new(name);
     endfunction
 

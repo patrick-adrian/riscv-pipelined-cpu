@@ -10,10 +10,10 @@ class fetch_pc_increment_seq extends fetch_base_seq;
     endfunction
 
     task body();
-        fetch_txn t;
+        fetch_seq_item t;
 
         for (int i = 0; i < num_txns; i++) begin
-            t = fetch_txn::type_id::create($sformatf("txn%0d", i));
+            t = fetch_seq_item::type_id::create($sformatf("txn%0d", i));
             start_item(t);
             t.pc_src         = 2'd0;
             t.stall          = 1'b0;

@@ -1,4 +1,4 @@
-class fetch_base_seq extends uvm_sequence #(fetch_txn);
+class fetch_base_seq extends uvm_sequence #(fetch_seq_item);
 
     `uvm_object_utils(fetch_base_seq)
 
