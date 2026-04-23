@@ -26,20 +26,19 @@ class fetch_monitor extends uvm_monitor;
         super.run_phase(phase);
 
         forever begin
-            @(posedge vif.clk);
+            @(vif.mon_cb);
             cycle_count++;
-            #1ps;
 
             obs = fetch_obs_txn::type_id::create($sformatf("obs_%0d", cycle_count));
             obs.cycle          = cycle_count;
-            obs.reset          = vif.reset;
-            obs.pc_src         = vif.pc_src;
-            obs.stall          = vif.stall;
-            obs.pc_target_ex   = vif.pc_target_ex;
-            obs.pc_plus4_ex    = vif.pc_plus4_ex;
-            obs.pred_pc_target = vif.pred_pc_target;
-            obs.pc             = vif.pc;
-            obs.pc_plus4       = vif.pc_plus4;
+            obs.reset          = vif.mon_cb.reset;
+            obs.pc_src         = vif.mon_cb.pc_src;
+            obs.stall          = vif.mon_cb.stall;
+            obs.pc_target_ex   = vif.mon_cb.pc_target_ex;
+            obs.pc_plus4_ex    = vif.mon_cb.pc_plus4_ex;
+            obs.pred_pc_target = vif.mon_cb.pred_pc_target;
+            obs.pc             = vif.mon_cb.pc;
+            obs.pc_plus4       = vif.mon_cb.pc_plus4;
 
             ap.write(obs);
             `uvm_info("FETCH/MON", $sformatf("sample %s", obs.convert2string()), UVM_HIGH)

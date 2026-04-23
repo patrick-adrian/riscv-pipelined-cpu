@@ -36,4 +36,12 @@ interface fetch_if(input logic clk);
         input pc_plus4;
     endclocking
 
+    modport drv_mp (
+        clocking drv_cb
+    );
+
+    modport mon_mp (
+        clocking mon_cb
+    );
+
 endinterface

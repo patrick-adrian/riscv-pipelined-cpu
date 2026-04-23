@@ -382,3 +382,4 @@ Assigning VIF from configuration space? - UVM Cookbook
 Cleaned up fetch UVM tb structure, renamed fetch_txn to fetch_seq_item
 Need to remove tb_valid? -> Done.
 fetch_if, fetch_obs_txn, monitor, scoreboard, driver, sequencer, 7. seq/fetch_base_seq.sv, agent, env, 10. tests/fetch_base_test.sv, 11. fetch_tb_top.sv
+Add modports and use of clocking block
