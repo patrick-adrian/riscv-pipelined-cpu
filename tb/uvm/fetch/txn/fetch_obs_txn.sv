@@ -1,5 +1,6 @@
 class fetch_obs_txn extends uvm_sequence_item;
 
+    // Raw cycle snapshot captured by the passive monitor.
     int unsigned       cycle;
     logic              reset;
     logic [1:0]        pc_src;

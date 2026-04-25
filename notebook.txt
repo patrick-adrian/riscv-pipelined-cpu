@@ -383,3 +383,15 @@ Cleaned up fetch UVM tb structure, renamed fetch_txn to fetch_seq_item
 Need to remove tb_valid? -> Done.
 fetch_if, fetch_obs_txn, monitor, scoreboard, driver, sequencer, 7. seq/fetch_base_seq.sv, agent, env, 10. tests/fetch_base_test.sv, 11. fetch_tb_top.sv
 Add modports and use of clocking block
+------------------------------------------------------
+April 25, 2026
+Current scoreboard problem: mixing current obs and prev obs incorrectly
+Golden reference model: combinational next-PC or pipelined delayed PC?
+Copying DUT output then correcting it?
+Logically inconsistent reset handling
+Scoreboard doing monitor-level work: logging, comparing, reference model
+Monitor - Extract DUT behaviour
+Scoreboard - Compare DUT vs model
+Model - Compute expected
+prev_obs usage overcomplicated
+-----------------------------

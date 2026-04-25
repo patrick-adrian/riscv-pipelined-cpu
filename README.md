@@ -66,7 +66,8 @@
 <li> Wed Apr 15: Planning to convert fetch into full UVM. </li>
 <li> Mon Apr 20: Initial fetch stage UVM tb. </li>
 <li> Tues Apr 21: Made fetch agent be passive or active. </li>
-<li> Thurs Apr 23: </li>
+<li> Thurs Apr 23: Fetch TB improvements (see notebook.txt) </li>
+<li> Sat Apr 25: Scoreboard improvements </li>
 
 </ul>
 

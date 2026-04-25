@@ -29,6 +29,7 @@ class fetch_monitor extends uvm_monitor;
             @(vif.mon_cb);
             cycle_count++;
 
+            // Emit one raw observation every sampled clock edge.
             obs = fetch_obs_txn::type_id::create($sformatf("obs_%0d", cycle_count));
             obs.cycle          = cycle_count;
             obs.reset          = vif.mon_cb.reset;
@@ -41,7 +42,7 @@ class fetch_monitor extends uvm_monitor;
             obs.pc_plus4       = vif.mon_cb.pc_plus4;
 
             ap.write(obs);
-            `uvm_info("FETCH/MON", $sformatf("sample %s", obs.convert2string()), UVM_HIGH)
+            `uvm_info("FETCH/MON", $sformatf("raw sample %s", obs.convert2string()), UVM_HIGH)
         end
     endtask
 
