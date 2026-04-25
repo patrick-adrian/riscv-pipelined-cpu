@@ -12,7 +12,9 @@ class fetch_scoreboard extends uvm_scoreboard;
     // Reference model state
     // -------------------------------------------------
     logic [31:0] exp_pc;
+
     bit reset_seen;
+    bit reset_active;
 
     // -------------------------------------------------
     // Constructor
@@ -23,8 +25,9 @@ class fetch_scoreboard extends uvm_scoreboard;
         analysis_export = new("analysis_export", this);
         fifo            = new("fifo", this);
 
-        exp_pc          = 32'h0;
-        reset_seen      = 0;
+        exp_pc         = 32'h0;
+        reset_seen     = 0;
+        reset_active   = 0;
     endfunction
 
     // -------------------------------------------------
@@ -36,7 +39,7 @@ class fetch_scoreboard extends uvm_scoreboard;
     endfunction
 
     // -------------------------------------------------
-    // Main loop
+    // Main scoring loop
     // -------------------------------------------------
     task run_phase(uvm_phase phase);
 
@@ -50,25 +53,34 @@ class fetch_scoreboard extends uvm_scoreboard;
             // RESET HANDLING
             // =================================================
             if (tr.reset) begin
-                exp_pc     = 32'h0;
-                reset_seen = 1'b1;
+                exp_pc       = 32'h0;
+                reset_seen   = 1;
+                reset_active = 1;
                 continue;
+            end
+
+            // detect reset release edge
+            if (reset_active && !tr.reset) begin
+                reset_active = 0;
             end
 
             if (!reset_seen)
                 continue;
 
             // =================================================
-            // STEP 1: CHECK CURRENT STATE
+            // STEP 1: COMPARE CURRENT STATE
             // =================================================
             if (tr.pc !== exp_pc) begin
                 `uvm_error("FETCH_SCOREBOARD",
-                    $sformatf("PC MISMATCH DUT=%h EXP=%h | src=%0d stall=%0b",
-                        tr.pc, exp_pc, tr.pc_src, tr.stall))
+                    $sformatf(
+                        "PC MISMATCH | DUT=%h EXP=%h | src=%0d stall=%0b reset=%0b",
+                        tr.pc, exp_pc, tr.pc_src, tr.stall, tr.reset
+                    )
+                )
             end
 
             // =================================================
-            // STEP 2: COMPUTE NEXT STATE (clean separation)
+            // STEP 2: COMPUTE NEXT STATE
             // =================================================
             exp_pc_next = exp_pc;
 

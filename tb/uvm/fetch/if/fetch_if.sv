@@ -41,19 +41,11 @@ interface fetch_if(input logic clk);
     endclocking
 
     modport drv_mp (
-        clocking drv_cb,
-        output reset,
-        output pc_src,
-        output stall,
-        output pc_target_ex,
-        output pc_plus4_ex,
-        output pred_pc_target
+        clocking drv_cb
     );
 
     modport mon_mp (
-        clocking mon_cb,
-        input pc,
-        input pc_plus4
+        clocking mon_cb
     );
 
 endinterface
