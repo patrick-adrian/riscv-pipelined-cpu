@@ -23,7 +23,6 @@ class fetch_monitor extends uvm_monitor;
 
         forever begin
             @(vif.mon_cb);
-            #0;
 
             tr = fetch_sample::type_id::create("tr");
 
