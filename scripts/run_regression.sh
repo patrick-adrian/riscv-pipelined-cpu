@@ -113,8 +113,11 @@ for test_name in "${TESTS[@]}"; do
         mv waveform.vcd "${test_dir}/waveform.vcd"
     fi
 
-    # Pass if sim.log contains "TEST PASSED"
-    if grep -q "TEST PASSED" "$sim_log" 2>/dev/null; then
+    # Pass if we see an explicit banner OR a clean UVM report summary.
+    # (Our UVM tests don't currently print "TEST PASSED".)
+    if grep -q "TEST PASSED" "$sim_log" 2>/dev/null || \
+       (grep -Eq "^UVM_ERROR[[:space:]]*:[[:space:]]*0[[:space:]]*$" "$sim_log" 2>/dev/null && \
+        grep -Eq "^UVM_FATAL[[:space:]]*:[[:space:]]*0[[:space:]]*$" "$sim_log" 2>/dev/null); then
         echo "PASS"
         ((PASS_COUNT++)) || true
         SUMMARY_LINES+=("${test_name} PASS")

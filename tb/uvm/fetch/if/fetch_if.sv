@@ -13,7 +13,11 @@ interface fetch_if(input logic clk);
     logic [31:0] pc_plus4;
 
     // Driver clocking block
-    clocking drv_cb @(posedge clk);
+    //
+    // Drive on negedge so DUT flops (posedge) see stable inputs.
+    // With drv_cb on posedge, values are updated in the clocking region
+    // after the DUT samples, effectively slipping stimulus by 1 cycle.
+    clocking drv_cb @(negedge clk);
         output reset;
         output pc_src;
         output stall;

@@ -5,6 +5,7 @@ package fetch_uvm_pkg;
 
     `include "txn/fetch_seq_item.sv"
     `include "txn/fetch_obs_txn.sv"
+    `include "txn/fetch_sample.sv"
     `include "agent/fetch_sequencer.sv"
     `include "agent/fetch_driver.sv"
     `include "agent/fetch_monitor.sv"

@@ -18,7 +18,10 @@ class fetch_env extends uvm_env;
 
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
+
         agent.monitor.ap.connect(scoreboard.analysis_export);
+
+
     endfunction
 
 endclass

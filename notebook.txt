@@ -395,3 +395,4 @@ Scoreboard - Compare DUT vs model
 Model - Compute expected
 prev_obs usage overcomplicated
 -----------------------------
+Tried new monitor and SB from bottom up
