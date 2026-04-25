@@ -45,76 +45,33 @@ class fetch_scoreboard extends uvm_scoreboard;
         forever begin
             fifo.get(tr);
 
-            // ======================================================
-            // RESET HANDLING
-            // ======================================================
+            // RESET
             if (tr.reset) begin
-                exp_pc     = 32'h0;
-                reset_seen = 1'b1;
-
-                `uvm_info("SCOREBOARD",
-                    "Reset observed: exp_pc initialized to 0",
-                    UVM_HIGH)
-
+                exp_pc     = 0;
+                reset_seen = 1;
                 continue;
             end
 
-            // Ignore everything until reset happens
             if (!reset_seen)
                 continue;
 
-            // ======================================================
-            // COMPARE DUT vs MODEL
-            // ======================================================
+            // -------------------------
+            // 1. COMPARE FIRST
+            // -------------------------
             if (tr.pc !== exp_pc) begin
-
-                `uvm_error("FETCH_SCOREBOARD",
-                    $sformatf(
-                        "PC MISMATCH | DUT=%h EXP=%h | src=%0d stall=%0b reset=%0b",
-                        tr.pc,
-                        exp_pc,
-                        tr.pc_src,
-                        tr.stall,
-                        tr.reset
-                    )
-                )
-
-            end
-            else begin
-
-                `uvm_info("FETCH_SCOREBOARD",
-                    $sformatf("OK | pc=%h exp_pc=%h", tr.pc, exp_pc),
-                    UVM_LOW)
-
+                `uvm_error("SCOREBOARD",
+                    $sformatf("PC MISMATCH DUT=%h EXP=%h", tr.pc, exp_pc))
             end
 
-            // ======================================================
-            // MODEL UPDATE (next-cycle expected PC)
-            // ======================================================
+            // -------------------------
+            // 2. THEN UPDATE MODEL
+            // -------------------------
             if (!tr.stall) begin
-
                 case (tr.pc_src)
-
-                    `PC_SRC_SEQ_F: begin
-                        exp_pc = exp_pc + 32'd4;
-                    end
-
-                    `PC_SRC_PRED_F: begin
-                        exp_pc = tr.pred_pc_target;
-                    end
-
-                    `PC_SRC_SEQ_E: begin
-                        exp_pc = tr.pc_plus4_ex;
-                    end
-
-                    `PC_SRC_TARGET_E: begin
-                        exp_pc = tr.pc_target_ex;
-                    end
-
-                    default: begin
-                        exp_pc = exp_pc;
-                    end
-
+                    `PC_SRC_SEQ_F:    exp_pc = exp_pc + 4;
+                    `PC_SRC_PRED_F:   exp_pc = tr.pred_pc_target;
+                    `PC_SRC_SEQ_E:    exp_pc = tr.pc_plus4_ex;
+                    `PC_SRC_TARGET_E: exp_pc = tr.pc_target_ex;
                 endcase
 
             end
