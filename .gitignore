@@ -19,3 +19,4 @@ xsim.dir
 *.vcd.lzo
 .cursor
 failures.txt
+xsim.covdb/

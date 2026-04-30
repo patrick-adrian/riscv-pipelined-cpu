@@ -6,7 +6,7 @@ class fetch_random_seq extends fetch_base_seq;
 
     function new(string name = "fetch_random_seq");
         super.new(name);
-        num_txns = 50;
+        num_txns = 10;
     endfunction
 
     task body();

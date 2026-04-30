@@ -10,6 +10,7 @@ package fetch_uvm_pkg;
     `include "agent/fetch_driver.sv"
     `include "agent/fetch_monitor.sv"
     `include "scoreboard/fetch_scoreboard.sv"
+    `include "scoreboard/fetch_coverage.sv"
     `include "agent/fetch_agent.sv"
     `include "env/fetch_env.sv"
 
