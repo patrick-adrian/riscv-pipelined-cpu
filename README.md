@@ -67,7 +67,8 @@
 <li> Mon Apr 20: Initial fetch stage UVM tb. </li>
 <li> Tues Apr 21: Made fetch agent be passive or active. </li>
 <li> Thurs Apr 23: Fetch TB improvements (see notebook.txt) </li>
-<li> Sat Apr 25: Scoreboard improvements </li>
+<li> Sat Apr 25: New and improved monitor and scoreboard. </li>
+<li> Thurs Apr 30: Implement constrained random and functional coverage. </li>
 
 </ul>
 

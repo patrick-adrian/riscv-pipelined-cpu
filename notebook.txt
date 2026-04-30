@@ -395,4 +395,10 @@ Scoreboard - Compare DUT vs model
 Model - Compute expected
 prev_obs usage overcomplicated
 -----------------------------
-Tried new monitor and SB from bottom up
+Tried new monitor and SB from bottom up.
+------------------------------------------------------
+April 27, 2026
+Program block? - no, anti-pattern in UVM design
+------------------------------------------------------
+April 30, 2026
+Begin implementing constrained random and functional coverage.

@@ -12,6 +12,31 @@ class fetch_seq_item extends uvm_sequence_item;
         pred_pc_target[1:0] == 2'b00;
     }
 
+    constraint pc_src_dist {
+        pc_src dist {
+            0 := 40,   // PC+4 normal flow
+            1 := 30,   // branch
+            2 := 20,   // jump / target
+            3 := 10    // reserved / edge
+        };
+    }
+
+    constraint stall_behavior {
+        stall dist {0 := 80, 1 := 20};
+    }
+
+    constraint pc_target_ex_valid_when_branch {
+        (pc_src == 1) -> (pc_target_ex != 32'h0);
+    }
+
+    constraint pc_plus4_ex_valid_when_jump {
+        (pc_src == 2) -> (pc_plus4_ex != 32'h0);
+    }
+
+    constraint pred_pc_target_valid_when_jump {
+        (pc_src == 3) -> (pred_pc_target != 32'h0);
+    }
+
     `uvm_object_utils_begin(fetch_seq_item)
         `uvm_field_int(pc_src, UVM_DEFAULT)
         `uvm_field_int(stall, UVM_DEFAULT)
