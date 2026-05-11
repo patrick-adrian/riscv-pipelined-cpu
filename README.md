@@ -68,7 +68,8 @@
 <li> Tues Apr 21: Made fetch agent be passive or active. </li>
 <li> Thurs Apr 23: Fetch TB improvements (see notebook.txt) </li>
 <li> Sat Apr 25: New and improved monitor and scoreboard. </li>
-<li> Thurs Apr 30: Implement constrained random and functional coverage. </li>
+<li> Mon May 4: Begin studying RTL design interview questions. </li>
+<li> Sun May 10: Studying RTL design interview questions. </li>
 
 </ul>
 

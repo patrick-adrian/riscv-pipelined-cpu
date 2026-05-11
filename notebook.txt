@@ -402,3 +402,21 @@ Program block? - no, anti-pattern in UVM design
 ------------------------------------------------------
 April 30, 2026
 Begin implementing constrained random and functional coverage.
+Random in txn? -> no
+Should each test have its own coverage, or all dumped into one db
+Current coverage does NOT check:
+
+Temporal behavior
+stall held for multiple cycles
+back-to-back branches
+control changes during stall
+
+Data relevance
+branch targets vs PC progression
+repeated vs changing targets
+
+Real bugs
+pipeline edge cases
+control hazardspriority interactions
+------------------------------------------------------
+Start cache controller
