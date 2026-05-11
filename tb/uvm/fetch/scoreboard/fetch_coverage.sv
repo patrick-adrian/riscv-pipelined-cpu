@@ -62,6 +62,7 @@ class fetch_coverage extends uvm_subscriber #(fetch_sample);
     function void report_phase(uvm_phase phase);
 
         int fd;
+        string filename = $sformatf("fetch_coverage_%0t.csv", $time);
 
         real cov_total;
         real cov_pc_src;
@@ -77,7 +78,7 @@ class fetch_coverage extends uvm_subscriber #(fetch_sample);
         cov_pc_target_align = cg_fetch.cp_pc_target_align.get_coverage();
         cov_x_pc_src_stall  = cg_fetch.x_pc_src_stall.get_coverage();
 
-        fd = $fopen("fetch_coverage.csv", "w");
+        fd = $fopen(filename, "w");
         $fdisplay(fd, "Metric,Value");
         $fdisplay(fd, "Total Coverage,%0.2f%%", cov_total);
         $fdisplay(fd, "pc_src Coverage,%0.2f%%", cov_pc_src);
@@ -93,8 +94,8 @@ class fetch_coverage extends uvm_subscriber #(fetch_sample);
         $fdisplay(fd, "no_stall,%0d", stall_count[0]);
         $fdisplay(fd, "stall,%0d",    stall_count[1]);
 
-        $fdisplay(fd, "aligned,%0d",   pc_target_align_count[1]);
-        $fdisplay(fd, "misaligned,%0d",pc_target_align_count[0]);
+        $fdisplay(fd, "aligned,%0d",   pc_target_align_count[0]);
+        $fdisplay(fd, "misaligned,%0d",pc_target_align_count[1]);
         $fclose(fd);
 
         `uvm_info("COV", $sformatf("Total Coverage = %0.2f%%", cov_total), UVM_LOW)

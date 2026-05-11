@@ -1,0 +1,14 @@
+Metric,Value
+Total Coverage,96.88%
+pc_src Coverage,100.00%
+stall Coverage,100.00%
+pc_target_align Coverage,100.00%
+x_pc_src_stall Coverage,87.50%
+pc_plus4_count,9
+branch_count,3
+jump_count,1
+reserved_count,2
+no_stall,5
+stall,10
+aligned,15
+misaligned,0
