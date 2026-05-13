@@ -1,0 +1,244 @@
+Tier 1 — Extremely Common (Must Be Comfortable)
+
+1. Implement Logic Using Only NANDs/NORs
+Examples:
+XOR using NAND
+AND using NOR
+3-input NAND using 2-input NANDs
+OR using NAND
+
+Tests:
+DeMorgan
+Boolean manipulation
+gate universality
+
+2. Implement Function Using MUXes
+Examples:
+AND using 2:1 mux
+XOR using mux
+arbitrary function using 4:1 mux
+
+Tests:
+Shannon expansion
+select-line reasoning
+datapath thinking
+
+3. Simplify Boolean Expressions
+Examples:
+AB+A
+B
+A+AB
+AB+
+A
+C+BC
+
+Tests:
+absorption
+factoring
+DeMorgan
+consensus theorem
+
+4. K-Maps
+Typical:
+simplify 3-variable or 4-variable function
+derive SOP/POS
+identify hazards
+
+Tests:
+minimization
+pattern recognition
+
+5. Design a Basic Combinational Block
+
+Examples:
+priority encoder
+decoder
+multiplexer
+comparator
+parity generator/checker
+
+Tests:
+logic structuring
+clean thinking
+Tier 2 — Very Common
+
+These separate average candidates from stronger ones.
+
+6. Adders/Subtractors
+Examples:
+
+half adder
+full adder
+ripple carry adder
+carry-lookahead concept
+
+Know:
+propagate/generate
+carry bottleneck
+
+Critical equation:
+S=A⊕B⊕Cin
+
+7. Sequential Logic Basics
+Examples:
+D flip-flop behavior
+latch vs FF
+setup/hold
+edge-triggering
+
+Very common conceptual question:
+“What happens if setup time is violated?”
+Answer direction:
+metastability
+undefined resolution time
+
+8. FSM Design
+Examples:
+vending machine
+traffic light
+sequence detector
+
+Know:
+Moore vs Mealy
+state diagrams
+state transition tables
+
+9. Counters and Shift Registers
+Examples:
+synchronous counter
+ring counter
+Johnson counter
+serial shift register
+
+Tests:
+sequential reasoning
+
+10. Timing Questions
+
+Examples:
+critical path
+max clock frequency
+propagation delay
+
+Core relationship:
+fmax=1/Tclk
+	
+Need awareness of:
+combinational delay
+FF setup time
+
+Tier 3 — Common for Stronger RTL/DV Roles
+Very relevant for your path.
+
+11. Clock Domain Crossing (CDC)
+Examples:
+why metastability occurs
+synchronizer design
+
+Must know:
+2-flop synchronizer
+async FIFO conceptually
+12. Pipeline Questions
+
+Examples:
+hazards
+forwarding
+stalling
+branch penalty
+
+Very common for CPU-related interviews.
+
+13. Cache Basics
+Examples:
+direct mapped vs associative
+write-through vs write-back
+cache indexing
+
+Important for architecture-heavy roles.
+
+14. Verilog/SystemVerilog RTL Questions
+Examples:
+blocking vs nonblocking
+combinational always block
+latch inference
+synthesizable vs nonsynthesizable code
+
+Critical:
+always_comb
+always_ff
+<= vs =
+15. FSM RTL Coding
+
+Examples:
+write sequence detector
+detect 1011
+overlapping/non-overlapping
+
+Tests:
+coding discipline
+clean RTL structure
+
+Tier 4 — Strong Interview Differentiators
+These impress interviewers.
+
+16. Hazard Questions
+Examples:
+static hazard
+dynamic hazard
+glitch generation
+
+Usually tied to K-maps.
+
+17. Arithmetic Hardware
+Examples:
+Wallace tree
+Booth multiplication
+restoring division
+
+More advanced.
+
+18. Memory Design Questions
+Examples:
+SRAM cell basics
+register file ports
+arbitration
+
+19. Bus Protocol Questions
+
+Examples:
+AXI handshake
+ready/valid
+backpressure
+
+Very relevant for verification.
+
+20. Verification-Oriented Digital Design Questions
+Examples:
+how would you verify this FIFO?
+what assertions would you write?
+corner cases?
+
+This is where your UVM work becomes valuable.
+
+Priority order:
+
+Boolean algebra fluency
+MUX/NAND implementation
+K-maps
+Sequential timing
+FSMs
+Verilog RTL semantics
+Pipeline hazards
+Cache fundamentals
+CDC/metastability
+FIFO design/verification
+
+What Strong Candidates Eventually Develop
+The transition is:
+Beginner
+“memorize circuits”
+↓
+Intermediate
+“derive using Boolean algebra”
+↓
+Strong RTL/DV candidate
