@@ -69,7 +69,8 @@
 <li> Thurs Apr 23: Fetch TB improvements (see notebook.txt) </li>
 <li> Sat Apr 25: New and improved monitor and scoreboard. </li>
 <li> Mon May 4: Begin studying RTL design interview questions. </li>
-<li> Sun May 10: Studying RTL design interview questions. </li>
+<li> Sun May 10: Tier 1 questions </li>
+<li> Tues May 12: Tier 1 questions </li>
 
 </ul>
 
