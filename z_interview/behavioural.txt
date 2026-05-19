@@ -38,11 +38,34 @@ Designing test cases
 
 
 3. Tell me about a time you worked on a team.
-I 
+In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. My role focused on the datapath and control integration, while other team members worked on instruction memory and individual modules like ALU and register file design.
+Early on, we ran into integration issues where each module worked independently, but the full system wasn’t behaving correctly when combined. The main problem was inconsistent assumptions about timing and signal validity between modules.
+To address this, we started aligning on a shared interface contract for signals like valid/ready behavior and clocked updates. I also took responsibility for helping debug system-level issues using simulation waveforms, tracing signals across module boundaries instead of only looking at individual blocks.
+Over time, this improved our integration process significantly and reduced debugging time because we were no longer treating modules in isolation.
+From that experience, I learned that in hardware systems, most team issues aren’t about individual module correctness—they’re about interface assumptions and communication between component
 
 4. Tell me about a failure.
+Long-term failure: AMD interviews. Since 2024, I did not narrow what kind of role I was interested in.
+I applied to every listing: software, firmware, hardware, test roles.
+I was able to make my resume look good and get interviews.
+But because I spread myself so thin for so many different types of roles, come the interview, I was always underprepared, and I never stood out as a candidate.
+I would lazily start projects that would be useful if I went through with them, but I never did.
+In 2025, I fixed this by narrowing what kind of roles I wanted to get more experience in.
+I focused on ONE project that would help me learn the specific skills (UVM, RTL) and systems level thinking.
+I leveraged my experience at my current internship to carry over skills and learn on the job.
+Now, I feel more confident in these interviews and have built up skills that aren't random and are what I am actually interested in.
+What I learned from this experience is that instead of learning a little of everything, I need to get really good at a few specific things and skills.
+I also learned that I want to work on products that go into products that the average person uses every day.
 
 5. Why AMD?
+The work AMD does is exactly what I've been trying to move toward and build strong skills in:
+The intersection of computer architecture, hardware design, and system-wide debugging.
+I already do have experience with low-level thinking, like designing a CPU in VHDL, my UVM verification project, and building automation tools at my current internship.
+AMD seems like an environment where the product goes beyond just design, both pre and post-silicon is very involved,
+and I feel like I can contribute alongisde engineers while workign on large-scale and high-performance systems.
+One of the things I love at Evertz is that we push for the use of AI to increase productivity, and I'm sure that AMD has the same mentality.
+I feel like I would get a strong balance between software and hardware at AMD.
+I want to contribute to products that are used in millions of devices that millions of people use everyday.
 
 6. Why should we hire you?
 I think one of my stronger qualities is that I’m comfortable working across both hardware and software domains. 
