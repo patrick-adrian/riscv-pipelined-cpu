@@ -36,3 +36,41 @@ memory basics
 bitwise operations
 
 Bitwise questions are common in hardware interviews.
+
+Day 1
+
+Digital design review:
+
+FSMs
+muxes
+timing
+sequential vs combinational
+blocking/non-blocking
+Day 2
+
+Power management:
+
+clock gating
+power gating
+dynamic vs leakage power
+low-power intuition
+Day 3
+
+Python + C refresh:
+
+bitwise ops
+parsing
+scripting
+debugging
+Day 4
+
+Mock interview:
+
+explain every resume project aloud
+whiteboard FSMs
+explain CPU datapath
+Day 5
+
+Behavioral + debugging stories:
+
+prepare 5 strong stories
