@@ -71,3 +71,92 @@ I want to contribute to products that are used in millions of devices that milli
 I think one of my stronger qualities is that I’m comfortable working across both hardware and software domains. 
 I’ve worked on RTL and architecture-focused projects, but I’ve also spent a lot of time building automation and debugging tools. 
 That combination has helped me become very process-oriented when solving technical problems, especially when debugging complex behavior.
+
+I think one of my stronger qualities is that I’ve developed experience across both hardware-oriented and software-oriented engineering work, which has helped me become very comfortable debugging complex systems.
+On the hardware side, I’ve worked on projects involving digital design, FPGA development, and verification concepts like UVM-style testbench architecture and cycle-level behavior. On the software side, my internship at Evertz Microsystems has given me experience building automation tools and thinking carefully about reliability, observability, and scalable testing.
+I also think I learn technical systems quickly once I understand the underlying architecture. In a lot of my projects, I’ve had to move beyond just implementing features and instead understand why certain designs break under edge cases like resets, stalls, or timing-related behavior.
+I may not know every tool or workflow your team uses yet, but I think I’d bring a strong debugging mindset, adaptability, and a willingness to learn quickly in a system-level engineering environment.
+
+4. Validation / Debug Mindset
+
+reproducing bugs
+isolating failures
+triaging
+correlating HW/SW behavior
+
+Prepare Stories Around:
+A bug you debugged
+
+Structure:
+symptom
+hypothesis
+tools used
+isolation steps
+root cause
+fix
+
+Automation
+Explain:
+what was manual before
+what you automated
+impact
+Hardware/software interaction
+
+Any story involving:
+FPGA
+microcontrollers
+sensors
+timing
+serial communication
+scripts controlling hardware
+
+6. Resume Deep Dive
+Expect deep drilling into your projects.
+The VHDL CPU project is probably your strongest match.
+Be prepared for:
+datapath explanation
+control unit
+ALU operations
+registers
+memory interface
+FSM/control logic
+timing/simulation
+
+For your automation work:
+architecture
+libraries used
+debugging
+edge cases
+how tests were validated
+
+For PID/DSP:
+they may ask basics, but less likely.
+
+7. Questions They May Ask
+
+Hardware
+Difference between latch and flip-flop
+What causes metastability?
+What is setup/hold violation?
+Explain clock gating
+Explain power gating
+Why use non-blocking assignments?
+Explain an FSM you designed
+Difference between Verilog and VHDL
+
+Debug
+How would you isolate a failing test?
+What would you do if hardware behaves inconsistently?
+How do you debug intermittent failures?
+
+Programming
+Write a Python script to parse logs
+Reverse bits / masking in C
+Explain a script you wrote
+
+Behavioral
+Hard bug you solved
+Team conflict
+Tight deadline
+Failure story
+Learning new technology quickly

@@ -1,0 +1,38 @@
+3. Python + C
+scripting
+automation
+debugging
+interacting with hardware/tests
+Python Topics
+
+file IO
+parsing logs
+subprocess
+regex basics
+loops/dictionaries/lists
+argparse
+automation workflows
+
+Potential questions:
+
+write a parser
+automate repetitive testing
+read CSV/log files
+poll hardware status
+
+You should be ready to explain:
+
+your automation scripts
+why you used Python
+how you debugged failures
+
+C Topics
+
+Probably fundamentals only:
+pointers
+arrays
+structs
+memory basics
+bitwise operations
+
+Bitwise questions are common in hardware interviews.
