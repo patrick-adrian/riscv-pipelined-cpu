@@ -1,0 +1,16 @@
+{
+  "_comment": "Optional defaults applied when CLI args are not given. CLI flags always win.",
+  "timeout": 10.0,
+  "workers": 1,
+  "report": "json",
+  "tests": [
+    "cpu_count_nonzero",
+    "cpu_can_compute",
+    "disk_free_above_threshold",
+    "tempdir_write_read",
+    "subprocess_echo_hello",
+    "parser_finds_errors",
+    "parser_severity_counts",
+    "parser_extracts_metrics"
+  ]
+}

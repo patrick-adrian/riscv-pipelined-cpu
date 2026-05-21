@@ -1,0 +1,9 @@
+# Runtime dependencies
+#
+# The framework itself uses only the Python standard library. That's
+# deliberate: validation tools that ship into restricted CI / lab
+# environments are easier to deploy when they don't need pip access.
+#
+# Everything below is for development / running the unit-test suite.
+
+pytest>=7.4
