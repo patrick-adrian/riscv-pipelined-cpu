@@ -36,7 +36,6 @@ That change made the testbench more robust because it allowed me to correctly ca
 UVM clock
 Designing test cases
 
-
 3. Tell me about a time you worked on a team.
 In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. My role focused on the datapath and control integration, while other team members worked on instruction memory and individual modules like ALU and register file design.
 Early on, we ran into integration issues where each module worked independently, but the full system wasn’t behaving correctly when combined. The main problem was inconsistent assumptions about timing and signal validity between modules.
