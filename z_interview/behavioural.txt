@@ -43,10 +43,19 @@ I learned a lot from that experience about designing controlled experiments, int
 
 3b. Tell me about a difficult challenge.
 
-One difficult challenge I worked on was designing a test that isolated bottlenecks for an API request microservice at Evertz.
-I started with a black-box generator designed by a coworker. The initial test started with me running the generator and seeing when the service broke.
-To begin isolating, I learned the flow of a request through the system, starting with the generator, NGINX, uWSGI, and finally the application.
-
+One difficult challenge I worked on at Evertz was designing a test framework that could isolate bottlenecks in an API request/response microservice.
+I started with a black-box request generator that had already been developed by a coworker. 
+Initially, the process was mostly just running the generator until the service failed, but that didn’t clearly explain where the bottlenecks were occurring.
+To isolate the issue, I first learned the full request path through the system — from the request generator, through NGINX and uWSGI, and finally into the application and database layers.
+From there, I improved the observability around the tests. I wrote scripts to monitor logs and detect errors while the generator was running, and I also began tracking Linux platform metrics such as:
+file descriptor usage,
+open socket connections,
+PostgreSQL connection counts,
+and listen/accept queue behavior.
+By correlating these metrics with latency and failure patterns, we were able to identify that the database connection handling and listen queues were the primary bottlenecks under heavy load.
+After identifying those issues, the team implemented architectural improvements, and we validated the changes using the same automated tests. 
+In the end, we increased the maximum throughput ceiling of the microservice by roughly 32x.
+That experience taught me a lot about performance engineering, observability, and how important good instrumentation is when debugging complex systems.
 
 3. Tell me about a time you worked on a team.
 In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. 
