@@ -25,14 +25,16 @@ I also updated the monitor logic. Instead of sampling only when a valid transact
 That change made the testbench more robust because it allowed me to correctly capture edge cases like reset and stalls without losing visibility into DUT behavior at the cycle level.
 
 3. Tell me about a difficult challenge.
-I had to come up with ways to performance test an API request/response microservice.
-I needed to design tests that isolated different stress points of our system.
-To do this, I changed one variable per test.
-1. Connection Scalability Test: vary number of clients, each client sends one request, meaure latency and number of errors. 
-2. Throughput Saturation Test: vary RPS, fix number of clients, measure latency and number of errors.
-3. Mixed Scaling Test: vary number of clients and RPS, measure latency and number of errors.
-With each test, I was able to stress different sections of the system and isolate which ones were the bottleneck.
-This led to architectural improvements, such as to NGINX, and I was able to validate improvement with the same tests.
+One difficult challenge I worked on was designing performance tests for an API request/response microservice at Evertz.
+The problem was that we needed meaningful benchmark data, but it was hard to identify where performance bottlenecks were actually coming from because multiple factors could affect the system at once.
+To solve this, I designed a set of tests where I changed one variable at a time so we could isolate different stress points in the architecture.
+For example:
+In a connection scalability test, I varied the number of clients while keeping request behavior simple, then measured latency and error rates.
+In a throughput saturation test, I fixed the number of clients but increased requests per second to identify throughput limits.
+I also created mixed scaling tests where both client count and request rate increased together to simulate more realistic production behavior.
+By comparing the results across these tests, we were able to isolate which parts of the system became bottlenecks under different conditions.
+That led to architectural improvements, including changes to NGINX configuration and request handling behavior. After the changes, I reran the same automated tests to validate that latency and scalability improved as expected.
+I learned a lot from that experience about designing controlled experiments, interpreting performance data, and building tests that are actually useful for engineering decisions rather than just generating numbers.
 
 3. Tell me about a time you worked on a team.
 In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. My role focused on the datapath and control integration, while other team members worked on instruction memory and individual modules like ALU and register file design.
