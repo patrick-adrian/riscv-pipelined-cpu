@@ -1,31 +1,22 @@
 1. Tell me about yourself
 
 I’m a computer engineering student currently working as a Test Automation Engineering Intern at Evertz Microsystems. 
-Most of my work revolves around automation, scripting, and debugging, building tools for the team with a focus on performance testing.
-As well as repetitive workflows when it comes to validating new features and bug fixes.
-But I’ve also been heavily focused on digital design and computer architecture in personal projects.
-For example, I designed 32-bit RISC CPU in VHDL on FPGA, where I worked on datapath/control integration, simulation, and debugging. 
-I’ve also worked on DSP and control-system projects, including audio filtering and PID control design.
-On the software side, I’ve built automation tools using Python, Bash, and Ansible,
-which helped me develop systems-level knowledge and thinking.
-I'm drawn towards this role because it sits at the intersection of hardware systems, 
-debugging, and low-level design, which aligns closely with the areas I’ve been trying to strengthen.
+My work revolves around automation, scripting, debugging, and building tools for the team with a focus on performance testing.
+In my role, I work closely with platform and validation engineers to improve how we measure system performance. 
+One of the main challenges I was involved in was establishing a more consistent and automated way to collect benchmarking data for key customer workloads. 
+The goal was to make performance comparisons more reliable for regression testing and to support architectural decisions.
+To address this, I spearheaded the design of a test framework and tests that simulate realistic usage conditions and extract meaningful performance metrics in a repeatable way. 
+This involved scripting, debugging across system layers, and making sure results were consistent enough to be used for engineering decisions.
+I used tools like Python, Bash, and Ansible, which helped me develop systems-level knowledge and thinking.
+
+Outside of work, I’ve been focused on hardware design and computer architecture in personal projects.
+I designed 32-bit RISC CPU in VHDL, implemented on an FPGA board.
+And I designed a UVM testbench in SystemVerilog for a pipelined CPU, using Vivado.
+
+I'm drawn towards this role because it intersects hardware systems and low-level design, which aligns closely with the areas I’ve been trying to strengthen.
 
 2. Tell me about a difficult technical problem.
-When designing a UVM testbench for the fetch stage of a pipelined CPU, I had to define the reset contract between different modules.
-I had to separate concerns among the driver, transaction, monitor, scoreboard, and test.
-At first, I included the reset signal as part of the transaction that goes into the DUT (fetch stage).
-And the monitor sampled at every cycle.
-This worked at first, but then introduced issues when I wanted to test reset behaviour in between cycles.
-It also doesn't make sense architecturally, since reset in a pipelined CPU would be controlled globally rather than on a per-cycle basis.
-To fix this, I created a UVM reset sequence dedicated to toggling the reset signal.
-Now, all I was able to control reset from a higher level (the test level), and one that is more accurate to the real-world usage.
-Another big problem when designing my testbenches was when the monitor should sample the DUT and send that sample to the scoreboard.
-At first I designed it to only sample when a valid transaction was driven.
-But this broke quickly again when I wanted to test reset behaviour and stall behaviour.
-I fixed this by instead sampling every clock, and letting the scoreboard decide whether it should be counted as a valid transaction or not.
 
-Fixed:
 While building a UVM testbench for the fetch stage of a pipelined CPU, I ran into two related issues around how reset and sampling should be modeled in a verification environment.
 Initially, I modeled reset as part of the transaction being driven into the DUT, since I was thinking of everything as a single stimulus stream. The monitor also only sampled when a valid transaction was present.
 This worked for basic functionality, but it started breaking down when I tried to test reset behavior and pipeline stalls. Reset is not really a per-transaction concept in a pipelined CPU — it’s a global control signal that can occur independently of instruction flow. Because of that, embedding it in transactions made it impossible to correctly model reset happening between cycles.
@@ -33,8 +24,15 @@ To fix this, I separated reset into its own UVM sequence that directly controlle
 I also updated the monitor logic. Instead of sampling only when a valid transaction was driven, I made it sample every clock cycle. Then I pushed the responsibility of filtering valid behavior into the scoreboard.
 That change made the testbench more robust because it allowed me to correctly capture edge cases like reset and stalls without losing visibility into DUT behavior at the cycle level.
 
-UVM clock
-Designing test cases
+3. Tell me about a difficult challenge.
+I had to come up with ways to performance test an API request/response microservice.
+I needed to design tests that isolated different stress points of our system.
+To do this, I changed one variable per test.
+1. Connection Scalability Test: vary number of clients, each client sends one request, meaure latency and number of errors. 
+2. Throughput Saturation Test: vary RPS, fix number of clients, measure latency and number of errors.
+3. Mixed Scaling Test: vary number of clients and RPS, measure latency and number of errors.
+With each test, I was able to stress different sections of the system and isolate which ones were the bottleneck.
+This led to architectural improvements, such as to NGINX, and I was able to validate improvement with the same tests.
 
 3. Tell me about a time you worked on a team.
 In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. My role focused on the datapath and control integration, while other team members worked on instruction memory and individual modules like ALU and register file design.
@@ -67,14 +65,13 @@ I feel like I would get a strong balance between software and hardware at AMD.
 I want to contribute to products that are used in millions of devices that millions of people use everyday.
 
 6. Why should we hire you?
-I think one of my stronger qualities is that I’m comfortable working across both hardware and software domains. 
-I’ve worked on RTL and architecture-focused projects, but I’ve also spent a lot of time building automation and debugging tools. 
-That combination has helped me become very process-oriented when solving technical problems, especially when debugging complex behavior.
-
 I think one of my stronger qualities is that I’ve developed experience across both hardware-oriented and software-oriented engineering work, which has helped me become very comfortable debugging complex systems.
-On the hardware side, I’ve worked on projects involving digital design, FPGA development, and verification concepts like UVM-style testbench architecture and cycle-level behavior. On the software side, my internship at Evertz Microsystems has given me experience building automation tools and thinking carefully about reliability, observability, and scalable testing.
-I also think I learn technical systems quickly once I understand the underlying architecture. In a lot of my projects, I’ve had to move beyond just implementing features and instead understand why certain designs break under edge cases like resets, stalls, or timing-related behavior.
-I may not know every tool or workflow your team uses yet, but I think I’d bring a strong debugging mindset, adaptability, and a willingness to learn quickly in a system-level engineering environment.
+On the hardware side, I’ve worked on projects involving digital design, FPGA development, and verification concepts like UVM-style testbench architecture and cycle-level behavior. 
+On the software side, my internship at Evertz Microsystems has given me experience building automation tools and thinking carefully about reliability, observability, and scalable testing.
+I learn technical systems quickly once I understand the underlying architecture. 
+In a lot of my projects, I’ve had to move beyond just implementing features and instead understand why certain designs break under edge cases like resets, stalls, or timing-related behavior.
+software?>
+Even if I may not know every tool or workflow the team uses yet, I'm confident I'd bring a strong debugging mindset, adaptability, and a willingness to learn quickly in a system-level engineering environment.
 
 4. Validation / Debug Mindset
 

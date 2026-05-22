@@ -15,6 +15,20 @@ typedef struct node {
 node *head = NULL;
 node n1;
 
+--------------------------------------------------------------------------------------------
+void reverse(node **head) {
+    node *prev = NULL, *curr = *head, *next;
+
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+
+    *head = prev;
+}
+
 -----------------------------------------------------------------------------
 void push_front(node **head, int value) {
 	if(!head) return;
@@ -114,20 +128,3 @@ node* find(node *head, int value) {
     }
     return NULL;
 }
---------------------------------------------------------------------------------------------
-
-void reverse(node **head) {
-    node *prev = NULL, *curr = *head, *next;
-
-    while (curr) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
-    }
-
-    *head = prev;
-}
-
-
-
