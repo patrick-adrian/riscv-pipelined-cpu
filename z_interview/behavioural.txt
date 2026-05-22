@@ -19,12 +19,16 @@ I'm drawn towards this role because it intersects hardware systems and low-level
 
 While building a UVM testbench for the fetch stage of a pipelined CPU, I ran into two related issues around how reset and sampling should be modeled in a verification environment.
 Initially, I modeled reset as part of the transaction being driven into the DUT, since I was thinking of everything as a single stimulus stream. The monitor also only sampled when a valid transaction was present.
-This worked for basic functionality, but it started breaking down when I tried to test reset behavior and pipeline stalls. Reset is not really a per-transaction concept in a pipelined CPU — it’s a global control signal that can occur independently of instruction flow. Because of that, embedding it in transactions made it impossible to correctly model reset happening between cycles.
-To fix this, I separated reset into its own UVM sequence that directly controlled the reset signal at the test level, independent of instruction transactions. That made the reset behavior realistic and reusable across different test scenarios.
+This worked for basic functionality, but it started breaking down when I tried to test reset behavior and pipeline stalls. 
+Reset is not really a per-transaction concept in a pipelined CPU — it’s a global control signal that can occur independently of instruction flow. 
+Because of that, embedding it in transactions made it impossible to correctly model reset happening between cycles.
+To fix this, I separated reset into its own UVM sequence that directly controlled the reset signal at the test level, independent of instruction transactions. 
+That made the reset behavior realistic and reusable across different test scenarios.
 I also updated the monitor logic. Instead of sampling only when a valid transaction was driven, I made it sample every clock cycle. Then I pushed the responsibility of filtering valid behavior into the scoreboard.
 That change made the testbench more robust because it allowed me to correctly capture edge cases like reset and stalls without losing visibility into DUT behavior at the cycle level.
 
-3. Tell me about a difficult challenge.
+3a. Tell me about a difficult challenge.
+
 One difficult challenge I worked on was designing performance tests for an API request/response microservice at Evertz.
 The problem was that we needed meaningful benchmark data, but it was hard to identify where performance bottlenecks were actually coming from because multiple factors could affect the system at once.
 To solve this, I designed a set of tests where I changed one variable at a time so we could isolate different stress points in the architecture.
@@ -33,28 +37,40 @@ In a connection scalability test, I varied the number of clients while keeping r
 In a throughput saturation test, I fixed the number of clients but increased requests per second to identify throughput limits.
 I also created mixed scaling tests where both client count and request rate increased together to simulate more realistic production behavior.
 By comparing the results across these tests, we were able to isolate which parts of the system became bottlenecks under different conditions.
-That led to architectural improvements, including changes to NGINX configuration and request handling behavior. After the changes, I reran the same automated tests to validate that latency and scalability improved as expected.
+That led to architectural improvements, including changes to NGINX configuration and request handling behavior. 
+After the changes, I reran the same automated tests to validate that latency and scalability improved as expected.
 I learned a lot from that experience about designing controlled experiments, interpreting performance data, and building tests that are actually useful for engineering decisions rather than just generating numbers.
 
+3b. Tell me about a difficult challenge.
+
+One difficult challenge I worked on was designing a test that isolated bottlenecks for an API request microservice at Evertz.
+I started with a black-box generator designed by a coworker. The initial test started with me running the generator and seeing when the service broke.
+To begin isolating, I learned the flow of a request through the system, starting with the generator, NGINX, uWSGI, and finally the application.
+
+
 3. Tell me about a time you worked on a team.
-In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. My role focused on the datapath and control integration, while other team members worked on instruction memory and individual modules like ALU and register file design.
-Early on, we ran into integration issues where each module worked independently, but the full system wasn’t behaving correctly when combined. The main problem was inconsistent assumptions about timing and signal validity between modules.
-To address this, we started aligning on a shared interface contract for signals like valid/ready behavior and clocked updates. I also took responsibility for helping debug system-level issues using simulation waveforms, tracing signals across module boundaries instead of only looking at individual blocks.
+In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. 
+My role focused on the datapath and control integration, while other team members worked on instruction memory and individual modules like ALU and register file design.
+Early on, we ran into integration issues where each module worked independently, but the full system wasn’t behaving correctly when combined. 
+The main problem was inconsistent assumptions about timing and signal validity between modules.
+To address this, we started aligning on a shared interface contract for signals like valid/ready behavior and clocked updates. 
+I also took responsibility for helping debug system-level issues using simulation waveforms, tracing signals across module boundaries instead of only looking at individual blocks.
 Over time, this improved our integration process significantly and reduced debugging time because we were no longer treating modules in isolation.
 From that experience, I learned that in hardware systems, most team issues aren’t about individual module correctness—they’re about interface assumptions and communication between component
 
 4. Tell me about a failure.
-Long-term failure: AMD interviews. Since 2024, I did not narrow what kind of role I was interested in.
-I applied to every listing: software, firmware, hardware, test roles.
-I was able to make my resume look good and get interviews.
-But because I spread myself so thin for so many different types of roles, come the interview, I was always underprepared, and I never stood out as a candidate.
-I would lazily start projects that would be useful if I went through with them, but I never did.
-In 2025, I fixed this by narrowing what kind of roles I wanted to get more experience in.
-I focused on ONE project that would help me learn the specific skills (UVM, RTL) and systems level thinking.
-I leveraged my experience at my current internship to carry over skills and learn on the job.
-Now, I feel more confident in these interviews and have built up skills that aren't random and are what I am actually interested in.
-What I learned from this experience is that instead of learning a little of everything, I need to get really good at a few specific things and skills.
-I also learned that I want to work on products that go into products that the average person uses every day.
+One longer-term failure I had was not narrowing my focus early enough when applying for internships.
+For a while, especially during 2024, I applied to almost every kind of engineering role I saw — software, firmware, hardware, validation, and automation roles. 
+I was able to get interviews because I had a broad resume and a variety of projects, but when it came to the actual interviews, I realized I wasn’t standing out strongly in any one area.
+I also noticed that I kept starting projects based on what I thought would look good on a resume, instead of committing deeply enough to build real expertise.
+That became pretty clear after several AMD interviews where I felt technically underprepared compared to candidates who had gone much deeper into a specific domain.
+In 2025, I changed my approach. Instead of spreading myself thin, I focused on building depth in areas I was genuinely interested in: RTL, UVM, and system-level validation.
+I committed to one major project that forced me to think more deeply about architecture, verification, and debugging rather than constantly jumping between unrelated technologies. 
+I also started leveraging my internship experience more intentionally so that the skills I was learning at work reinforced the direction I wanted to grow in.
+As a result, I’m much more confident technically now, and I feel like my skills are more aligned instead of random.
+What I learned from that experience is that engineering depth matters. 
+Learning a little bit of everything can help initially, but to really stand out, you need strong fundamentals and deeper expertise in a few areas you genuinely care about.
+It also helped me realize that I’m most motivated by working on systems and products that eventually impact large numbers of everyday users.
 
 5. Why AMD?
 The work AMD does is exactly what I've been trying to move toward and build strong skills in:
