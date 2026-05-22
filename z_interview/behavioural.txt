@@ -1,5 +1,4 @@
 1. Tell me about yourself
-
 I’m a computer engineering student currently working as a Test Automation Engineering Intern at Evertz Microsystems. 
 My work revolves around automation, scripting, debugging, and building tools for the team with a focus on performance testing.
 In my role, I work closely with platform and validation engineers to improve how we measure system performance. 
@@ -16,7 +15,6 @@ And I designed a UVM testbench in SystemVerilog for a pipelined CPU, using Vivad
 I'm drawn towards this role because it intersects hardware systems and low-level design, which aligns closely with the areas I’ve been trying to strengthen.
 
 2. Tell me about a difficult technical problem.
-
 While building a UVM testbench for the fetch stage of a pipelined CPU, I ran into two related issues around how reset and sampling should be modeled in a verification environment.
 Initially, I modeled reset as part of the transaction being driven into the DUT, since I was thinking of everything as a single stimulus stream. The monitor also only sampled when a valid transaction was present.
 This worked for basic functionality, but it started breaking down when I tried to test reset behavior and pipeline stalls. 
@@ -28,7 +26,6 @@ I also updated the monitor logic. Instead of sampling only when a valid transact
 That change made the testbench more robust because it allowed me to correctly capture edge cases like reset and stalls without losing visibility into DUT behavior at the cycle level.
 
 3a. Tell me about a difficult challenge.
-
 One difficult challenge I worked on was designing performance tests for an API request/response microservice at Evertz.
 The problem was that we needed meaningful benchmark data, but it was hard to identify where performance bottlenecks were actually coming from because multiple factors could affect the system at once.
 To solve this, I designed a set of tests where I changed one variable at a time so we could isolate different stress points in the architecture.
@@ -42,7 +39,6 @@ After the changes, I reran the same automated tests to validate that latency and
 I learned a lot from that experience about designing controlled experiments, interpreting performance data, and building tests that are actually useful for engineering decisions rather than just generating numbers.
 
 3b. Tell me about a difficult challenge.
-
 One difficult challenge I worked on at Evertz was designing a test framework that could isolate bottlenecks in an API request/response microservice.
 I started with a black-box request generator that had already been developed by a coworker. 
 Initially, the process was mostly just running the generator until the service failed, but that didn’t clearly explain where the bottlenecks were occurring.
@@ -56,6 +52,35 @@ By correlating these metrics with latency and failure patterns, we were able to 
 After identifying those issues, the team implemented architectural improvements, and we validated the changes using the same automated tests. 
 In the end, we increased the maximum throughput ceiling of the microservice by roughly 32x.
 That experience taught me a lot about performance engineering, observability, and how important good instrumentation is when debugging complex systems.
+
+3c. combined
+One difficult challenge I worked on at Evertz was designing a performance test framework that could isolate bottlenecks in an API request/response microservice.
+When I first started, we already had a black-box request generator built by a coworker. 
+The initial approach was mostly to run the generator until the service became unstable, but that didn’t clearly tell us where the actual bottlenecks were occurring.
+To solve that, I first learned the full request flow through the system — starting from the request generator, through NGINX and uWSGI, and finally into the application and PostgreSQL database layers.
+Once I understood the architecture, I designed tests that isolated different stress points by changing one variable at a time.
+For example:
+I created connection scalability tests where I varied the number of clients while monitoring latency and error rates.
+I created throughput saturation tests where I fixed the number of clients but increased requests per second.
+I also created mixed-load tests where both client count and throughput increased together to simulate more realistic production conditions.
+At the same time, I improved observability around the tests. I wrote scripts to monitor logs and detect failures while the tests were running, and I tracked Linux platform metrics such as:
+file descriptor usage,
+open socket connections,
+PostgreSQL connection counts,
+and listen/accept queue behavior.
+By correlating those system metrics with latency and failure patterns, we were able to isolate that database connection handling and listen queues were the primary bottlenecks under heavy load.
+After identifying the issues, the team implemented architectural improvements, including changes to NGINX and connection handling behavior. 
+We then validated the improvements using the same automated tests, and ultimately increased the maximum throughput ceiling of the microservice by roughly 32x.
+That experience taught me a lot about performance engineering, observability, and how important controlled testing and instrumentation are when debugging complex systems.
+
+3d. Tightened
+One difficult challenge I worked on at Evertz was figuring out where bottlenecks were coming from in an API request/response microservice under load.
+We had a black-box request generator, but it wasn’t clear what part of the system was limiting performance. 
+So I first mapped out the full request path through the stack — from the generator through NGINX, uWSGI, the application layer, and down to PostgreSQL.
+Then I designed a set of controlled performance tests to isolate variables: one focused on scaling the number of clients, another on increasing request rate, and a mixed-load test to simulate real traffic patterns.
+In parallel, I improved observability by tracking logs and Linux-level metrics like file descriptors, open connections, database connections, and listen/accept queues.
+By correlating those signals with latency and failure rates, I was able to pinpoint database connection pressure and queue saturation as the main bottlenecks.
+After the team implemented fixes, including changes around NGINX and connection handling, we validated everything using the same test framework and saw about a 32x increase in throughput capacity.
 
 3. Tell me about a time you worked on a team.
 In one of my major projects, I worked in a small team building a 32-bit RISC CPU on an FPGA using VHDL. 
@@ -99,6 +124,19 @@ I learn technical systems quickly once I understand the underlying architecture.
 In a lot of my projects, I’ve had to move beyond just implementing features and instead understand why certain designs break under edge cases like resets, stalls, or timing-related behavior.
 software?>
 Even if I may not know every tool or workflow the team uses yet, I'm confident I'd bring a strong debugging mindset, adaptability, and a willingness to learn quickly in a system-level engineering environment.
+-----------------------------------------------------------------------------------------------------------------------------------
+7. How did you solve a bug
+
+
+8. What are some workflows you automated
+
+-----------------------------------------------------------------------------------------------------------------------------------
+VHDL CPU summary
+
+UVM test framework summary
+
+
+
 
 4. Validation / Debug Mindset
 
