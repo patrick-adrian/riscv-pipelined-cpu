@@ -124,20 +124,85 @@ I learn technical systems quickly once I understand the underlying architecture.
 In a lot of my projects, I’ve had to move beyond just implementing features and instead understand why certain designs break under edge cases like resets, stalls, or timing-related behavior.
 software?>
 Even if I may not know every tool or workflow the team uses yet, I'm confident I'd bring a strong debugging mindset, adaptability, and a willingness to learn quickly in a system-level engineering environment.
------------------------------------------------------------------------------------------------------------------------------------
-7. How did you solve a bug
 
+7. How did you solve a bug / how do you reproduce bugs and isolate causes
+For debugging, I try to approach problems systematically instead of guessing.
+The first thing I do is make the issue reproducible and reduce the scope of the problem. I want to understand:
+what conditions trigger the bug,
+how consistently it happens,
+and what variables affect it.
+At Evertz, I worked on debugging performance issues in an API request/response microservice. Initially, the system would fail under heavy load, but it wasn’t obvious where the bottleneck was coming from.
+To isolate the issue, I first mapped out the full request flow through the system — from the request generator, through NGINX and uWSGI, and into the application and PostgreSQL layers.
+From there, I started controlling variables one at a time. I designed separate tests for:
+increasing client count,
+increasing requests per second,
+and mixed-load scenarios.
+At the same time, I added more observability by monitoring logs and Linux-level metrics like:
+file descriptor usage,
+open connections,
+database connection counts,
+and listen/accept queues.
+By comparing how those metrics changed under different workloads, I was able to narrow the issue down to database connection pressure and queue saturation rather than just assuming the application itself was failing.
+In general, my debugging process is:
+reproduce consistently,
+isolate variables,
+add observability,
+narrow the scope,
+validate the fix using the same test conditions.
+I’ve found that structured debugging is usually much faster and more reliable than trying random fixes.
 
-8. What are some workflows you automated
+8. What are some workflows you automated?
+At Evertz, I automated several workflows related to performance testing, debugging, and system setup.
+One major area was performance and stress testing for an API request/response microservice. Originally, a lot of the process was manual — engineers would SSH into systems, start generators, monitor logs separately, collect metrics manually, and then piece results together afterward.
+I automated large parts of that workflow by scripting:
+remote setup and execution over SSH,
+launching and controlling traffic generators,
+collecting system and application metrics during tests,
+parsing logs for failures and error patterns,
+and generating analysis reports after runs.
+That made tests much more repeatable and reduced the time needed to run large benchmark suites.
+I also automated parts of the debugging workflow. For example, instead of manually checking different system metrics during failures, I created scripts that continuously monitored things like open connections, file descriptor usage, queue behavior, and database connection counts while tests were running. That made it easier to correlate failures with system-level bottlenecks.
+Another area was system setup automation. I helped streamline parts of the environment setup process so engineers could bring systems up faster and more consistently before running validation or stress tests.
+What I liked about these projects was that the automation wasn’t just about saving time — it also improved consistency, reproducibility, and the quality of the debugging data we collected.
 
------------------------------------------------------------------------------------------------------------------------------------
-VHDL CPU summary
+10. VHDL CPU summary
+One of my most technical projects was designing a 32-bit RISC CPU in VHDL and implementing it on an FPGA using Intel Quartus.
+The goal of the project was to build a functioning processor from the ground up, including both the datapath and control logic. I implemented components such as:
+the ALU,
+register file,
+program counter,
+instruction decoder,
+control unit,
+memory interfaces,
+and pipeline/control flow logic.
+A big part of the project was understanding how instructions move through the datapath and how control signals coordinate different hardware blocks during execution.
+One challenge was debugging timing and control-related issues. Since hardware runs concurrently, bugs were often caused by incorrect signal timing, unintended state behavior, or mismatches between simulation and synthesized behavior.
+To debug issues, I used RTL simulation and waveform analysis extensively. I would trace signals cycle-by-cycle to verify:
+register writes,
+ALU outputs,
+control signal assertions,
+branch behavior,
+and memory accesses.
+I also learned the importance of separating combinational and sequential logic correctly, especially when dealing with finite state machines and clocked processes.
+After validating functionality in simulation, I synthesized the design in Quartus and checked timing analysis to ensure the design met timing constraints on the FPGA.
+What I liked most about the project was that it tied together a lot of concepts from computer architecture and digital design — instruction execution, state machines, timing, debugging, and hardware/software interaction — and it gave me a much deeper understanding of how processors actually work underneath higher-level software abstractions.
 
-UVM test framework summary
+11. UVM test framework summary
+One project I’ve been working on is building a UVM-based verification environment for a pipelined CPU design.
+The main goal was to move beyond writing simple directed testbenches and instead learn a more scalable and reusable verification methodology similar to what’s used in industry.
+The DUT was a pipelined CPU, and the verification environment was structured around standard UVM components:
+sequence items for instruction transactions,
+sequencers to generate stimulus,
+drivers that interfaced with the DUT,
+monitors that captured pipeline activity,
+and a scoreboard to compare expected versus actual behavior.
+One of the more interesting challenges was verifying sequential behavior correctly rather than just checking single instructions in isolation. Because multiple instructions can exist in different pipeline stages simultaneously, debugging failures required tracking instruction flow cycle-by-cycle and understanding hazards, stalls, and timing interactions.
+To improve visibility, I added monitors around key pipeline stages and used transaction-level logging to observe how instructions propagated through the processor. That helped isolate issues like incorrect forwarding behavior, bad control timing, or pipeline state mismatches.
+I also worked on building constrained-random style stimulus instead of relying only on hand-written directed tests. The idea was to create broader instruction coverage and expose corner cases that are easy to miss manually.
+Another thing I focused on was separating responsibilities cleanly between components so the environment would be easier to scale and reuse. For example, stimulus generation, DUT driving, monitoring, and checking were all modularized instead of tightly coupled together.
+What I learned most from the project was how much verification is really about observability, architecture, and debugging methodology. Writing the DUT is only part of the challenge — building infrastructure that can systematically find and isolate failures is equally important.
 
-
-
-
+-------------------------------------------------------------------------------------
 4. Validation / Debug Mindset
 
 reproducing bugs
