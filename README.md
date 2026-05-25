@@ -71,7 +71,7 @@
 <li> Mon May 4: Begin studying RTL design interview questions. </li>
 <li> Sun May 10: Tier 1 questions </li>
 <li> Tues May 12: Tier 1 questions </li>
-<li> Thurs May 14-20: Interview prep </li>
+<li> May 14-23: Interview prep </li>
 
 </ul>
 
